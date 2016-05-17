@@ -1,0 +1,13 @@
+name: pysat
+dependencies:
+  - python=3
+  - jupyter
+  - matplotlib
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - yaml
+  - pip
+  - pip:
+    - pvl
