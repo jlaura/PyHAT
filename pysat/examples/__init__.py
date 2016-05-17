@@ -6,7 +6,7 @@ __all__ = ['get_path']
 # Used largely unmodififed from:
 # https://github.com/pysal/pysal/blob/master/pysal/examples/__init__.py
 
-base = os.path.split(autocnet.__file__)[0]
+base = os.path.split(pysat.__file__)[0]
 example_dir = os.path.join(base, 'examples')
 dirs = next(os.walk(example_dir))[1]
 file_2_dir = {}
