@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/USGS-Astrogeology/PySAT.svg?branch=master)](https://travis-ci.org/USGS-Astrogeology/PySAT)
+[![Coverage Status](https://coveralls.io/repos/github/USGS-Astrogeology/PySAT/badge.svg?branch=master)](https://coveralls.io/github/USGS-Astrogeology/PySAT?branch=master)
 # Installation
 
   - Install [Anaconda Python](https://www.continuum.io/downloads).  Be sure to get Python 3.x
