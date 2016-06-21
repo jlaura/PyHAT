@@ -2,6 +2,8 @@
 import os
 import numpy as np
 import pandas as pd
+from PySAT.fileio.utils import file_search
+from PySAT.spectral.spectral_data import spectral_data
 
 #This function reads the lookup tables used to expand metadata from the file names
 #This is separated from parsing the filenames so that for large lists of files the 
