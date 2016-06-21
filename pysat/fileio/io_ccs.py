@@ -5,9 +5,9 @@ import os
 import numpy as np
 import pandas as pd
 import scipy
-from PySAT.fileio.utils import file_search
-from PySAT.fileio.lookup import lookup
-from PySAT.spectral.spectral_data import spectral_data
+from pysat.fileio.utils import file_search
+from pysat.fileio.lookup import lookup
+from pysat.spectral.spectral_data import spectral_data
 import time
 
 def CCS(input_data):

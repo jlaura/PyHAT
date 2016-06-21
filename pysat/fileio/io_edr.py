@@ -1,6 +1,6 @@
 
 import pandas as pd
-from PySAT.fileio.header_parser import header_parser
+from pysat.fileio.header_parser import header_parser
 
 def EDR(input_data):
     with open(input_data, 'r') as f:
