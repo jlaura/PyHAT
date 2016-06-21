@@ -8,6 +8,15 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 from sklearn import cross_validation
+from pysat.spectral.baseline_code.als import ALS
+from pysat.spectral.baseline_code.dietrich import Dietrich
+from pysat.spectral.baseline_code.polyfit import PolyFit
+from pysat.spectral.baseline_code.airpls import AirPLS
+from pysat.spectral.baseline_code.fabc import FABC
+from pysat.spectral.baseline_code.kajfosz_kwiatek import KajfoszKwiatek as KK
+from pysat.spectral.baseline_code.mario import Mario
+from pysat.spectral.baseline_code.median import MedianFilter
+from pysat.spectral.baseline_code.rubberband import Rubberband
 
 
 def norm_total(df):

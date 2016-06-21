@@ -1,4 +1,5 @@
 import numpy as np
+from pysat.spectral.baseline_code.common import WhittakerSmoother, Baseline
 
 
 def als_baseline(intensities, asymmetry_param=0.05, smoothness_param=1e6,
