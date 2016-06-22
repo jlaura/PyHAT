@@ -19,24 +19,20 @@ class pls_sm:
     #            blended_test,
     #            color='r',
     #            xcol='Ref Comp Wt. %',
-    #            ycol='Predictive Comp Wt. %',
+    #            ycol='Predicted Comp Wt. %',
     #            figpath=outpath)
 
     # TODO rename this function to something better, later on
-    def final(self, testdata, blended_test, el, color='r', xcol='Ref Comp Wt%', ycol='Predictive Comp Wt%', figpath=None):
-        title = 'Reference and Predictive Comp of' + el
+    def final(self, testdata, blended_test, el, xcol='Ref Comp Wt%', ycol='Predicted Comp Wt%', figpath=None):
+        title = 'Reference and Predicted Comp of ' + el
         if figpath is not None:
             plot.figure()
-            plot.scatter(testdata, blended_test, color)
-            plot.savefig(figpath+'/'+title+'.png', dpi=600)
+            plot.scatter(testdata, blended_test, color='r')
             plot.title(title)
             plot.xlabel(xcol)
             plot.ylabel(ycol)
-
-            plot.title(ycol+' ('+str(rangei[0])+'-'+str(rangei[1])+')')
-            plot.xlabel('Leverage')
-            plot.ylabel('Q')
-
+            plot.plot([0, 100], [0, 100])
+            plot.savefig(figpath+'/'+title+'.png')
 
     def fit(self,trainsets,ranges,ncs,ycol,figpath=None):
         self.ranges=ranges
