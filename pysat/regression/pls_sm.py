@@ -61,6 +61,8 @@ class pls_sm:
                 plot.title(ycol+' ('+str(rangei[0])+'-'+str(rangei[1])+')')
                 plot.xlabel('Leverage')
                 plot.ylabel('Q')
+                plot.ylim([0,1.1*np.max(Q_res)])
+                plot.xlim([0,1.1*np.max(leverage)])
                     
                 plot.savefig(figpath+'/'+ycol+'_'+str(rangei[0])+'-'+str(rangei[1])+'Qres_vs_Leverage.png',dpi=600)
                 self.leverage=leverage
