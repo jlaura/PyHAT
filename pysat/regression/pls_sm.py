@@ -24,17 +24,18 @@ class pls_sm:
 
     # TODO rename this function to something better, later on
     def final(self, testdata, blended_test, el, color='r', xcol='Ref Comp Wt%', ycol='Predictive Comp Wt%', figpath=None):
-        self.testdata = testdata
-        self.blended_test = blended_test
-        self.color = color
-        self.xcol = xcol
-        self.ycol = ycol
-        self.figpath = figpath
+        title = 'Reference and Predictive Comp of' + el
         if figpath is not None:
             plot.figure()
             plot.scatter(testdata, blended_test, color)
-            plot.savefig(figpath+'/Reference and Predictive Comp of'+el+'.png', dpi=600)
+            plot.savefig(figpath+'/'+title+'.png', dpi=600)
+            plot.title(title)
+            plot.xlabel(xcol)
+            plot.ylabel(ycol)
 
+            plot.title(ycol+' ('+str(rangei[0])+'-'+str(rangei[1])+')')
+            plot.xlabel('Leverage')
+            plot.ylabel('Q')
 
 
     def fit(self,trainsets,ranges,ncs,ycol,figpath=None):
