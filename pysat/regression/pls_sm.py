@@ -14,7 +14,26 @@ import scipy.optimize as opt
 class pls_sm:
     def __init__(self):
         pass
-    
+
+    # TODO sm.final(testdata[0]['meta'][el],
+    #            blended_test,
+    #            color='r',
+    #            xcol='Ref Comp Wt. %',
+    #            ycol='Predicted Comp Wt. %',
+    #            figpath=outpath)
+
+    # TODO rename this function to something better, later on
+    def final(self, testdata, blended_test, el, xcol='Ref Comp Wt%', ycol='Predicted Comp Wt%', figpath=None):
+        title = 'Reference and Predicted Comp of ' + el
+        if figpath is not None:
+            plot.figure()
+            plot.scatter(testdata, blended_test, color='r')
+            plot.title(title)
+            plot.xlabel(xcol)
+            plot.ylabel(ycol)
+            plot.plot([0, 100], [0, 100])
+            plot.savefig(figpath+'/'+title+'.png')
+
     def fit(self,trainsets,ranges,ncs,ycol,figpath=None):
         self.ranges=ranges
         self.ncs=ncs        
