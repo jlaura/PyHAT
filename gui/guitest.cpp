@@ -44,3 +44,8 @@ void GuiTest::on_toolButton_4_clicked()
 
 
 
+
+void GuiTest::on_actionExit_triggered()
+{
+    this->close();
+}
