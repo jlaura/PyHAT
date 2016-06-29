@@ -86,7 +86,7 @@ public:
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents_2;
     QVBoxLayout *verticalLayout_7;
-    QGroupBox *Files_2;
+    QGroupBox *files;
     QVBoxLayout *Files;
     QSplitter *splitter_2;
     QWidget *layoutWidget;
@@ -326,21 +326,21 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, -370, 547, 932));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 547, 915));
         verticalLayout_7 = new QVBoxLayout(scrollAreaWidgetContents_2);
         verticalLayout_7->setSpacing(6);
         verticalLayout_7->setContentsMargins(11, 11, 11, 11);
         verticalLayout_7->setObjectName(QStringLiteral("verticalLayout_7"));
-        Files_2 = new QGroupBox(scrollAreaWidgetContents_2);
-        Files_2->setObjectName(QStringLiteral("Files_2"));
+        files = new QGroupBox(scrollAreaWidgetContents_2);
+        files->setObjectName(QStringLiteral("files"));
         QFont font;
         font.setPointSize(10);
-        Files_2->setFont(font);
-        Files = new QVBoxLayout(Files_2);
+        files->setFont(font);
+        Files = new QVBoxLayout(files);
         Files->setSpacing(6);
         Files->setContentsMargins(11, 11, 11, 11);
         Files->setObjectName(QStringLiteral("Files"));
-        splitter_2 = new QSplitter(Files_2);
+        splitter_2 = new QSplitter(files);
         splitter_2->setObjectName(QStringLiteral("splitter_2"));
         splitter_2->setOrientation(Qt::Horizontal);
         layoutWidget = new QWidget(splitter_2);
@@ -437,7 +437,7 @@ public:
         Files->addWidget(splitter_2);
 
 
-        verticalLayout_7->addWidget(Files_2);
+        verticalLayout_7->addWidget(files);
 
         Norm3 = new QGroupBox(scrollAreaWidgetContents_2);
         Norm3->setObjectName(QStringLiteral("Norm3"));
@@ -638,17 +638,6 @@ public:
         CompRanges = new QGroupBox(scrollAreaWidgetContents_2);
         CompRanges->setObjectName(QStringLiteral("CompRanges"));
         CompRanges->setFont(font);
-        CompRanges->setStyleSheet(QLatin1String("QGroupBox::title { \n"
-"    background-color: transparent;\n"
-"     subcontrol-position: top left; /* position at the top left*/ \n"
-"     padding:2 13px;\n"
-"\n"
-" } \n"
-"\n"
-"QGroupBox { \n"
-"     border: 2px solid gray; \n"
-"     border-radius: 3px; \n"
-" } "));
         verticalLayout_14 = new QVBoxLayout(CompRanges);
         verticalLayout_14->setSpacing(6);
         verticalLayout_14->setContentsMargins(11, 11, 11, 11);
@@ -1031,7 +1020,7 @@ public:
         verticalLayout_7->addWidget(ok);
 
         scrollArea->setWidget(scrollAreaWidgetContents_2);
-        Files_2->raise();
+        files->raise();
         groupBox->raise();
         MaxNumComp->raise();
         CompRanges->raise();
@@ -1183,7 +1172,7 @@ public:
         actionAbout_QtCreator->setText(QApplication::translate("GuiTest", "About QtCreator...", 0));
         actionExit->setText(QApplication::translate("GuiTest", "Exit", 0));
         actionNormalization->setText(QApplication::translate("GuiTest", "Normalization", 0));
-        Files_2->setTitle(QApplication::translate("GuiTest", "Files", 0));
+        files->setTitle(QApplication::translate("GuiTest", "Files", 0));
         label_3->setText(QApplication::translate("GuiTest", "Maskfile", 0));
         label->setText(QApplication::translate("GuiTest", "Unknown Data", 0));
         label_2->setText(QApplication::translate("GuiTest", "Full Database", 0));
