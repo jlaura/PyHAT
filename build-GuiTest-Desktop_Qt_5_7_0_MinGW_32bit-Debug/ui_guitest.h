@@ -158,13 +158,9 @@ public:
     QVBoxLayout *verticalLayout_11;
     QLabel *label_14;
     QLabel *label_15;
-    QLabel *label_16;
-    QLabel *label_17;
     QVBoxLayout *verticalLayout_12;
     QLineEdit *lineEdit_5;
     QSpinBox *spinBox_7;
-    QSpinBox *spinBox_8;
-    QSpinBox *spinBox_9;
     QGroupBox *CompRanges;
     QVBoxLayout *verticalLayout_14;
     QHBoxLayout *horizontalLayout_8;
@@ -199,9 +195,6 @@ public:
     QLabel *label_37;
     QLabel *label_35;
     QLabel *label_38;
-    QGroupBox *MaxNumComp;
-    QVBoxLayout *verticalLayout_9;
-    QSpinBox *spinBox_17;
     QGroupBox *CreateModels;
     QVBoxLayout *verticalLayout_17;
     QHBoxLayout *horizontalLayout_14;
@@ -349,7 +342,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, -66, 547, 928));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 564, 827));
         scrollAreaWidgetContents_2->setStyleSheet(QLatin1String("QGroupBox {\n"
 "  border: 2px solid gray;\n"
 "  border-radius: 6px;\n"
@@ -760,16 +753,6 @@ public:
 
         verticalLayout_11->addWidget(label_15);
 
-        label_16 = new QLabel(CrossValidation);
-        label_16->setObjectName(QStringLiteral("label_16"));
-
-        verticalLayout_11->addWidget(label_16);
-
-        label_17 = new QLabel(CrossValidation);
-        label_17->setObjectName(QStringLiteral("label_17"));
-
-        verticalLayout_11->addWidget(label_17);
-
 
         horizontalLayout_4->addLayout(verticalLayout_11);
 
@@ -785,16 +768,6 @@ public:
         spinBox_7->setObjectName(QStringLiteral("spinBox_7"));
 
         verticalLayout_12->addWidget(spinBox_7);
-
-        spinBox_8 = new QSpinBox(CrossValidation);
-        spinBox_8->setObjectName(QStringLiteral("spinBox_8"));
-
-        verticalLayout_12->addWidget(spinBox_8);
-
-        spinBox_9 = new QSpinBox(CrossValidation);
-        spinBox_9->setObjectName(QStringLiteral("spinBox_9"));
-
-        verticalLayout_12->addWidget(spinBox_9);
 
 
         horizontalLayout_4->addLayout(verticalLayout_12);
@@ -1008,23 +981,6 @@ public:
 
         verticalLayout_29->addWidget(CompRanges);
 
-        MaxNumComp = new QGroupBox(scrollAreaWidgetContents_2);
-        MaxNumComp->setObjectName(QStringLiteral("MaxNumComp"));
-        MaxNumComp->setFont(font);
-        verticalLayout_9 = new QVBoxLayout(MaxNumComp);
-        verticalLayout_9->setSpacing(6);
-        verticalLayout_9->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_9->setObjectName(QStringLiteral("verticalLayout_9"));
-        spinBox_17 = new QSpinBox(MaxNumComp);
-        spinBox_17->setObjectName(QStringLiteral("spinBox_17"));
-        spinBox_17->setMinimum(-100);
-        spinBox_17->setMaximum(1000);
-
-        verticalLayout_9->addWidget(spinBox_17);
-
-
-        verticalLayout_29->addWidget(MaxNumComp);
-
         CreateModels = new QGroupBox(scrollAreaWidgetContents_2);
         CreateModels->setObjectName(QStringLiteral("CreateModels"));
         CreateModels->setFont(font);
@@ -1193,7 +1149,6 @@ public:
         Files->raise();
         OK->raise();
         CrossValidation->raise();
-        MaxNumComp->raise();
         CompRanges->raise();
         CreateModels->raise();
         Normalization->raise();
@@ -1372,11 +1327,9 @@ public:
         norm_label_7->setText(QApplication::translate("GuiTest", "Value 7", 0));
         norm_label_8->setText(QApplication::translate("GuiTest", "Value 8", 0));
         pushButton_13->setText(QApplication::translate("GuiTest", "Add Value", 0));
-        CrossValidation->setTitle(QApplication::translate("GuiTest", "Cross Validation", 0));
+        CrossValidation->setTitle(QApplication::translate("GuiTest", "Setup", 0));
         label_14->setText(QApplication::translate("GuiTest", "Element Name", 0));
         label_15->setText(QApplication::translate("GuiTest", "nfolds_test", 0));
-        label_16->setText(QApplication::translate("GuiTest", "nfolds_cv", 0));
-        label_17->setText(QApplication::translate("GuiTest", "testfolds_cv", 0));
         CompRanges->setTitle(QApplication::translate("GuiTest", "Composition Ranges", 0));
         label_40->setText(QApplication::translate("GuiTest", "compranges", 0));
         label_20->setText(QApplication::translate("GuiTest", "[", 0));
@@ -1399,7 +1352,6 @@ public:
         label_37->setText(QApplication::translate("GuiTest", ",", 0));
         label_35->setText(QApplication::translate("GuiTest", "0", 0));
         label_38->setText(QApplication::translate("GuiTest", "]", 0));
-        MaxNumComp->setTitle(QApplication::translate("GuiTest", "Max Number of Components", 0));
         CreateModels->setTitle(QApplication::translate("GuiTest", "Create Models", 0));
         label_70->setText(QApplication::translate("GuiTest", "Value 1", 0));
         label_71->setText(QApplication::translate("GuiTest", "Value 2", 0));
