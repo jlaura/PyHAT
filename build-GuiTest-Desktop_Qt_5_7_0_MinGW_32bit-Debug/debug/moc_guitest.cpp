@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_GuiTest_t {
     QByteArrayData data[14];
-    char stringdata0[220];
+    char stringdata0[218];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -39,17 +39,17 @@ QT_MOC_LITERAL(6, 103, 23), // "on_actionExit_triggered"
 QT_MOC_LITERAL(7, 127, 24), // "on_pushButton_13_clicked"
 QT_MOC_LITERAL(8, 152, 21), // "on_pushButton_clicked"
 QT_MOC_LITERAL(9, 174, 6), // "labels"
-QT_MOC_LITERAL(10, 181, 8), // "QLabel**"
-QT_MOC_LITERAL(11, 190, 9), // "spinright"
-QT_MOC_LITERAL(12, 200, 10), // "QSpinBox**"
-QT_MOC_LITERAL(13, 211, 8) // "spinleft"
+QT_MOC_LITERAL(10, 181, 7), // "QLabel*"
+QT_MOC_LITERAL(11, 189, 9), // "spinright"
+QT_MOC_LITERAL(12, 199, 9), // "QSpinBox*"
+QT_MOC_LITERAL(13, 209, 8) // "spinleft"
 
     },
     "GuiTest\0on_toolButton_clicked\0\0"
     "on_toolButton_2_clicked\0on_toolButton_3_clicked\0"
     "on_toolButton_4_clicked\0on_actionExit_triggered\0"
     "on_pushButton_13_clicked\0on_pushButton_clicked\0"
-    "labels\0QLabel**\0spinright\0QSpinBox**\0"
+    "labels\0QLabel*\0spinright\0QSpinBox*\0"
     "spinleft"
 };
 #undef QT_MOC_LITERAL
@@ -107,12 +107,12 @@ void GuiTest::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 4: _t->on_actionExit_triggered(); break;
         case 5: _t->on_pushButton_13_clicked(); break;
         case 6: _t->on_pushButton_clicked(); break;
-        case 7: { QLabel** _r = _t->labels();
-            if (_a[0]) *reinterpret_cast< QLabel***>(_a[0]) = _r; }  break;
-        case 8: { QSpinBox** _r = _t->spinright();
-            if (_a[0]) *reinterpret_cast< QSpinBox***>(_a[0]) = _r; }  break;
-        case 9: { QSpinBox** _r = _t->spinleft();
-            if (_a[0]) *reinterpret_cast< QSpinBox***>(_a[0]) = _r; }  break;
+        case 7: { QLabel* _r = _t->labels();
+            if (_a[0]) *reinterpret_cast< QLabel**>(_a[0]) = _r; }  break;
+        case 8: { QSpinBox* _r = _t->spinright();
+            if (_a[0]) *reinterpret_cast< QSpinBox**>(_a[0]) = _r; }  break;
+        case 9: { QSpinBox* _r = _t->spinleft();
+            if (_a[0]) *reinterpret_cast< QSpinBox**>(_a[0]) = _r; }  break;
         default: ;
         }
     }
