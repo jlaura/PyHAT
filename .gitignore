@@ -72,3 +72,7 @@ target/
 .csv
 .png
 .SAV
+*.bat
+auto_gitter.bat
+*.bat
+*.bat
