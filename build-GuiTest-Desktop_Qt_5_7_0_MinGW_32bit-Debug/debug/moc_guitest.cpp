@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_GuiTest_t {
-    QByteArrayData data[14];
-    char stringdata0[218];
+    QByteArrayData data[15];
+    char stringdata0[223];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -40,16 +40,17 @@ QT_MOC_LITERAL(7, 127, 24), // "on_pushButton_13_clicked"
 QT_MOC_LITERAL(8, 152, 21), // "on_pushButton_clicked"
 QT_MOC_LITERAL(9, 174, 6), // "labels"
 QT_MOC_LITERAL(10, 181, 7), // "QLabel*"
-QT_MOC_LITERAL(11, 189, 9), // "spinright"
-QT_MOC_LITERAL(12, 199, 9), // "QSpinBox*"
-QT_MOC_LITERAL(13, 209, 8) // "spinleft"
+QT_MOC_LITERAL(11, 189, 4), // "size"
+QT_MOC_LITERAL(12, 194, 9), // "spinright"
+QT_MOC_LITERAL(13, 204, 9), // "QSpinBox*"
+QT_MOC_LITERAL(14, 214, 8) // "spinleft"
 
     },
     "GuiTest\0on_toolButton_clicked\0\0"
     "on_toolButton_2_clicked\0on_toolButton_3_clicked\0"
     "on_toolButton_4_clicked\0on_actionExit_triggered\0"
     "on_pushButton_13_clicked\0on_pushButton_clicked\0"
-    "labels\0QLabel*\0spinright\0QSpinBox*\0"
+    "labels\0QLabel*\0size\0spinright\0QSpinBox*\0"
     "spinleft"
 };
 #undef QT_MOC_LITERAL
@@ -75,9 +76,9 @@ static const uint qt_meta_data_GuiTest[] = {
        6,    0,   68,    2, 0x08 /* Private */,
        7,    0,   69,    2, 0x08 /* Private */,
        8,    0,   70,    2, 0x08 /* Private */,
-       9,    0,   71,    2, 0x08 /* Private */,
-      11,    0,   72,    2, 0x08 /* Private */,
-      13,    0,   73,    2, 0x08 /* Private */,
+       9,    1,   71,    2, 0x08 /* Private */,
+      12,    1,   74,    2, 0x08 /* Private */,
+      14,    1,   77,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -87,9 +88,9 @@ static const uint qt_meta_data_GuiTest[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    0x80000000 | 10,
-    0x80000000 | 12,
-    0x80000000 | 12,
+    0x80000000 | 10, QMetaType::Int,   11,
+    0x80000000 | 13, QMetaType::Int,   11,
+    0x80000000 | 13, QMetaType::Int,   11,
 
        0        // eod
 };
@@ -107,11 +108,11 @@ void GuiTest::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 4: _t->on_actionExit_triggered(); break;
         case 5: _t->on_pushButton_13_clicked(); break;
         case 6: _t->on_pushButton_clicked(); break;
-        case 7: { QLabel* _r = _t->labels();
+        case 7: { QLabel* _r = _t->labels((*reinterpret_cast< int(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< QLabel**>(_a[0]) = _r; }  break;
-        case 8: { QSpinBox* _r = _t->spinright();
+        case 8: { QSpinBox* _r = _t->spinright((*reinterpret_cast< int(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< QSpinBox**>(_a[0]) = _r; }  break;
-        case 9: { QSpinBox* _r = _t->spinleft();
+        case 9: { QSpinBox* _r = _t->spinleft((*reinterpret_cast< int(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< QSpinBox**>(_a[0]) = _r; }  break;
         default: ;
         }
