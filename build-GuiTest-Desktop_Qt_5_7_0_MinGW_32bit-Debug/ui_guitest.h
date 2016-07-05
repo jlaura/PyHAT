@@ -1308,7 +1308,6 @@ public:
         QObject::connect(spinBox_20, SIGNAL(valueChanged(int)), label_79, SLOT(setNum(int)));
         QObject::connect(spinBox_21, SIGNAL(valueChanged(int)), label_84, SLOT(setNum(int)));
         QObject::connect(spinBox_22, SIGNAL(valueChanged(int)), label_89, SLOT(setNum(int)));
-        QObject::connect(norm_spinBox_9, SIGNAL(valueChanged(int)), norm_spinBox, SLOT(setValue(int)));
 
         QMetaObject::connectSlotsByName(GuiTest);
     } // setupUi
