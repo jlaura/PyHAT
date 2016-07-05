@@ -96,7 +96,7 @@ static const uint qt_meta_data_GuiTest[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, 0x80000000 | 14,   15,
-    QMetaType::Void, QMetaType::Int,   17,
+    QMetaType::Void, 0x80000000 | 14,   17,
 
        0        // eod
 };
@@ -117,13 +117,20 @@ void GuiTest::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 7: _t->on_actionExit_triggered(); break;
         case 8: _t->on_pushButton_13_clicked(); break;
         case 9: _t->SpinBoxChanged((*reinterpret_cast< QWidget*(*)>(_a[1]))); break;
-        case 10: _t->spinboxWrite((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 10: _t->spinboxWrite((*reinterpret_cast< QWidget*(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         switch (_id) {
         default: *reinterpret_cast<int*>(_a[0]) = -1; break;
         case 9:
+            switch (*reinterpret_cast<int*>(_a[1])) {
+            default: *reinterpret_cast<int*>(_a[0]) = -1; break;
+            case 0:
+                *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< QWidget* >(); break;
+            }
+            break;
+        case 10:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<int*>(_a[0]) = -1; break;
             case 0:
