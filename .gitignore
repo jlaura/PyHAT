@@ -69,10 +69,8 @@ target/
 *.swp
 
 #Data and output files
-.csv
 .png
 .SAV
 *.bat
 *.user
 *.csv
-auto_gitter.bat
