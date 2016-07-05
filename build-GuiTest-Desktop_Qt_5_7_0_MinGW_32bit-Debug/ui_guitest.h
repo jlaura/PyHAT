@@ -152,6 +152,7 @@ public:
     QHBoxLayout *horizontalLayout_25;
     QSpacerItem *horizontalSpacer_6;
     QPushButton *pushButton_13;
+    QPushButton *pushButton_2;
     QGroupBox *CrossValidation;
     QVBoxLayout *CrossValid;
     QHBoxLayout *horizontalLayout_4;
@@ -161,6 +162,9 @@ public:
     QVBoxLayout *verticalLayout_12;
     QLineEdit *lineEdit_5;
     QSpinBox *spinBox_7;
+    QHBoxLayout *horizontalLayout_27;
+    QSpacerItem *horizontalSpacer_7;
+    QPushButton *pushButton_3;
     QGroupBox *CompRanges;
     QVBoxLayout *verticalLayout_14;
     QHBoxLayout *horizontalLayout_8;
@@ -195,6 +199,9 @@ public:
     QLabel *label_37;
     QLabel *label_35;
     QLabel *label_38;
+    QHBoxLayout *horizontalLayout_31;
+    QSpacerItem *horizontalSpacer_9;
+    QPushButton *pushButton_5;
     QGroupBox *CreateModels;
     QVBoxLayout *verticalLayout_17;
     QHBoxLayout *horizontalLayout_14;
@@ -222,6 +229,9 @@ public:
     QLabel *label_89;
     QLabel *label_90;
     QLabel *label_91;
+    QHBoxLayout *horizontalLayout_33;
+    QSpacerItem *horizontalSpacer_11;
+    QPushButton *pushButton_7;
     QGroupBox *OK;
     QHBoxLayout *ok;
     QSpacerItem *horizontalSpacer_5;
@@ -342,7 +352,10 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 547, 810));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, -177, 550, 958));
+        QFont font;
+        font.setPointSize(8);
+        scrollAreaWidgetContents_2->setFont(font);
         scrollAreaWidgetContents_2->setStyleSheet(QLatin1String("QGroupBox {\n"
 "  border: 2px solid gray;\n"
 "  border-radius: 6px;\n"
@@ -361,9 +374,9 @@ public:
         verticalLayout_29->setObjectName(QStringLiteral("verticalLayout_29"));
         Files = new QGroupBox(scrollAreaWidgetContents_2);
         Files->setObjectName(QStringLiteral("Files"));
-        QFont font;
-        font.setPointSize(10);
-        Files->setFont(font);
+        QFont font1;
+        font1.setPointSize(10);
+        Files->setFont(font1);
         files = new QVBoxLayout(Files);
         files->setSpacing(6);
         files->setContentsMargins(11, 11, 11, 11);
@@ -469,7 +482,7 @@ public:
 
         Normalization = new QGroupBox(scrollAreaWidgetContents_2);
         Normalization->setObjectName(QStringLiteral("Normalization"));
-        Normalization->setFont(font);
+        Normalization->setFont(font1);
         verticalLayout_27 = new QVBoxLayout(Normalization);
         verticalLayout_27->setSpacing(6);
         verticalLayout_27->setContentsMargins(11, 11, 11, 11);
@@ -718,6 +731,11 @@ public:
 
         horizontalLayout_25->addWidget(pushButton_13);
 
+        pushButton_2 = new QPushButton(Normalization);
+        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+
+        horizontalLayout_25->addWidget(pushButton_2);
+
 
         verticalLayout_22->addLayout(horizontalLayout_25);
 
@@ -732,7 +750,7 @@ public:
 
         CrossValidation = new QGroupBox(scrollAreaWidgetContents_2);
         CrossValidation->setObjectName(QStringLiteral("CrossValidation"));
-        CrossValidation->setFont(font);
+        CrossValidation->setFont(font1);
         CrossValid = new QVBoxLayout(CrossValidation);
         CrossValid->setSpacing(6);
         CrossValid->setContentsMargins(11, 11, 11, 11);
@@ -775,12 +793,27 @@ public:
 
         CrossValid->addLayout(horizontalLayout_4);
 
+        horizontalLayout_27 = new QHBoxLayout();
+        horizontalLayout_27->setSpacing(6);
+        horizontalLayout_27->setObjectName(QStringLiteral("horizontalLayout_27"));
+        horizontalSpacer_7 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_27->addItem(horizontalSpacer_7);
+
+        pushButton_3 = new QPushButton(CrossValidation);
+        pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
+
+        horizontalLayout_27->addWidget(pushButton_3);
+
+
+        CrossValid->addLayout(horizontalLayout_27);
+
 
         verticalLayout_29->addWidget(CrossValidation);
 
         CompRanges = new QGroupBox(scrollAreaWidgetContents_2);
         CompRanges->setObjectName(QStringLiteral("CompRanges"));
-        CompRanges->setFont(font);
+        CompRanges->setFont(font1);
         verticalLayout_14 = new QVBoxLayout(CompRanges);
         verticalLayout_14->setSpacing(6);
         verticalLayout_14->setContentsMargins(11, 11, 11, 11);
@@ -845,7 +878,7 @@ public:
         horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
         label_40 = new QLabel(CompRanges);
         label_40->setObjectName(QStringLiteral("label_40"));
-        label_40->setFont(font);
+        label_40->setFont(font1);
 
         horizontalLayout_9->addWidget(label_40);
 
@@ -854,121 +887,121 @@ public:
         horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
         label_20 = new QLabel(CompRanges);
         label_20->setObjectName(QStringLiteral("label_20"));
-        label_20->setFont(font);
+        label_20->setFont(font1);
 
         horizontalLayout_6->addWidget(label_20);
 
         label_21 = new QLabel(CompRanges);
         label_21->setObjectName(QStringLiteral("label_21"));
-        label_21->setFont(font);
+        label_21->setFont(font1);
 
         horizontalLayout_6->addWidget(label_21);
 
         label_22 = new QLabel(CompRanges);
         label_22->setObjectName(QStringLiteral("label_22"));
-        label_22->setFont(font);
+        label_22->setFont(font1);
 
         horizontalLayout_6->addWidget(label_22);
 
         label_23 = new QLabel(CompRanges);
         label_23->setObjectName(QStringLiteral("label_23"));
-        label_23->setFont(font);
+        label_23->setFont(font1);
 
         horizontalLayout_6->addWidget(label_23);
 
         label_24 = new QLabel(CompRanges);
         label_24->setObjectName(QStringLiteral("label_24"));
-        label_24->setFont(font);
+        label_24->setFont(font1);
 
         horizontalLayout_6->addWidget(label_24);
 
         label_27 = new QLabel(CompRanges);
         label_27->setObjectName(QStringLiteral("label_27"));
-        label_27->setFont(font);
+        label_27->setFont(font1);
 
         horizontalLayout_6->addWidget(label_27);
 
         label_29 = new QLabel(CompRanges);
         label_29->setObjectName(QStringLiteral("label_29"));
-        label_29->setFont(font);
+        label_29->setFont(font1);
 
         horizontalLayout_6->addWidget(label_29);
 
         label_28 = new QLabel(CompRanges);
         label_28->setObjectName(QStringLiteral("label_28"));
-        label_28->setFont(font);
+        label_28->setFont(font1);
 
         horizontalLayout_6->addWidget(label_28);
 
         label_26 = new QLabel(CompRanges);
         label_26->setObjectName(QStringLiteral("label_26"));
-        label_26->setFont(font);
+        label_26->setFont(font1);
 
         horizontalLayout_6->addWidget(label_26);
 
         label_25 = new QLabel(CompRanges);
         label_25->setObjectName(QStringLiteral("label_25"));
-        label_25->setFont(font);
+        label_25->setFont(font1);
 
         horizontalLayout_6->addWidget(label_25);
 
         label_32 = new QLabel(CompRanges);
         label_32->setObjectName(QStringLiteral("label_32"));
-        label_32->setFont(font);
+        label_32->setFont(font1);
 
         horizontalLayout_6->addWidget(label_32);
 
         label_30 = new QLabel(CompRanges);
         label_30->setObjectName(QStringLiteral("label_30"));
-        label_30->setFont(font);
+        label_30->setFont(font1);
 
         horizontalLayout_6->addWidget(label_30);
 
         label_33 = new QLabel(CompRanges);
         label_33->setObjectName(QStringLiteral("label_33"));
-        label_33->setFont(font);
+        label_33->setFont(font1);
 
         horizontalLayout_6->addWidget(label_33);
 
         label_34 = new QLabel(CompRanges);
         label_34->setObjectName(QStringLiteral("label_34"));
-        label_34->setFont(font);
+        label_34->setFont(font1);
 
         horizontalLayout_6->addWidget(label_34);
 
         label_31 = new QLabel(CompRanges);
         label_31->setObjectName(QStringLiteral("label_31"));
-        label_31->setFont(font);
+        label_31->setFont(font1);
 
         horizontalLayout_6->addWidget(label_31);
 
         label_39 = new QLabel(CompRanges);
         label_39->setObjectName(QStringLiteral("label_39"));
-        label_39->setFont(font);
+        label_39->setFont(font1);
 
         horizontalLayout_6->addWidget(label_39);
 
         label_36 = new QLabel(CompRanges);
         label_36->setObjectName(QStringLiteral("label_36"));
-        label_36->setFont(font);
+        label_36->setFont(font1);
 
         horizontalLayout_6->addWidget(label_36);
 
         label_37 = new QLabel(CompRanges);
         label_37->setObjectName(QStringLiteral("label_37"));
-        label_37->setFont(font);
+        label_37->setFont(font1);
 
         horizontalLayout_6->addWidget(label_37);
 
         label_35 = new QLabel(CompRanges);
         label_35->setObjectName(QStringLiteral("label_35"));
-        label_35->setFont(font);
+        label_35->setFont(font1);
 
         horizontalLayout_6->addWidget(label_35);
 
         label_38 = new QLabel(CompRanges);
         label_38->setObjectName(QStringLiteral("label_38"));
-        label_38->setFont(font);
+        label_38->setFont(font1);
 
         horizontalLayout_6->addWidget(label_38);
 
@@ -978,12 +1011,27 @@ public:
 
         verticalLayout_14->addLayout(horizontalLayout_9);
 
+        horizontalLayout_31 = new QHBoxLayout();
+        horizontalLayout_31->setSpacing(6);
+        horizontalLayout_31->setObjectName(QStringLiteral("horizontalLayout_31"));
+        horizontalSpacer_9 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_31->addItem(horizontalSpacer_9);
+
+        pushButton_5 = new QPushButton(CompRanges);
+        pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
+
+        horizontalLayout_31->addWidget(pushButton_5);
+
+
+        verticalLayout_14->addLayout(horizontalLayout_31);
+
 
         verticalLayout_29->addWidget(CompRanges);
 
         CreateModels = new QGroupBox(scrollAreaWidgetContents_2);
         CreateModels->setObjectName(QStringLiteral("CreateModels"));
-        CreateModels->setFont(font);
+        CreateModels->setFont(font1);
         verticalLayout_17 = new QVBoxLayout(CreateModels);
         verticalLayout_17->setSpacing(6);
         verticalLayout_17->setContentsMargins(11, 11, 11, 11);
@@ -1122,6 +1170,21 @@ public:
 
         verticalLayout_17->addLayout(horizontalLayout_15);
 
+        horizontalLayout_33 = new QHBoxLayout();
+        horizontalLayout_33->setSpacing(6);
+        horizontalLayout_33->setObjectName(QStringLiteral("horizontalLayout_33"));
+        horizontalSpacer_11 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_33->addItem(horizontalSpacer_11);
+
+        pushButton_7 = new QPushButton(CreateModels);
+        pushButton_7->setObjectName(QStringLiteral("pushButton_7"));
+
+        horizontalLayout_33->addWidget(pushButton_7);
+
+
+        verticalLayout_17->addLayout(horizontalLayout_33);
+
 
         verticalLayout_29->addWidget(CreateModels);
 
@@ -1158,7 +1221,7 @@ public:
         GuiTest->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(GuiTest);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 584, 21));
+        menuBar->setGeometry(QRect(0, 0, 584, 20));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuPreprocessing = new QMenu(menuBar);
@@ -1319,9 +1382,11 @@ public:
         norm_label_7->setText(QApplication::translate("GuiTest", "Value 7", 0));
         norm_label_8->setText(QApplication::translate("GuiTest", "Value 8", 0));
         pushButton_13->setText(QApplication::translate("GuiTest", "Add Value", 0));
+        pushButton_2->setText(QApplication::translate("GuiTest", "Compile", 0));
         CrossValidation->setTitle(QApplication::translate("GuiTest", "Setup", 0));
         label_14->setText(QApplication::translate("GuiTest", "Element Name", 0));
         label_15->setText(QApplication::translate("GuiTest", "nfolds_test", 0));
+        pushButton_3->setText(QApplication::translate("GuiTest", "Compile", 0));
         CompRanges->setTitle(QApplication::translate("GuiTest", "Composition Ranges", 0));
         label_40->setText(QApplication::translate("GuiTest", "compranges", 0));
         label_20->setText(QApplication::translate("GuiTest", "[", 0));
@@ -1344,6 +1409,7 @@ public:
         label_37->setText(QApplication::translate("GuiTest", ",", 0));
         label_35->setText(QApplication::translate("GuiTest", "0", 0));
         label_38->setText(QApplication::translate("GuiTest", "]", 0));
+        pushButton_5->setText(QApplication::translate("GuiTest", "Compile", 0));
         CreateModels->setTitle(QApplication::translate("GuiTest", "Create Models", 0));
         label_70->setText(QApplication::translate("GuiTest", "Value 1", 0));
         label_71->setText(QApplication::translate("GuiTest", "Value 2", 0));
@@ -1361,6 +1427,7 @@ public:
         label_89->setText(QApplication::translate("GuiTest", "0", 0));
         label_90->setText(QApplication::translate("GuiTest", ")", 0));
         label_91->setText(QApplication::translate("GuiTest", "]", 0));
+        pushButton_7->setText(QApplication::translate("GuiTest", "Compile", 0));
         pushButton->setText(QApplication::translate("GuiTest", "OK", 0));
         menuFile->setTitle(QApplication::translate("GuiTest", "File", 0));
         menuPreprocessing->setTitle(QApplication::translate("GuiTest", "Preprocessing", 0));
