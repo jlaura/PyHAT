@@ -74,3 +74,4 @@ target/
 .SAV
 *.bat
 *.user
+*.csv
