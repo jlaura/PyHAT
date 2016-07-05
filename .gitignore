@@ -75,3 +75,4 @@ target/
 *.bat
 *.user
 *.csv
+auto_gitter.bat
