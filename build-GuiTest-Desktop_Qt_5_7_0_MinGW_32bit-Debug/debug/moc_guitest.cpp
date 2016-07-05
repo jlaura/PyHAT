@@ -86,7 +86,7 @@ static const uint qt_meta_data_GuiTest[] = {
       13,    0,  104,    2, 0x08 /* Private */,
       14,    0,  105,    2, 0x08 /* Private */,
       15,    0,  106,    2, 0x08 /* Private */,
-      16,    1,  107,    2, 0x08 /* Private */,
+      16,    2,  107,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Int, QMetaType::Bool,    3,    4,
@@ -101,7 +101,7 @@ static const uint qt_meta_data_GuiTest[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   17,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int,   17,    3,
 
        0        // eod
 };
@@ -124,7 +124,7 @@ void GuiTest::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 9: _t->on_actionExit_triggered(); break;
         case 10: _t->on_pushButton_13_clicked(); break;
         case 11: _t->on_pushButton_clicked(); break;
-        case 12: _t->spinboxWrite((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 12: _t->spinboxWrite((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         default: ;
         }
     }
