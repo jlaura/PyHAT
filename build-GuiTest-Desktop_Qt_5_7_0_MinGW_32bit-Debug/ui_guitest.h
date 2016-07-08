@@ -96,16 +96,19 @@ public:
     QLabel *label;
     QLabel *label_2;
     QLabel *label_4;
+    QLabel *label_5;
     QVBoxLayout *verticalLayout_5;
     QLineEdit *lineEdit;
     QLineEdit *lineEdit_2;
     QLineEdit *lineEdit_3;
     QLineEdit *lineEdit_4;
+    QLineEdit *lineEdit_6;
     QVBoxLayout *verticalLayout;
     QToolButton *toolButton;
     QToolButton *toolButton_2;
     QToolButton *toolButton_3;
     QToolButton *toolButton_4;
+    QToolButton *toolButton_5;
     QGroupBox *Normalization;
     QVBoxLayout *verticalLayout_27;
     QVBoxLayout *verticalLayout_26;
@@ -352,7 +355,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, -117, 550, 958));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 550, 986));
         QFont font;
         font.setPointSize(8);
         scrollAreaWidgetContents_2->setFont(font);
@@ -414,6 +417,11 @@ public:
 
         verticalLayout_6->addWidget(label_4);
 
+        label_5 = new QLabel(layoutWidget);
+        label_5->setObjectName(QStringLiteral("label_5"));
+
+        verticalLayout_6->addWidget(label_5);
+
 
         horizontalLayout->addLayout(verticalLayout_6);
 
@@ -444,6 +452,12 @@ public:
 
         verticalLayout_5->addWidget(lineEdit_4);
 
+        lineEdit_6 = new QLineEdit(layoutWidget);
+        lineEdit_6->setObjectName(QStringLiteral("lineEdit_6"));
+        lineEdit_6->setReadOnly(true);
+
+        verticalLayout_5->addWidget(lineEdit_6);
+
 
         horizontalLayout->addLayout(verticalLayout_5);
 
@@ -469,6 +483,11 @@ public:
         toolButton_4->setObjectName(QStringLiteral("toolButton_4"));
 
         verticalLayout->addWidget(toolButton_4);
+
+        toolButton_5 = new QToolButton(layoutWidget);
+        toolButton_5->setObjectName(QStringLiteral("toolButton_5"));
+
+        verticalLayout->addWidget(toolButton_5);
 
 
         horizontalLayout->addLayout(verticalLayout);
@@ -1364,14 +1383,17 @@ public:
         label->setText(QApplication::translate("GuiTest", "Unknown Data", 0));
         label_2->setText(QApplication::translate("GuiTest", "Full Database", 0));
         label_4->setText(QApplication::translate("GuiTest", "Output Location", 0));
+        label_5->setText(QApplication::translate("GuiTest", "Python exe Location", 0));
         lineEdit->setText(QApplication::translate("GuiTest", "*.csv", 0));
         lineEdit_2->setText(QApplication::translate("GuiTest", "*.csv", 0));
         lineEdit_3->setText(QApplication::translate("GuiTest", "*.csv", 0));
         lineEdit_4->setText(QApplication::translate("GuiTest", "*/*", 0));
+        lineEdit_6->setText(QApplication::translate("GuiTest", "*python.exe", 0));
         toolButton->setText(QApplication::translate("GuiTest", "...", 0));
         toolButton_2->setText(QApplication::translate("GuiTest", "...", 0));
         toolButton_3->setText(QApplication::translate("GuiTest", "...", 0));
         toolButton_4->setText(QApplication::translate("GuiTest", "...", 0));
+        toolButton_5->setText(QApplication::translate("GuiTest", "...", 0));
         Normalization->setTitle(QApplication::translate("GuiTest", "Normalization", 0));
         norm_label->setText(QApplication::translate("GuiTest", "Value 1", 0));
         norm_label_2->setText(QApplication::translate("GuiTest", "Value 2", 0));
