@@ -164,21 +164,21 @@ public:
     QLabel *label_15;
     QVBoxLayout *verticalLayout_12;
     QLineEdit *lineEdit_5;
-    QSpinBox *spinBox_7;
+    QSpinBox *nfolds_test;
     QHBoxLayout *horizontalLayout_27;
     QSpacerItem *horizontalSpacer_7;
     QPushButton *pushButton_3;
     QGroupBox *CompRanges;
     QVBoxLayout *verticalLayout_14;
     QHBoxLayout *horizontalLayout_8;
-    QSpinBox *spinBox_5;
-    QSpinBox *spinBox_10;
-    QSpinBox *spinBox_11;
-    QSpinBox *spinBox_12;
-    QSpinBox *spinBox_13;
-    QSpinBox *spinBox_14;
-    QSpinBox *spinBox_15;
-    QSpinBox *spinBox_16;
+    QSpinBox *comp_range;
+    QSpinBox *comp_range_2;
+    QSpinBox *comp_range_3;
+    QSpinBox *comp_range_4;
+    QSpinBox *comp_range_5;
+    QSpinBox *comp_range_6;
+    QSpinBox *comp_range_7;
+    QSpinBox *comp_range_8;
     QHBoxLayout *horizontalLayout_9;
     QLabel *label_40;
     QHBoxLayout *horizontalLayout_6;
@@ -214,10 +214,10 @@ public:
     QLabel *label_72;
     QLabel *label_73;
     QVBoxLayout *verticalLayout_19;
-    QSpinBox *spinBox_19;
-    QSpinBox *spinBox_20;
-    QSpinBox *spinBox_21;
-    QSpinBox *spinBox_22;
+    QSpinBox *create_model_spin;
+    QSpinBox *create_model_spin_2;
+    QSpinBox *create_model_spin_3;
+    QSpinBox *create_model_spin_4;
     QHBoxLayout *horizontalLayout_15;
     QLabel *label_74;
     QHBoxLayout *horizontalLayout_16;
@@ -801,10 +801,10 @@ public:
 
         verticalLayout_12->addWidget(lineEdit_5);
 
-        spinBox_7 = new QSpinBox(CrossValidation);
-        spinBox_7->setObjectName(QStringLiteral("spinBox_7"));
+        nfolds_test = new QSpinBox(CrossValidation);
+        nfolds_test->setObjectName(QStringLiteral("nfolds_test"));
 
-        verticalLayout_12->addWidget(spinBox_7);
+        verticalLayout_12->addWidget(nfolds_test);
 
 
         horizontalLayout_4->addLayout(verticalLayout_12);
@@ -840,54 +840,54 @@ public:
         horizontalLayout_8 = new QHBoxLayout();
         horizontalLayout_8->setSpacing(6);
         horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
-        spinBox_5 = new QSpinBox(CompRanges);
-        spinBox_5->setObjectName(QStringLiteral("spinBox_5"));
-        spinBox_5->setMinimum(-100);
-        spinBox_5->setMaximum(1000);
+        comp_range = new QSpinBox(CompRanges);
+        comp_range->setObjectName(QStringLiteral("comp_range"));
+        comp_range->setMinimum(-100);
+        comp_range->setMaximum(1000);
 
-        horizontalLayout_8->addWidget(spinBox_5);
+        horizontalLayout_8->addWidget(comp_range);
 
-        spinBox_10 = new QSpinBox(CompRanges);
-        spinBox_10->setObjectName(QStringLiteral("spinBox_10"));
-        spinBox_10->setMaximum(1000);
+        comp_range_2 = new QSpinBox(CompRanges);
+        comp_range_2->setObjectName(QStringLiteral("comp_range_2"));
+        comp_range_2->setMaximum(1000);
 
-        horizontalLayout_8->addWidget(spinBox_10);
+        horizontalLayout_8->addWidget(comp_range_2);
 
-        spinBox_11 = new QSpinBox(CompRanges);
-        spinBox_11->setObjectName(QStringLiteral("spinBox_11"));
-        spinBox_11->setMaximum(1000);
+        comp_range_3 = new QSpinBox(CompRanges);
+        comp_range_3->setObjectName(QStringLiteral("comp_range_3"));
+        comp_range_3->setMaximum(1000);
 
-        horizontalLayout_8->addWidget(spinBox_11);
+        horizontalLayout_8->addWidget(comp_range_3);
 
-        spinBox_12 = new QSpinBox(CompRanges);
-        spinBox_12->setObjectName(QStringLiteral("spinBox_12"));
-        spinBox_12->setMaximum(1000);
+        comp_range_4 = new QSpinBox(CompRanges);
+        comp_range_4->setObjectName(QStringLiteral("comp_range_4"));
+        comp_range_4->setMaximum(1000);
 
-        horizontalLayout_8->addWidget(spinBox_12);
+        horizontalLayout_8->addWidget(comp_range_4);
 
-        spinBox_13 = new QSpinBox(CompRanges);
-        spinBox_13->setObjectName(QStringLiteral("spinBox_13"));
-        spinBox_13->setMaximum(1000);
+        comp_range_5 = new QSpinBox(CompRanges);
+        comp_range_5->setObjectName(QStringLiteral("comp_range_5"));
+        comp_range_5->setMaximum(1000);
 
-        horizontalLayout_8->addWidget(spinBox_13);
+        horizontalLayout_8->addWidget(comp_range_5);
 
-        spinBox_14 = new QSpinBox(CompRanges);
-        spinBox_14->setObjectName(QStringLiteral("spinBox_14"));
-        spinBox_14->setMaximum(1000);
+        comp_range_6 = new QSpinBox(CompRanges);
+        comp_range_6->setObjectName(QStringLiteral("comp_range_6"));
+        comp_range_6->setMaximum(1000);
 
-        horizontalLayout_8->addWidget(spinBox_14);
+        horizontalLayout_8->addWidget(comp_range_6);
 
-        spinBox_15 = new QSpinBox(CompRanges);
-        spinBox_15->setObjectName(QStringLiteral("spinBox_15"));
-        spinBox_15->setMaximum(1000);
+        comp_range_7 = new QSpinBox(CompRanges);
+        comp_range_7->setObjectName(QStringLiteral("comp_range_7"));
+        comp_range_7->setMaximum(1000);
 
-        horizontalLayout_8->addWidget(spinBox_15);
+        horizontalLayout_8->addWidget(comp_range_7);
 
-        spinBox_16 = new QSpinBox(CompRanges);
-        spinBox_16->setObjectName(QStringLiteral("spinBox_16"));
-        spinBox_16->setMaximum(1000);
+        comp_range_8 = new QSpinBox(CompRanges);
+        comp_range_8->setObjectName(QStringLiteral("comp_range_8"));
+        comp_range_8->setMaximum(1000);
 
-        horizontalLayout_8->addWidget(spinBox_16);
+        horizontalLayout_8->addWidget(comp_range_8);
 
 
         verticalLayout_14->addLayout(horizontalLayout_8);
@@ -1087,29 +1087,29 @@ public:
         verticalLayout_19 = new QVBoxLayout();
         verticalLayout_19->setSpacing(6);
         verticalLayout_19->setObjectName(QStringLiteral("verticalLayout_19"));
-        spinBox_19 = new QSpinBox(CreateModels);
-        spinBox_19->setObjectName(QStringLiteral("spinBox_19"));
-        spinBox_19->setMaximum(20);
+        create_model_spin = new QSpinBox(CreateModels);
+        create_model_spin->setObjectName(QStringLiteral("create_model_spin"));
+        create_model_spin->setMaximum(20);
 
-        verticalLayout_19->addWidget(spinBox_19);
+        verticalLayout_19->addWidget(create_model_spin);
 
-        spinBox_20 = new QSpinBox(CreateModels);
-        spinBox_20->setObjectName(QStringLiteral("spinBox_20"));
-        spinBox_20->setMaximum(20);
+        create_model_spin_2 = new QSpinBox(CreateModels);
+        create_model_spin_2->setObjectName(QStringLiteral("create_model_spin_2"));
+        create_model_spin_2->setMaximum(20);
 
-        verticalLayout_19->addWidget(spinBox_20);
+        verticalLayout_19->addWidget(create_model_spin_2);
 
-        spinBox_21 = new QSpinBox(CreateModels);
-        spinBox_21->setObjectName(QStringLiteral("spinBox_21"));
-        spinBox_21->setMaximum(20);
+        create_model_spin_3 = new QSpinBox(CreateModels);
+        create_model_spin_3->setObjectName(QStringLiteral("create_model_spin_3"));
+        create_model_spin_3->setMaximum(20);
 
-        verticalLayout_19->addWidget(spinBox_21);
+        verticalLayout_19->addWidget(create_model_spin_3);
 
-        spinBox_22 = new QSpinBox(CreateModels);
-        spinBox_22->setObjectName(QStringLiteral("spinBox_22"));
-        spinBox_22->setMaximum(20);
+        create_model_spin_4 = new QSpinBox(CreateModels);
+        create_model_spin_4->setObjectName(QStringLiteral("create_model_spin_4"));
+        create_model_spin_4->setMaximum(20);
 
-        verticalLayout_19->addWidget(spinBox_22);
+        verticalLayout_19->addWidget(create_model_spin_4);
 
 
         horizontalLayout_14->addLayout(verticalLayout_19);
@@ -1323,10 +1323,10 @@ public:
         menuHelp->addAction(actionAbout_QtCreator);
 
         retranslateUi(GuiTest);
-        QObject::connect(spinBox_19, SIGNAL(valueChanged(int)), label_77, SLOT(setNum(int)));
-        QObject::connect(spinBox_20, SIGNAL(valueChanged(int)), label_79, SLOT(setNum(int)));
-        QObject::connect(spinBox_21, SIGNAL(valueChanged(int)), label_84, SLOT(setNum(int)));
-        QObject::connect(spinBox_22, SIGNAL(valueChanged(int)), label_89, SLOT(setNum(int)));
+        QObject::connect(create_model_spin, SIGNAL(valueChanged(int)), label_77, SLOT(setNum(int)));
+        QObject::connect(create_model_spin_2, SIGNAL(valueChanged(int)), label_79, SLOT(setNum(int)));
+        QObject::connect(create_model_spin_3, SIGNAL(valueChanged(int)), label_84, SLOT(setNum(int)));
+        QObject::connect(create_model_spin_4, SIGNAL(valueChanged(int)), label_89, SLOT(setNum(int)));
 
         QMetaObject::connectSlotsByName(GuiTest);
     } // setupUi

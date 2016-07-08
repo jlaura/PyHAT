@@ -100,7 +100,7 @@ static const uint qt_meta_data_GuiTest[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 14,   15,
+    QMetaType::Int, 0x80000000 | 14,   15,
     QMetaType::Void, 0x80000000 | 14,   17,
     QMetaType::Void,
     QMetaType::Void,
@@ -123,7 +123,8 @@ void GuiTest::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 6: _t->on_toolButton_4_clicked(); break;
         case 7: _t->on_actionExit_triggered(); break;
         case 8: _t->on_pushButton_13_clicked(); break;
-        case 9: _t->SpinBoxChanged((*reinterpret_cast< QWidget*(*)>(_a[1]))); break;
+        case 9: { int _r = _t->SpinBoxChanged((*reinterpret_cast< QWidget*(*)>(_a[1])));
+            if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
         case 10: _t->spinboxWrite((*reinterpret_cast< QWidget*(*)>(_a[1]))); break;
         case 11: _t->on_toolButton_5_clicked(); break;
         case 12: _t->on_pushButton_clicked(); break;
