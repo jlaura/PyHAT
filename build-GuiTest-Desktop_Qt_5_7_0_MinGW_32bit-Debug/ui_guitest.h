@@ -109,6 +109,9 @@ public:
     QToolButton *toolButton_3;
     QToolButton *toolButton_4;
     QToolButton *toolButton_5;
+    QHBoxLayout *horizontalLayout_29;
+    QSpacerItem *horizontalSpacer_8;
+    QPushButton *pushButton_4;
     QGroupBox *Normalization;
     QVBoxLayout *verticalLayout_27;
     QVBoxLayout *verticalLayout_26;
@@ -355,7 +358,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 550, 986));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, -3, 550, 1015));
         QFont font;
         font.setPointSize(8);
         scrollAreaWidgetContents_2->setFont(font);
@@ -495,6 +498,21 @@ public:
         splitter_2->addWidget(layoutWidget);
 
         files->addWidget(splitter_2);
+
+        horizontalLayout_29 = new QHBoxLayout();
+        horizontalLayout_29->setSpacing(6);
+        horizontalLayout_29->setObjectName(QStringLiteral("horizontalLayout_29"));
+        horizontalSpacer_8 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout_29->addItem(horizontalSpacer_8);
+
+        pushButton_4 = new QPushButton(Files);
+        pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
+
+        horizontalLayout_29->addWidget(pushButton_4);
+
+
+        files->addLayout(horizontalLayout_29);
 
 
         verticalLayout_29->addWidget(Files);
@@ -1394,6 +1412,7 @@ public:
         toolButton_3->setText(QApplication::translate("GuiTest", "...", 0));
         toolButton_4->setText(QApplication::translate("GuiTest", "...", 0));
         toolButton_5->setText(QApplication::translate("GuiTest", "...", 0));
+        pushButton_4->setText(QApplication::translate("GuiTest", "Compile", 0));
         Normalization->setTitle(QApplication::translate("GuiTest", "Normalization", 0));
         norm_label->setText(QApplication::translate("GuiTest", "Value 1", 0));
         norm_label_2->setText(QApplication::translate("GuiTest", "Value 2", 0));
