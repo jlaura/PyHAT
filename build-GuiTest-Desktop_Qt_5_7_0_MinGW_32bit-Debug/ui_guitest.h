@@ -358,7 +358,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, -3, 550, 1015));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, -173, 550, 1015));
         QFont font;
         font.setPointSize(8);
         scrollAreaWidgetContents_2->setFont(font);
@@ -1345,6 +1345,7 @@ public:
         QObject::connect(create_model_spin_2, SIGNAL(valueChanged(int)), label_79, SLOT(setNum(int)));
         QObject::connect(create_model_spin_3, SIGNAL(valueChanged(int)), label_84, SLOT(setNum(int)));
         QObject::connect(create_model_spin_4, SIGNAL(valueChanged(int)), label_89, SLOT(setNum(int)));
+        QObject::connect(norm_spinBox, SIGNAL(valueChanged(int)), norm_spinBox_10, SLOT(setValue(int)));
 
         QMetaObject::connectSlotsByName(GuiTest);
     } // setupUi
