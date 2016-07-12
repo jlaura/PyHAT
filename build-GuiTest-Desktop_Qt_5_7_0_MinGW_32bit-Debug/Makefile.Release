@@ -49,7 +49,8 @@ OBJECTS       = release/main.o \
 		release/guitest.o \
 		release/moc_guitest.o
 
-DIST          = recylce ..\..\PySAT\src\PYSAT_GUI\guitest.h ..\..\PySAT\src\PYSAT_GUI\main.cpp \
+DIST          = recylce \
+		test.txt ..\..\PySAT\src\PYSAT_GUI\guitest.h ..\..\PySAT\src\PYSAT_GUI\main.cpp \
 		..\..\PySAT\src\PYSAT_GUI\guitest.cpp
 QMAKE_TARGET  = GuiTest
 DESTDIR        = release\ #avoid trailing-slash linebreak
@@ -532,7 +533,9 @@ release/guitest.o: ../../PySAT/src/PYSAT_GUI/guitest.cpp ../../PySAT/src/PYSAT_G
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtWidgets/qfiledialog.h \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/QDebug \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/QRect \
-		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtWidgets/QDesktopWidget
+		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtWidgets/QDesktopWidget \
+		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/QSignalMapper \
+		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/qsignalmapper.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\guitest.o ..\..\PySAT\src\PYSAT_GUI\guitest.cpp
 
 release/moc_guitest.o: release/moc_guitest.cpp 
