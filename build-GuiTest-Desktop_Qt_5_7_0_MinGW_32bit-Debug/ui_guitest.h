@@ -1315,6 +1315,14 @@ public:
         menuHelp->addAction(actionAbout_QtCreator);
 
         retranslateUi(GuiTest);
+        QObject::connect(comp_range, SIGNAL(valueChanged(int)), label_21, SLOT(setNum(int)));
+        QObject::connect(comp_range_2, SIGNAL(valueChanged(int)), label_23, SLOT(setNum(int)));
+        QObject::connect(comp_range_5, SIGNAL(valueChanged(int)), label_29, SLOT(setNum(int)));
+        QObject::connect(comp_range_6, SIGNAL(valueChanged(int)), label_26, SLOT(setNum(int)));
+        QObject::connect(comp_range_3, SIGNAL(valueChanged(int)), label_30, SLOT(setNum(int)));
+        QObject::connect(comp_range_4, SIGNAL(valueChanged(int)), label_34, SLOT(setNum(int)));
+        QObject::connect(comp_range_7, SIGNAL(valueChanged(int)), label_36, SLOT(setNum(int)));
+        QObject::connect(comp_range_8, SIGNAL(valueChanged(int)), label_35, SLOT(setNum(int)));
 
         QMetaObject::connectSlotsByName(GuiTest);
     } // setupUi
