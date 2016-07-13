@@ -258,7 +258,7 @@ public:
     {
         if (GuiTest->objectName().isEmpty())
             GuiTest->setObjectName(QStringLiteral("GuiTest"));
-        GuiTest->resize(584, 500);
+        GuiTest->resize(584, 1200);
         actionLoad_Refence_Data = new QAction(GuiTest);
         actionLoad_Refence_Data->setObjectName(QStringLiteral("actionLoad_Refence_Data"));
         actionLoad_Unknown_Data = new QAction(GuiTest);
@@ -358,7 +358,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, -178, 550, 1015));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 564, 1121));
         QFont font;
         font.setPointSize(8);
         scrollAreaWidgetContents_2->setFont(font);
@@ -1341,17 +1341,6 @@ public:
         menuHelp->addAction(actionAbout_QtCreator);
 
         retranslateUi(GuiTest);
-        QObject::connect(create_model_spin, SIGNAL(valueChanged(int)), label_77, SLOT(setNum(int)));
-        QObject::connect(create_model_spin_2, SIGNAL(valueChanged(int)), label_79, SLOT(setNum(int)));
-        QObject::connect(create_model_spin_3, SIGNAL(valueChanged(int)), label_84, SLOT(setNum(int)));
-        QObject::connect(create_model_spin_4, SIGNAL(valueChanged(int)), label_89, SLOT(setNum(int)));
-        QObject::connect(norm_spinBox, SIGNAL(valueChanged(int)), norm_spinBox_10, SLOT(setValue(int)));
-        QObject::connect(norm_spinBox_2, SIGNAL(valueChanged(int)), norm_spinBox_11, SLOT(setValue(int)));
-        QObject::connect(norm_spinBox_3, SIGNAL(valueChanged(int)), norm_spinBox_12, SLOT(setValue(int)));
-        QObject::connect(norm_spinBox_4, SIGNAL(valueChanged(int)), norm_spinBox_13, SLOT(setValue(int)));
-        QObject::connect(norm_spinBox_5, SIGNAL(valueChanged(int)), norm_spinBox_14, SLOT(setValue(int)));
-        QObject::connect(norm_spinBox_6, SIGNAL(valueChanged(int)), norm_spinBox_15, SLOT(setValue(int)));
-        QObject::connect(norm_spinBox_7, SIGNAL(valueChanged(int)), norm_spinBox_16, SLOT(setValue(int)));
 
         QMetaObject::connectSlotsByName(GuiTest);
     } // setupUi
