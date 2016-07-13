@@ -82,10 +82,10 @@ public:
     QAction *actionExit;
     QAction *actionNormalization;
     QWidget *centralWidget;
-    QVBoxLayout *verticalLayout_28;
+    QVBoxLayout *verticalLayout_9;
     QScrollArea *scrollArea;
     QWidget *scrollAreaWidgetContents_2;
-    QVBoxLayout *verticalLayout_29;
+    QVBoxLayout *verticalLayout_8;
     QGroupBox *Files;
     QVBoxLayout *files;
     QSplitter *splitter_2;
@@ -109,9 +109,6 @@ public:
     QToolButton *toolButton_3;
     QToolButton *toolButton_4;
     QToolButton *toolButton_5;
-    QHBoxLayout *horizontalLayout_29;
-    QSpacerItem *horizontalSpacer_8;
-    QPushButton *pushButton_4;
     QGroupBox *Normalization;
     QVBoxLayout *verticalLayout_27;
     QVBoxLayout *verticalLayout_26;
@@ -158,7 +155,6 @@ public:
     QHBoxLayout *horizontalLayout_25;
     QSpacerItem *horizontalSpacer_6;
     QPushButton *pushButton_13;
-    QPushButton *pushButton_2;
     QGroupBox *CrossValidation;
     QVBoxLayout *CrossValid;
     QHBoxLayout *horizontalLayout_4;
@@ -168,18 +164,23 @@ public:
     QVBoxLayout *verticalLayout_12;
     QLineEdit *lineEdit_5;
     QSpinBox *nfolds_test;
-    QHBoxLayout *horizontalLayout_27;
-    QSpacerItem *horizontalSpacer_7;
-    QPushButton *pushButton_3;
     QGroupBox *CompRanges;
-    QVBoxLayout *verticalLayout_14;
-    QHBoxLayout *horizontalLayout_8;
+    QVBoxLayout *verticalLayout_7;
+    QVBoxLayout *verticalLayout_4;
+    QHBoxLayout *horizontalLayout_3;
+    QLabel *label_80;
     QSpinBox *comp_range;
     QSpinBox *comp_range_2;
-    QSpinBox *comp_range_3;
-    QSpinBox *comp_range_4;
+    QHBoxLayout *horizontalLayout_5;
+    QLabel *label_81;
     QSpinBox *comp_range_5;
     QSpinBox *comp_range_6;
+    QHBoxLayout *horizontalLayout_7;
+    QLabel *label_82;
+    QSpinBox *comp_range_3;
+    QSpinBox *comp_range_4;
+    QHBoxLayout *horizontalLayout_10;
+    QLabel *label_85;
     QSpinBox *comp_range_7;
     QSpinBox *comp_range_8;
     QHBoxLayout *horizontalLayout_9;
@@ -205,9 +206,6 @@ public:
     QLabel *label_37;
     QLabel *label_35;
     QLabel *label_38;
-    QHBoxLayout *horizontalLayout_31;
-    QSpacerItem *horizontalSpacer_9;
-    QPushButton *pushButton_5;
     QGroupBox *CreateModels;
     QVBoxLayout *verticalLayout_17;
     QHBoxLayout *horizontalLayout_14;
@@ -235,9 +233,6 @@ public:
     QLabel *label_89;
     QLabel *label_90;
     QLabel *label_91;
-    QHBoxLayout *horizontalLayout_33;
-    QSpacerItem *horizontalSpacer_11;
-    QPushButton *pushButton_7;
     QGroupBox *OK;
     QHBoxLayout *ok;
     QSpacerItem *horizontalSpacer_5;
@@ -258,7 +253,7 @@ public:
     {
         if (GuiTest->objectName().isEmpty())
             GuiTest->setObjectName(QStringLiteral("GuiTest"));
-        GuiTest->resize(584, 1200);
+        GuiTest->resize(581, 500);
         actionLoad_Refence_Data = new QAction(GuiTest);
         actionLoad_Refence_Data->setObjectName(QStringLiteral("actionLoad_Refence_Data"));
         actionLoad_Unknown_Data = new QAction(GuiTest);
@@ -349,16 +344,16 @@ public:
         actionNormalization->setObjectName(QStringLiteral("actionNormalization"));
         centralWidget = new QWidget(GuiTest);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        verticalLayout_28 = new QVBoxLayout(centralWidget);
-        verticalLayout_28->setSpacing(6);
-        verticalLayout_28->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_28->setObjectName(QStringLiteral("verticalLayout_28"));
+        verticalLayout_9 = new QVBoxLayout(centralWidget);
+        verticalLayout_9->setSpacing(6);
+        verticalLayout_9->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_9->setObjectName(QStringLiteral("verticalLayout_9"));
         scrollArea = new QScrollArea(centralWidget);
         scrollArea->setObjectName(QStringLiteral("scrollArea"));
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 564, 1121));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, -578, 547, 999));
         QFont font;
         font.setPointSize(8);
         scrollAreaWidgetContents_2->setFont(font);
@@ -374,10 +369,10 @@ public:
 "  padding-left: 8px;\n"
 "}\n"
 ""));
-        verticalLayout_29 = new QVBoxLayout(scrollAreaWidgetContents_2);
-        verticalLayout_29->setSpacing(6);
-        verticalLayout_29->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_29->setObjectName(QStringLiteral("verticalLayout_29"));
+        verticalLayout_8 = new QVBoxLayout(scrollAreaWidgetContents_2);
+        verticalLayout_8->setSpacing(6);
+        verticalLayout_8->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_8->setObjectName(QStringLiteral("verticalLayout_8"));
         Files = new QGroupBox(scrollAreaWidgetContents_2);
         Files->setObjectName(QStringLiteral("Files"));
         QFont font1;
@@ -499,23 +494,8 @@ public:
 
         files->addWidget(splitter_2);
 
-        horizontalLayout_29 = new QHBoxLayout();
-        horizontalLayout_29->setSpacing(6);
-        horizontalLayout_29->setObjectName(QStringLiteral("horizontalLayout_29"));
-        horizontalSpacer_8 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_29->addItem(horizontalSpacer_8);
-
-        pushButton_4 = new QPushButton(Files);
-        pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
-
-        horizontalLayout_29->addWidget(pushButton_4);
-
-
-        files->addLayout(horizontalLayout_29);
-
-
-        verticalLayout_29->addWidget(Files);
+        verticalLayout_8->addWidget(Files);
 
         Normalization = new QGroupBox(scrollAreaWidgetContents_2);
         Normalization->setObjectName(QStringLiteral("Normalization"));
@@ -768,11 +748,6 @@ public:
 
         horizontalLayout_25->addWidget(pushButton_13);
 
-        pushButton_2 = new QPushButton(Normalization);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
-
-        horizontalLayout_25->addWidget(pushButton_2);
-
 
         verticalLayout_22->addLayout(horizontalLayout_25);
 
@@ -783,7 +758,7 @@ public:
         verticalLayout_27->addLayout(verticalLayout_26);
 
 
-        verticalLayout_29->addWidget(Normalization);
+        verticalLayout_8->addWidget(Normalization);
 
         CrossValidation = new QGroupBox(scrollAreaWidgetContents_2);
         CrossValidation->setObjectName(QStringLiteral("CrossValidation"));
@@ -830,85 +805,114 @@ public:
 
         CrossValid->addLayout(horizontalLayout_4);
 
-        horizontalLayout_27 = new QHBoxLayout();
-        horizontalLayout_27->setSpacing(6);
-        horizontalLayout_27->setObjectName(QStringLiteral("horizontalLayout_27"));
-        horizontalSpacer_7 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_27->addItem(horizontalSpacer_7);
-
-        pushButton_3 = new QPushButton(CrossValidation);
-        pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
-
-        horizontalLayout_27->addWidget(pushButton_3);
-
-
-        CrossValid->addLayout(horizontalLayout_27);
-
-
-        verticalLayout_29->addWidget(CrossValidation);
+        verticalLayout_8->addWidget(CrossValidation);
 
         CompRanges = new QGroupBox(scrollAreaWidgetContents_2);
         CompRanges->setObjectName(QStringLiteral("CompRanges"));
         CompRanges->setFont(font1);
-        verticalLayout_14 = new QVBoxLayout(CompRanges);
-        verticalLayout_14->setSpacing(6);
-        verticalLayout_14->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_14->setObjectName(QStringLiteral("verticalLayout_14"));
-        horizontalLayout_8 = new QHBoxLayout();
-        horizontalLayout_8->setSpacing(6);
-        horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
+        verticalLayout_7 = new QVBoxLayout(CompRanges);
+        verticalLayout_7->setSpacing(6);
+        verticalLayout_7->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_7->setObjectName(QStringLiteral("verticalLayout_7"));
+        verticalLayout_4 = new QVBoxLayout();
+        verticalLayout_4->setSpacing(6);
+        verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
+        horizontalLayout_3 = new QHBoxLayout();
+        horizontalLayout_3->setSpacing(6);
+        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        label_80 = new QLabel(CompRanges);
+        label_80->setObjectName(QStringLiteral("label_80"));
+
+        horizontalLayout_3->addWidget(label_80);
+
         comp_range = new QSpinBox(CompRanges);
         comp_range->setObjectName(QStringLiteral("comp_range"));
         comp_range->setMinimum(-100);
         comp_range->setMaximum(1000);
 
-        horizontalLayout_8->addWidget(comp_range);
+        horizontalLayout_3->addWidget(comp_range);
 
         comp_range_2 = new QSpinBox(CompRanges);
         comp_range_2->setObjectName(QStringLiteral("comp_range_2"));
         comp_range_2->setMaximum(1000);
 
-        horizontalLayout_8->addWidget(comp_range_2);
+        horizontalLayout_3->addWidget(comp_range_2);
 
-        comp_range_3 = new QSpinBox(CompRanges);
-        comp_range_3->setObjectName(QStringLiteral("comp_range_3"));
-        comp_range_3->setMaximum(1000);
 
-        horizontalLayout_8->addWidget(comp_range_3);
+        verticalLayout_4->addLayout(horizontalLayout_3);
 
-        comp_range_4 = new QSpinBox(CompRanges);
-        comp_range_4->setObjectName(QStringLiteral("comp_range_4"));
-        comp_range_4->setMaximum(1000);
+        horizontalLayout_5 = new QHBoxLayout();
+        horizontalLayout_5->setSpacing(6);
+        horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
+        label_81 = new QLabel(CompRanges);
+        label_81->setObjectName(QStringLiteral("label_81"));
 
-        horizontalLayout_8->addWidget(comp_range_4);
+        horizontalLayout_5->addWidget(label_81);
 
         comp_range_5 = new QSpinBox(CompRanges);
         comp_range_5->setObjectName(QStringLiteral("comp_range_5"));
         comp_range_5->setMaximum(1000);
 
-        horizontalLayout_8->addWidget(comp_range_5);
+        horizontalLayout_5->addWidget(comp_range_5);
 
         comp_range_6 = new QSpinBox(CompRanges);
         comp_range_6->setObjectName(QStringLiteral("comp_range_6"));
         comp_range_6->setMaximum(1000);
 
-        horizontalLayout_8->addWidget(comp_range_6);
+        horizontalLayout_5->addWidget(comp_range_6);
+
+
+        verticalLayout_4->addLayout(horizontalLayout_5);
+
+        horizontalLayout_7 = new QHBoxLayout();
+        horizontalLayout_7->setSpacing(6);
+        horizontalLayout_7->setObjectName(QStringLiteral("horizontalLayout_7"));
+        label_82 = new QLabel(CompRanges);
+        label_82->setObjectName(QStringLiteral("label_82"));
+
+        horizontalLayout_7->addWidget(label_82);
+
+        comp_range_3 = new QSpinBox(CompRanges);
+        comp_range_3->setObjectName(QStringLiteral("comp_range_3"));
+        comp_range_3->setMaximum(1000);
+
+        horizontalLayout_7->addWidget(comp_range_3);
+
+        comp_range_4 = new QSpinBox(CompRanges);
+        comp_range_4->setObjectName(QStringLiteral("comp_range_4"));
+        comp_range_4->setMaximum(1000);
+
+        horizontalLayout_7->addWidget(comp_range_4);
+
+
+        verticalLayout_4->addLayout(horizontalLayout_7);
+
+        horizontalLayout_10 = new QHBoxLayout();
+        horizontalLayout_10->setSpacing(6);
+        horizontalLayout_10->setObjectName(QStringLiteral("horizontalLayout_10"));
+        label_85 = new QLabel(CompRanges);
+        label_85->setObjectName(QStringLiteral("label_85"));
+
+        horizontalLayout_10->addWidget(label_85);
 
         comp_range_7 = new QSpinBox(CompRanges);
         comp_range_7->setObjectName(QStringLiteral("comp_range_7"));
         comp_range_7->setMaximum(1000);
 
-        horizontalLayout_8->addWidget(comp_range_7);
+        horizontalLayout_10->addWidget(comp_range_7);
 
         comp_range_8 = new QSpinBox(CompRanges);
         comp_range_8->setObjectName(QStringLiteral("comp_range_8"));
         comp_range_8->setMaximum(1000);
 
-        horizontalLayout_8->addWidget(comp_range_8);
+        horizontalLayout_10->addWidget(comp_range_8);
 
 
-        verticalLayout_14->addLayout(horizontalLayout_8);
+        verticalLayout_4->addLayout(horizontalLayout_10);
+
+
+        verticalLayout_7->addLayout(verticalLayout_4);
 
         horizontalLayout_9 = new QHBoxLayout();
         horizontalLayout_9->setSpacing(6);
@@ -1046,25 +1050,10 @@ public:
         horizontalLayout_9->addLayout(horizontalLayout_6);
 
 
-        verticalLayout_14->addLayout(horizontalLayout_9);
-
-        horizontalLayout_31 = new QHBoxLayout();
-        horizontalLayout_31->setSpacing(6);
-        horizontalLayout_31->setObjectName(QStringLiteral("horizontalLayout_31"));
-        horizontalSpacer_9 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_31->addItem(horizontalSpacer_9);
-
-        pushButton_5 = new QPushButton(CompRanges);
-        pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
-
-        horizontalLayout_31->addWidget(pushButton_5);
+        verticalLayout_7->addLayout(horizontalLayout_9);
 
 
-        verticalLayout_14->addLayout(horizontalLayout_31);
-
-
-        verticalLayout_29->addWidget(CompRanges);
+        verticalLayout_8->addWidget(CompRanges);
 
         CreateModels = new QGroupBox(scrollAreaWidgetContents_2);
         CreateModels->setObjectName(QStringLiteral("CreateModels"));
@@ -1207,23 +1196,8 @@ public:
 
         verticalLayout_17->addLayout(horizontalLayout_15);
 
-        horizontalLayout_33 = new QHBoxLayout();
-        horizontalLayout_33->setSpacing(6);
-        horizontalLayout_33->setObjectName(QStringLiteral("horizontalLayout_33"));
-        horizontalSpacer_11 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_33->addItem(horizontalSpacer_11);
-
-        pushButton_7 = new QPushButton(CreateModels);
-        pushButton_7->setObjectName(QStringLiteral("pushButton_7"));
-
-        horizontalLayout_33->addWidget(pushButton_7);
-
-
-        verticalLayout_17->addLayout(horizontalLayout_33);
-
-
-        verticalLayout_29->addWidget(CreateModels);
+        verticalLayout_8->addWidget(CreateModels);
 
         OK = new QGroupBox(scrollAreaWidgetContents_2);
         OK->setObjectName(QStringLiteral("OK"));
@@ -1243,22 +1217,22 @@ public:
         ok->addWidget(pushButton);
 
 
-        verticalLayout_29->addWidget(OK);
+        verticalLayout_8->addWidget(OK);
 
         scrollArea->setWidget(scrollAreaWidgetContents_2);
         Files->raise();
         OK->raise();
         CrossValidation->raise();
-        CompRanges->raise();
         CreateModels->raise();
         Normalization->raise();
+        CompRanges->raise();
 
-        verticalLayout_28->addWidget(scrollArea);
+        verticalLayout_9->addWidget(scrollArea);
 
         GuiTest->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(GuiTest);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 584, 20));
+        menuBar->setGeometry(QRect(0, 0, 581, 20));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
         menuPreprocessing = new QMenu(menuBar);
@@ -1408,7 +1382,6 @@ public:
         toolButton_3->setText(QApplication::translate("GuiTest", "...", 0));
         toolButton_4->setText(QApplication::translate("GuiTest", "...", 0));
         toolButton_5->setText(QApplication::translate("GuiTest", "...", 0));
-        pushButton_4->setText(QApplication::translate("GuiTest", "Compile", 0));
         Normalization->setTitle(QApplication::translate("GuiTest", "Normalization", 0));
         norm_label->setText(QApplication::translate("GuiTest", "Value 1", 0));
         norm_label_2->setText(QApplication::translate("GuiTest", "Value 2", 0));
@@ -1419,12 +1392,14 @@ public:
         norm_label_7->setText(QApplication::translate("GuiTest", "Value 7", 0));
         norm_label_8->setText(QApplication::translate("GuiTest", "Value 8", 0));
         pushButton_13->setText(QApplication::translate("GuiTest", "Add Value", 0));
-        pushButton_2->setText(QApplication::translate("GuiTest", "Compile", 0));
         CrossValidation->setTitle(QApplication::translate("GuiTest", "Setup", 0));
         label_14->setText(QApplication::translate("GuiTest", "Element Name", 0));
         label_15->setText(QApplication::translate("GuiTest", "nfolds_test", 0));
-        pushButton_3->setText(QApplication::translate("GuiTest", "Compile", 0));
         CompRanges->setTitle(QApplication::translate("GuiTest", "Composition Ranges", 0));
+        label_80->setText(QApplication::translate("GuiTest", "Value 1", 0));
+        label_81->setText(QApplication::translate("GuiTest", "Value 2", 0));
+        label_82->setText(QApplication::translate("GuiTest", "Value 3", 0));
+        label_85->setText(QApplication::translate("GuiTest", "Value 4", 0));
         label_40->setText(QApplication::translate("GuiTest", "compranges", 0));
         label_20->setText(QApplication::translate("GuiTest", "[", 0));
         label_21->setText(QApplication::translate("GuiTest", "0", 0));
@@ -1446,7 +1421,6 @@ public:
         label_37->setText(QApplication::translate("GuiTest", ",", 0));
         label_35->setText(QApplication::translate("GuiTest", "0", 0));
         label_38->setText(QApplication::translate("GuiTest", "]", 0));
-        pushButton_5->setText(QApplication::translate("GuiTest", "Compile", 0));
         CreateModels->setTitle(QApplication::translate("GuiTest", "Create Models", 0));
         label_70->setText(QApplication::translate("GuiTest", "Value 1", 0));
         label_71->setText(QApplication::translate("GuiTest", "Value 2", 0));
@@ -1464,7 +1438,6 @@ public:
         label_89->setText(QApplication::translate("GuiTest", "0", 0));
         label_90->setText(QApplication::translate("GuiTest", ")", 0));
         label_91->setText(QApplication::translate("GuiTest", "]", 0));
-        pushButton_7->setText(QApplication::translate("GuiTest", "Compile", 0));
         pushButton->setText(QApplication::translate("GuiTest", "OK", 0));
         menuFile->setTitle(QApplication::translate("GuiTest", "File", 0));
         menuPreprocessing->setTitle(QApplication::translate("GuiTest", "Preprocessing", 0));
