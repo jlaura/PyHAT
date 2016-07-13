@@ -353,7 +353,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, -578, 547, 999));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, -394, 547, 991));
         QFont font;
         font.setPointSize(8);
         scrollAreaWidgetContents_2->setFont(font);
@@ -1407,7 +1407,7 @@ public:
         label_80->setText(QApplication::translate("GuiTest", "Value 1", 0));
         label_81->setText(QApplication::translate("GuiTest", "Value 2", 0));
         label_82->setText(QApplication::translate("GuiTest", "Value 3", 0));
-        label_85->setText(QApplication::translate("GuiTest", "Value 4", 0));
+        label_85->setText(QApplication::translate("GuiTest", "Full Model Value", 0));
         label_40->setText(QApplication::translate("GuiTest", "compranges", 0));
         label_20->setText(QApplication::translate("GuiTest", "[", 0));
         label_21->setText(QApplication::translate("GuiTest", "0", 0));
