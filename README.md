@@ -12,4 +12,10 @@
   - Execute the `jupyter notebook` that will open a new browser tab with the Jupyter homepage.
   - Launch (click) the `Kaguya_Spectral_Profiler.ipynb` notebook.
 
-  
+
+
+# PYSAT UI
+![PYSAT](https://github.com/tisaconundrum2/PySAT/blob/master/src/installer/splash.png)  
+
+- Download the installer in this path: [\PYSAT\src\installer](https://github.com/tisaconundrum2/PySAT/tree/master/src/installer) and click on the installer.
+- choose where you'd like to run it. Click on [GuiTest](change.later)
