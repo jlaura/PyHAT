@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_GuiTest_t {
-    QByteArrayData data[24];
-    char stringdata0[414];
+    QByteArrayData data[23];
+    char stringdata0[412];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -49,10 +49,9 @@ QT_MOC_LITERAL(16, 283, 3), // "wSp"
 QT_MOC_LITERAL(17, 287, 12), // "spinboxWrite"
 QT_MOC_LITERAL(18, 300, 1), // "e"
 QT_MOC_LITERAL(19, 302, 34), // "on_elementNameLine_editingFin..."
-QT_MOC_LITERAL(20, 337, 27), // "on_nfolds_test_valueChanged"
-QT_MOC_LITERAL(21, 365, 4), // "arg1"
-QT_MOC_LITERAL(22, 370, 19), // "on_okButton_clicked"
-QT_MOC_LITERAL(23, 390, 23) // "on_actionExit_triggered"
+QT_MOC_LITERAL(20, 337, 30), // "on_nfolds_test_editingFinished"
+QT_MOC_LITERAL(21, 368, 19), // "on_okButton_clicked"
+QT_MOC_LITERAL(22, 388, 23) // "on_actionExit_triggered"
 
     },
     "GuiTest\0setupQSpinWidgets\0\0setSizeOfWindow\0"
@@ -65,7 +64,7 @@ QT_MOC_LITERAL(23, 390, 23) // "on_actionExit_triggered"
     "on_NormValuebutton_clicked\0SpinBoxChanged\0"
     "QWidget*\0wSp\0spinboxWrite\0e\0"
     "on_elementNameLine_editingFinished\0"
-    "on_nfolds_test_valueChanged\0arg1\0"
+    "on_nfolds_test_editingFinished\0"
     "on_okButton_clicked\0on_actionExit_triggered"
 };
 #undef QT_MOC_LITERAL
@@ -97,9 +96,9 @@ static const uint qt_meta_data_GuiTest[] = {
       14,    1,  108,    2, 0x08 /* Private */,
       17,    1,  111,    2, 0x08 /* Private */,
       19,    0,  114,    2, 0x08 /* Private */,
-      20,    1,  115,    2, 0x08 /* Private */,
-      22,    0,  118,    2, 0x08 /* Private */,
-      23,    0,  119,    2, 0x08 /* Private */,
+      20,    0,  115,    2, 0x08 /* Private */,
+      21,    0,  116,    2, 0x08 /* Private */,
+      22,    0,  117,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -115,7 +114,7 @@ static const uint qt_meta_data_GuiTest[] = {
     QMetaType::Int, 0x80000000 | 15,   16,
     QMetaType::Void, 0x80000000 | 15,   18,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   21,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
 
@@ -142,7 +141,7 @@ void GuiTest::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
             if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
         case 11: _t->spinboxWrite((*reinterpret_cast< QWidget*(*)>(_a[1]))); break;
         case 12: _t->on_elementNameLine_editingFinished(); break;
-        case 13: _t->on_nfolds_test_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 13: _t->on_nfolds_test_editingFinished(); break;
         case 14: _t->on_okButton_clicked(); break;
         case 15: _t->on_actionExit_triggered(); break;
         default: ;
