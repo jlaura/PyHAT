@@ -104,11 +104,11 @@ public:
     QLineEdit *lineEdit_4;
     QLineEdit *lineEdit_6;
     QVBoxLayout *verticalLayout;
-    QToolButton *toolButton;
-    QToolButton *toolButton_2;
-    QToolButton *toolButton_3;
-    QToolButton *toolButton_4;
-    QToolButton *toolButton_5;
+    QToolButton *maskFileButton;
+    QToolButton *unknownDataButton;
+    QToolButton *fullDataBaseButton;
+    QToolButton *outPutLocationButton;
+    QToolButton *pythonButton;
     QGroupBox *Normalization;
     QVBoxLayout *verticalLayout_27;
     QVBoxLayout *verticalLayout_26;
@@ -154,7 +154,7 @@ public:
     QSpinBox *norm_spinBox_8;
     QHBoxLayout *horizontalLayout_25;
     QSpacerItem *horizontalSpacer_6;
-    QPushButton *pushButton_13;
+    QPushButton *NormValuebutton;
     QGroupBox *CrossValidation;
     QVBoxLayout *CrossValid;
     QHBoxLayout *horizontalLayout_4;
@@ -162,7 +162,7 @@ public:
     QLabel *label_14;
     QLabel *label_15;
     QVBoxLayout *verticalLayout_12;
-    QLineEdit *lineEdit_5;
+    QLineEdit *elementNameLine;
     QSpinBox *nfolds_test;
     QGroupBox *CompRanges;
     QVBoxLayout *verticalLayout_7;
@@ -236,7 +236,7 @@ public:
     QGroupBox *OK;
     QHBoxLayout *ok;
     QSpacerItem *horizontalSpacer_5;
-    QPushButton *pushButton;
+    QPushButton *okButton;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuPreprocessing;
@@ -353,7 +353,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName(QStringLiteral("scrollAreaWidgetContents_2"));
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, -394, 547, 991));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, -239, 547, 991));
         QFont font;
         font.setPointSize(8);
         scrollAreaWidgetContents_2->setFont(font);
@@ -462,30 +462,30 @@ public:
         verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(6);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        toolButton = new QToolButton(layoutWidget);
-        toolButton->setObjectName(QStringLiteral("toolButton"));
+        maskFileButton = new QToolButton(layoutWidget);
+        maskFileButton->setObjectName(QStringLiteral("maskFileButton"));
 
-        verticalLayout->addWidget(toolButton);
+        verticalLayout->addWidget(maskFileButton);
 
-        toolButton_2 = new QToolButton(layoutWidget);
-        toolButton_2->setObjectName(QStringLiteral("toolButton_2"));
+        unknownDataButton = new QToolButton(layoutWidget);
+        unknownDataButton->setObjectName(QStringLiteral("unknownDataButton"));
 
-        verticalLayout->addWidget(toolButton_2);
+        verticalLayout->addWidget(unknownDataButton);
 
-        toolButton_3 = new QToolButton(layoutWidget);
-        toolButton_3->setObjectName(QStringLiteral("toolButton_3"));
+        fullDataBaseButton = new QToolButton(layoutWidget);
+        fullDataBaseButton->setObjectName(QStringLiteral("fullDataBaseButton"));
 
-        verticalLayout->addWidget(toolButton_3);
+        verticalLayout->addWidget(fullDataBaseButton);
 
-        toolButton_4 = new QToolButton(layoutWidget);
-        toolButton_4->setObjectName(QStringLiteral("toolButton_4"));
+        outPutLocationButton = new QToolButton(layoutWidget);
+        outPutLocationButton->setObjectName(QStringLiteral("outPutLocationButton"));
 
-        verticalLayout->addWidget(toolButton_4);
+        verticalLayout->addWidget(outPutLocationButton);
 
-        toolButton_5 = new QToolButton(layoutWidget);
-        toolButton_5->setObjectName(QStringLiteral("toolButton_5"));
+        pythonButton = new QToolButton(layoutWidget);
+        pythonButton->setObjectName(QStringLiteral("pythonButton"));
 
-        verticalLayout->addWidget(toolButton_5);
+        verticalLayout->addWidget(pythonButton);
 
 
         horizontalLayout->addLayout(verticalLayout);
@@ -743,10 +743,10 @@ public:
 
         horizontalLayout_25->addItem(horizontalSpacer_6);
 
-        pushButton_13 = new QPushButton(Normalization);
-        pushButton_13->setObjectName(QStringLiteral("pushButton_13"));
+        NormValuebutton = new QPushButton(Normalization);
+        NormValuebutton->setObjectName(QStringLiteral("NormValuebutton"));
 
-        horizontalLayout_25->addWidget(pushButton_13);
+        horizontalLayout_25->addWidget(NormValuebutton);
 
 
         verticalLayout_22->addLayout(horizontalLayout_25);
@@ -789,10 +789,10 @@ public:
         verticalLayout_12 = new QVBoxLayout();
         verticalLayout_12->setSpacing(6);
         verticalLayout_12->setObjectName(QStringLiteral("verticalLayout_12"));
-        lineEdit_5 = new QLineEdit(CrossValidation);
-        lineEdit_5->setObjectName(QStringLiteral("lineEdit_5"));
+        elementNameLine = new QLineEdit(CrossValidation);
+        elementNameLine->setObjectName(QStringLiteral("elementNameLine"));
 
-        verticalLayout_12->addWidget(lineEdit_5);
+        verticalLayout_12->addWidget(elementNameLine);
 
         nfolds_test = new QSpinBox(CrossValidation);
         nfolds_test->setObjectName(QStringLiteral("nfolds_test"));
@@ -1209,12 +1209,12 @@ public:
 
         ok->addItem(horizontalSpacer_5);
 
-        pushButton = new QPushButton(OK);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setFont(font);
-        pushButton->setMouseTracking(false);
+        okButton = new QPushButton(OK);
+        okButton->setObjectName(QStringLiteral("okButton"));
+        okButton->setFont(font);
+        okButton->setMouseTracking(false);
 
-        ok->addWidget(pushButton);
+        ok->addWidget(okButton);
 
 
         verticalLayout_8->addWidget(OK);
@@ -1385,11 +1385,11 @@ public:
         lineEdit_3->setText(QApplication::translate("GuiTest", "*.csv", 0));
         lineEdit_4->setText(QApplication::translate("GuiTest", "*/*", 0));
         lineEdit_6->setText(QApplication::translate("GuiTest", "*python.exe", 0));
-        toolButton->setText(QApplication::translate("GuiTest", "...", 0));
-        toolButton_2->setText(QApplication::translate("GuiTest", "...", 0));
-        toolButton_3->setText(QApplication::translate("GuiTest", "...", 0));
-        toolButton_4->setText(QApplication::translate("GuiTest", "...", 0));
-        toolButton_5->setText(QApplication::translate("GuiTest", "...", 0));
+        maskFileButton->setText(QApplication::translate("GuiTest", "...", 0));
+        unknownDataButton->setText(QApplication::translate("GuiTest", "...", 0));
+        fullDataBaseButton->setText(QApplication::translate("GuiTest", "...", 0));
+        outPutLocationButton->setText(QApplication::translate("GuiTest", "...", 0));
+        pythonButton->setText(QApplication::translate("GuiTest", "...", 0));
         Normalization->setTitle(QApplication::translate("GuiTest", "Normalization", 0));
         norm_label->setText(QApplication::translate("GuiTest", "Value 1", 0));
         norm_label_2->setText(QApplication::translate("GuiTest", "Value 2", 0));
@@ -1399,7 +1399,7 @@ public:
         norm_label_6->setText(QApplication::translate("GuiTest", "Value 6", 0));
         norm_label_7->setText(QApplication::translate("GuiTest", "Value 7", 0));
         norm_label_8->setText(QApplication::translate("GuiTest", "Value 8", 0));
-        pushButton_13->setText(QApplication::translate("GuiTest", "Add Value", 0));
+        NormValuebutton->setText(QApplication::translate("GuiTest", "Add Value", 0));
         CrossValidation->setTitle(QApplication::translate("GuiTest", "Setup", 0));
         label_14->setText(QApplication::translate("GuiTest", "Element Name", 0));
         label_15->setText(QApplication::translate("GuiTest", "nfolds_test", 0));
@@ -1446,7 +1446,7 @@ public:
         label_89->setText(QApplication::translate("GuiTest", "0", 0));
         label_90->setText(QApplication::translate("GuiTest", ")", 0));
         label_91->setText(QApplication::translate("GuiTest", "]", 0));
-        pushButton->setText(QApplication::translate("GuiTest", "OK", 0));
+        okButton->setText(QApplication::translate("GuiTest", "OK", 0));
         menuFile->setTitle(QApplication::translate("GuiTest", "File", 0));
         menuPreprocessing->setTitle(QApplication::translate("GuiTest", "Preprocessing", 0));
         menuBaseline_Removal->setTitle(QApplication::translate("GuiTest", "Baseline Removal", 0));

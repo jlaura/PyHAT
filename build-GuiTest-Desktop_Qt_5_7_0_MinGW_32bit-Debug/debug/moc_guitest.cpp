@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_GuiTest_t {
-    QByteArrayData data[24];
-    char stringdata0[372];
+    QByteArrayData data[22];
+    char stringdata0[381];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -37,33 +37,33 @@ QT_MOC_LITERAL(4, 43, 12), // "setupOutFile"
 QT_MOC_LITERAL(5, 56, 20), // "setNormValuesVisible"
 QT_MOC_LITERAL(6, 77, 5), // "index"
 QT_MOC_LITERAL(7, 83, 7), // "visible"
-QT_MOC_LITERAL(8, 91, 21), // "on_toolButton_clicked"
-QT_MOC_LITERAL(9, 113, 23), // "on_toolButton_2_clicked"
-QT_MOC_LITERAL(10, 137, 23), // "on_toolButton_3_clicked"
-QT_MOC_LITERAL(11, 161, 23), // "on_toolButton_4_clicked"
-QT_MOC_LITERAL(12, 185, 23), // "on_actionExit_triggered"
-QT_MOC_LITERAL(13, 209, 24), // "on_pushButton_13_clicked"
-QT_MOC_LITERAL(14, 234, 14), // "SpinBoxChanged"
-QT_MOC_LITERAL(15, 249, 8), // "QWidget*"
-QT_MOC_LITERAL(16, 258, 3), // "wSp"
-QT_MOC_LITERAL(17, 262, 12), // "spinboxWrite"
-QT_MOC_LITERAL(18, 275, 1), // "i"
-QT_MOC_LITERAL(19, 277, 23), // "on_toolButton_5_clicked"
-QT_MOC_LITERAL(20, 301, 21), // "on_pushButton_clicked"
-QT_MOC_LITERAL(21, 323, 16), // "numberOfNewlines"
-QT_MOC_LITERAL(22, 340, 1), // "n"
-QT_MOC_LITERAL(23, 342, 29) // "on_lineEdit_5_editingFinished"
+QT_MOC_LITERAL(8, 91, 25), // "on_maskFileButton_clicked"
+QT_MOC_LITERAL(9, 117, 28), // "on_unknownDataButton_clicked"
+QT_MOC_LITERAL(10, 146, 29), // "on_fullDataBaseButton_clicked"
+QT_MOC_LITERAL(11, 176, 31), // "on_outPutLocationButton_clicked"
+QT_MOC_LITERAL(12, 208, 23), // "on_actionExit_triggered"
+QT_MOC_LITERAL(13, 232, 26), // "on_NormValuebutton_clicked"
+QT_MOC_LITERAL(14, 259, 14), // "SpinBoxChanged"
+QT_MOC_LITERAL(15, 274, 8), // "QWidget*"
+QT_MOC_LITERAL(16, 283, 3), // "wSp"
+QT_MOC_LITERAL(17, 287, 12), // "spinboxWrite"
+QT_MOC_LITERAL(18, 300, 1), // "i"
+QT_MOC_LITERAL(19, 302, 23), // "on_pythonButton_clicked"
+QT_MOC_LITERAL(20, 326, 19), // "on_okButton_clicked"
+QT_MOC_LITERAL(21, 346, 34) // "on_elementNameLine_editingFin..."
 
     },
     "GuiTest\0setSizeOfWindow\0\0setupQSpinWidgets\0"
     "setupOutFile\0setNormValuesVisible\0"
-    "index\0visible\0on_toolButton_clicked\0"
-    "on_toolButton_2_clicked\0on_toolButton_3_clicked\0"
-    "on_toolButton_4_clicked\0on_actionExit_triggered\0"
-    "on_pushButton_13_clicked\0SpinBoxChanged\0"
+    "index\0visible\0on_maskFileButton_clicked\0"
+    "on_unknownDataButton_clicked\0"
+    "on_fullDataBaseButton_clicked\0"
+    "on_outPutLocationButton_clicked\0"
+    "on_actionExit_triggered\0"
+    "on_NormValuebutton_clicked\0SpinBoxChanged\0"
     "QWidget*\0wSp\0spinboxWrite\0i\0"
-    "on_toolButton_5_clicked\0on_pushButton_clicked\0"
-    "numberOfNewlines\0n\0on_lineEdit_5_editingFinished"
+    "on_pythonButton_clicked\0on_okButton_clicked\0"
+    "on_elementNameLine_editingFinished"
 };
 #undef QT_MOC_LITERAL
 
@@ -73,7 +73,7 @@ static const uint qt_meta_data_GuiTest[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      16,   14, // methods
+      15,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -81,22 +81,21 @@ static const uint qt_meta_data_GuiTest[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   94,    2, 0x08 /* Private */,
-       3,    0,   95,    2, 0x08 /* Private */,
-       4,    0,   96,    2, 0x08 /* Private */,
-       5,    2,   97,    2, 0x08 /* Private */,
-       8,    0,  102,    2, 0x08 /* Private */,
-       9,    0,  103,    2, 0x08 /* Private */,
-      10,    0,  104,    2, 0x08 /* Private */,
-      11,    0,  105,    2, 0x08 /* Private */,
-      12,    0,  106,    2, 0x08 /* Private */,
-      13,    0,  107,    2, 0x08 /* Private */,
-      14,    1,  108,    2, 0x08 /* Private */,
-      17,    1,  111,    2, 0x08 /* Private */,
-      19,    0,  114,    2, 0x08 /* Private */,
-      20,    0,  115,    2, 0x08 /* Private */,
-      21,    1,  116,    2, 0x08 /* Private */,
-      23,    0,  119,    2, 0x08 /* Private */,
+       1,    0,   89,    2, 0x08 /* Private */,
+       3,    0,   90,    2, 0x08 /* Private */,
+       4,    0,   91,    2, 0x08 /* Private */,
+       5,    2,   92,    2, 0x08 /* Private */,
+       8,    0,   97,    2, 0x08 /* Private */,
+       9,    0,   98,    2, 0x08 /* Private */,
+      10,    0,   99,    2, 0x08 /* Private */,
+      11,    0,  100,    2, 0x08 /* Private */,
+      12,    0,  101,    2, 0x08 /* Private */,
+      13,    0,  102,    2, 0x08 /* Private */,
+      14,    1,  103,    2, 0x08 /* Private */,
+      17,    1,  106,    2, 0x08 /* Private */,
+      19,    0,  109,    2, 0x08 /* Private */,
+      20,    0,  110,    2, 0x08 /* Private */,
+      21,    0,  111,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -113,7 +112,6 @@ static const uint qt_meta_data_GuiTest[] = {
     QMetaType::Void, 0x80000000 | 15,   18,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   22,
     QMetaType::Void,
 
        0        // eod
@@ -129,19 +127,18 @@ void GuiTest::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 1: _t->setupQSpinWidgets(); break;
         case 2: _t->setupOutFile(); break;
         case 3: _t->setNormValuesVisible((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
-        case 4: _t->on_toolButton_clicked(); break;
-        case 5: _t->on_toolButton_2_clicked(); break;
-        case 6: _t->on_toolButton_3_clicked(); break;
-        case 7: _t->on_toolButton_4_clicked(); break;
+        case 4: _t->on_maskFileButton_clicked(); break;
+        case 5: _t->on_unknownDataButton_clicked(); break;
+        case 6: _t->on_fullDataBaseButton_clicked(); break;
+        case 7: _t->on_outPutLocationButton_clicked(); break;
         case 8: _t->on_actionExit_triggered(); break;
-        case 9: _t->on_pushButton_13_clicked(); break;
+        case 9: _t->on_NormValuebutton_clicked(); break;
         case 10: { int _r = _t->SpinBoxChanged((*reinterpret_cast< QWidget*(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
         case 11: _t->spinboxWrite((*reinterpret_cast< QWidget*(*)>(_a[1]))); break;
-        case 12: _t->on_toolButton_5_clicked(); break;
-        case 13: _t->on_pushButton_clicked(); break;
-        case 14: _t->numberOfNewlines((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 15: _t->on_lineEdit_5_editingFinished(); break;
+        case 12: _t->on_pythonButton_clicked(); break;
+        case 13: _t->on_okButton_clicked(); break;
+        case 14: _t->on_elementNameLine_editingFinished(); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
@@ -190,13 +187,13 @@ int GuiTest::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 16)
+        if (_id < 15)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 16;
+        _id -= 15;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 16)
+        if (_id < 15)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 16;
+        _id -= 15;
     }
     return _id;
 }
