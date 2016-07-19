@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_GuiTest_t {
-    QByteArrayData data[27];
-    char stringdata0[490];
+    QByteArrayData data[28];
+    char stringdata0[495];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -55,7 +55,8 @@ QT_MOC_LITERAL(22, 388, 23), // "on_actionExit_triggered"
 QT_MOC_LITERAL(23, 412, 40), // "on_actionSave_Current_Workflo..."
 QT_MOC_LITERAL(24, 453, 18), // "getAllDataLineEdit"
 QT_MOC_LITERAL(25, 472, 12), // "QLineEdit*[]"
-QT_MOC_LITERAL(26, 485, 4) // "text"
+QT_MOC_LITERAL(26, 485, 4), // "text"
+QT_MOC_LITERAL(27, 490, 4) // "size"
 
     },
     "GuiTest\0setupQSpinWidgets\0\0setSizeOfWindow\0"
@@ -71,7 +72,8 @@ QT_MOC_LITERAL(26, 485, 4) // "text"
     "on_nfolds_test_editingFinished\0"
     "on_okButton_clicked\0on_actionExit_triggered\0"
     "on_actionSave_Current_Workflow_triggered\0"
-    "getAllDataLineEdit\0QLineEdit*[]\0text"
+    "getAllDataLineEdit\0QLineEdit*[]\0text\0"
+    "size"
 };
 #undef QT_MOC_LITERAL
 
@@ -106,7 +108,7 @@ static const uint qt_meta_data_GuiTest[] = {
       21,    0,  126,    2, 0x08 /* Private */,
       22,    0,  127,    2, 0x08 /* Private */,
       23,    0,  128,    2, 0x08 /* Private */,
-      24,    1,  129,    2, 0x08 /* Private */,
+      24,    2,  129,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -126,7 +128,7 @@ static const uint qt_meta_data_GuiTest[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 25,   26,
+    QMetaType::Void, 0x80000000 | 25, QMetaType::Int,   26,   27,
 
        0        // eod
 };
@@ -155,7 +157,7 @@ void GuiTest::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 14: _t->on_okButton_clicked(); break;
         case 15: _t->on_actionExit_triggered(); break;
         case 16: _t->on_actionSave_Current_Workflow_triggered(); break;
-        case 17: _t->getAllDataLineEdit((*reinterpret_cast< QLineEdit*(*)[]>(_a[1]))); break;
+        case 17: _t->getAllDataLineEdit((*reinterpret_cast< QLineEdit*(*)[]>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
