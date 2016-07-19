@@ -536,7 +536,8 @@ release/guitest.o: ../../PySAT/src/PYSAT_GUI/guitest.cpp ../../PySAT/src/PYSAT_G
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtWidgets/QDesktopWidget \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/QSignalMapper \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/qsignalmapper.h \
-		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/QTextStream
+		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/QTextStream \
+		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtGui/QCloseEvent
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\guitest.o ..\..\PySAT\src\PYSAT_GUI\guitest.cpp
 
 release/moc_guitest.o: release/moc_guitest.cpp 
