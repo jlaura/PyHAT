@@ -23,11 +23,32 @@ def norm_total(df):
     df=df.div(df.sum(axis=1),axis=0)
     return df
 
+
+        
+
 class spectral_data(object):
     def __init__(self,df):
-        self.df=df
+              
+        
+        self.df=self.floatcols(df)
 
-    
+
+    #This function makes sure that the wavelength values that are used as column names are stored as floats
+    def floatcols(self,df):
+        metadata_cols=df.columns.levels[0]!='wvl'
+        metadata=df[df.columns.levels[0][metadata_cols]]
+        
+        wvls=np.array(df['wvl'].columns,dtype='float')
+        df_wvl_vals=df['wvl'].values
+        colnames=list(wvls)
+            
+        for i,x in enumerate(colnames):
+            colnames[i]=('wvl',x)
+                
+        new_df=pd.DataFrame(df_wvl_vals,columns=pd.MultiIndex.from_tuples(colnames),index=df.index)
+        new_df=pd.concat([new_df,metadata],axis=1)
+        return new_df
+     
     def interp(self,xnew):
         xnew=np.array(xnew,dtype='float')
 
@@ -105,7 +126,7 @@ class spectral_data(object):
     
     def stratified_folds(self,nfolds=5,sortby=None):
         self.df[('meta','Folds')]=np.NaN #Create an entry in the data frame that holds the folds
-        self.df.sort(columns=sortby,inplace=True) #sort the data frame by the column of interest
+        self.df.sort_values(by=sortby,inplace=True) #sort the data frame by the column of interest
         uniqvals=np.unique(self.df[sortby])   #get the unique values from the column of interest
         
         #assign folds by stepping through the unique values
