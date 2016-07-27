@@ -22,7 +22,9 @@
 - It is a prototype and only displays what we want to accomplish in a working UI
 
 - Download the installer in this path: [\PYSAT\src\installer](https://github.com/tisaconundrum2/PySAT/tree/master/src/installer) and click on the installer.
-- choose where you'd like to run it. Click on [PYSatGuiII.exe](#)
+- choose where you'd like to run it. Click on [PYSatGuiII.exe](#pysat-ui)
+- move qwindows.dll to ./platforms/ 
+- if the folder "platforms" doesn't exist make it.
 
 # PYSAT UI for Python
 
