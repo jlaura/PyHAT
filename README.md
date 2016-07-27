@@ -30,12 +30,12 @@
 - It is being built so it can work as close to the original libraries as physically possible
 
 Current Road Ahead
-- [o] Working Modules on UI
-- [o] Working Menus functions can be added dynamically
+- [ ] Working Modules on UI
+- [ ] Working Menus functions can be added dynamically
 - [x] Shortcut such as Ctrl S to save
-- [o] Embedded Plots and Graphs from data collected
-- [o] Package all python packages: sklearn, scipy, numpy, matplotlib, pysat for user consumption
-- [o] Add ability to save plots in personal files
-- [o] Add ability to save state of GUI, i.e. all number that user inputs will be there again after closing GUI
-- [o] Add ability to save data frame at any point in the workflow 
-- [o] Setup a way to select points on a scatter plot.
+- [ ] Embedded Plots and Graphs from data collected
+- [ ] Package all python packages: sklearn, scipy, numpy, matplotlib, pysat for user consumption
+- [ ] Add ability to save plots in personal files
+- [ ] Add ability to save state of GUI, i.e. all number that user inputs will be there again after closing GUI
+- [ ] Add ability to save data frame at any point in the workflow 
+- [ ] Setup a way to select points on a scatter plot.
