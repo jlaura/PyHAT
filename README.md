@@ -32,7 +32,7 @@
 Current Road Ahead
 - [o] Working Modules on UI
 - [o] Working Menus functions can be added dynamically
-- [o] Shortcut such as Ctrl S to save
+- [x] Shortcut such as Ctrl S to save
 - [o] Embedded Plots and Graphs from data collected
 - [o] Package all python packages: sklearn, scipy, numpy, matplotlib, pysat for user consumption
 - [o] Add ability to save plots in personal files
