@@ -29,25 +29,18 @@ def norm_total(df):
 class spectral_data(object):
     def __init__(self,df):
               
-        
-        self.df=self.floatcols(df)
+        uppercols=df.columns.levels[0]
+        lowercols=list(df.columns.levels[1].values)
+        for i,val in enumerate(lowercols):
+            try:
+                lowercols[i]=float(val)
+            except:
+                lowercols[i]=val
 
+        levels=[uppercols,lowercols]
+        df.columns.set_levels(levels,inplace=True)
+        self.df=df
 
-    #This function makes sure that the wavelength values that are used as column names are stored as floats
-    def floatcols(self,df):
-        metadata_cols=df.columns.levels[0]!='wvl'
-        metadata=df[df.columns.levels[0][metadata_cols]]
-        
-        wvls=np.array(df['wvl'].columns,dtype='float')
-        df_wvl_vals=df['wvl'].values
-        colnames=list(wvls)
-            
-        for i,x in enumerate(colnames):
-            colnames[i]=('wvl',x)
-                
-        new_df=pd.DataFrame(df_wvl_vals,columns=pd.MultiIndex.from_tuples(colnames),index=df.index)
-        new_df=pd.concat([new_df,metadata],axis=1)
-        return new_df
      
     def interp(self,xnew):
         xnew=np.array(xnew,dtype='float')
