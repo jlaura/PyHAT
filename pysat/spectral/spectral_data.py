@@ -64,7 +64,7 @@ class spectral_data(object):
         
         self.df=new_df
         
-    
+    #This function masks out specified ranges of the data
     def mask(self,maskfile):
         df_spectra=self.df['wvl'] #extract just the spectra from the data frame
         metadata_cols=self.df.columns.levels[0]!='wvl'  #extract just the metadata
@@ -86,7 +86,7 @@ class spectral_data(object):
         df_spectra.columns=pd.MultiIndex.from_tuples(spectcols) #assign the multiindex columns based on the new tuples
         self.df=pd.concat([df_spectra,metadata],axis=1) #merge the masked spectra back with the metadata
 
-        
+    #This function divides the data up into a specified number of random folds    
     def random_folds(self,nfolds=5,seed=10,groupby=None):
         self.df[('meta','Folds')]=np.nan #Create an entry in the data frame that holds the folds
         foldslist=np.array(self.df[('meta','Folds')])
@@ -116,7 +116,8 @@ class spectral_data(object):
         self.df[('meta','Folds')]=foldslist
        
         
-    
+    #this function divides the data up into a specified number of folds, using sorting 
+    #To try to get folds that look similar to each other
     def stratified_folds(self,nfolds=5,sortby=None):
         self.df[('meta','Folds')]=np.NaN #Create an entry in the data frame that holds the folds
         self.df.sort_values(by=sortby,inplace=True) #sort the data frame by the column of interest
@@ -135,7 +136,7 @@ class spectral_data(object):
         #sort by index to return the df to its original order
         self.df.sort_index(inplace=True)
         
-        
+    #This function normalizes specified ranges of the data by their respective sums    
     def norm(self,ranges):
         df_spect=self.df['wvl']
         df_meta=self.df['meta']
@@ -172,7 +173,7 @@ class spectral_data(object):
         self.df=df_new
 
 
-        
+    #This function applies baseline removal to the data    
     def remove_baseline(self,method='als',segment=True,params=None):
         wvls=np.array(self.df['wvl'].columns.values,dtype='float')
         spectra=np.array(self.df['wvl'],dtype='float')
@@ -215,7 +216,9 @@ class spectral_data(object):
         self.df['wvl']=br.fit_transform(wvls,spectra)
        
     
-
+    #This function finds rows of the data frame where a specified column has
+    #values matching a specified set of values
+    #(Useful for extracting folds)
     def rows_match(self,column_name,isin_array,invert=False):
         if invert:
             new_df=self.df.loc[-self.df[column_name].isin(isin_array)]              
@@ -223,7 +226,21 @@ class spectral_data(object):
             new_df=self.df.loc[self.df[column_name].isin(isin_array)]              
         return spectral_data(new_df)
         
-    def col_within_range(self,rangevals,col):
-        mask=(self.df[('meta',col)]>rangevals[0])&(self.df[('meta',col)]<rangevals[1])
-        return self.df.loc[mask]
+    #This function takes the sum of data over two specified wavelength ranges, 
+    #calculates the ratio of the sums, and adds the ratio as a column in the data frame
+    def ratio(self,range1,range2,rationame=''):        
+        cols=self.df['wvl'].columns.values
+        cols1=cols[(cols>=range1[0])&(cols<=range1[1])]
+        cols2=cols[(cols>=range2[0])*(cols<=range2[1])]
+        
+        df1=self.df['wvl'].loc[:,cols1]
+        df2=self.df['wvl'].loc[:,cols2]
+        
+        sum1=df1.sum(axis=1)
+        sum2=df2.sum(axis=1)
+        
+        ratio=sum1/sum2
+        
+        self.df[('ratio',rationame)]=ratio
+        
         
