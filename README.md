@@ -32,7 +32,7 @@
 - It is being built so it can work as close to the original libraries as physically possible
 
 Current Road Ahead
-- [ ] Working Modules on UI
+- [x] Working Modules on UI
 - [ ] Selecting functions from Menubar adds functions dynamically
 - [x] Shortcuts such as Ctrl S to save
 - [ ] Embedded Plots and Graphs from data collected
