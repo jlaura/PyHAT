@@ -74,3 +74,4 @@ target/
 *.bat
 *.user
 *.csv
+*.dll
