@@ -14,7 +14,7 @@
 
 
 
-# PYSAT UI
+# PYSAT UI in C++
 ![PYSAT](https://github.com/tisaconundrum2/PySAT/blob/master/src/installer/splash.png)  
 - This program was compiled in C++ it's backend does not rely on python
 - This was done for rapid protoyping purposes.
@@ -26,7 +26,7 @@
 - move qwindows.dll to ./platforms/ 
 - if the folder "platforms" doesn't exist make it.
 
-# PYSAT UI for Python
+# PYSAT UI in Python
 
 - This version of PYSAT has a backend that has been created in Python specifically.
 - It is being built so it can work as close to the original libraries as physically possible
