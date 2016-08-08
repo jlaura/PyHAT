@@ -34,7 +34,7 @@ It is a prototype and only displays what we want to accomplish in a working UI
 Current Road Ahead
 - [x] Working Modules on UI
 - [x] Selecting functions from Menubar adds functions dynamically
-- [x] Shortcuts such as Ctrl S to save
+- [ ] Shortcuts such as Ctrl S to save
 - [ ] Embedded Plots and Graphs from data collected
 - [ ] Package all python packages: sklearn, scipy, numpy, matplotlib, pysat for user consumption
 - [ ] Add ability to save plots in personal files
