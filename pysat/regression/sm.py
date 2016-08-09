@@ -7,13 +7,18 @@ Created on Sat Mar 26 20:15:46 2016
 import numpy as np
 import pysat.spectral.within_range as within_range
 from sklearn.cross_decomposition.pls_ import PLSRegression
+from sklearn.decomposition import PCA, FastICA
+from sklearn.gaussian_process import GaussianProcess
 from pysat.spectral.meancenter import meancenter
 from matplotlib import pyplot as plot
 import scipy.optimize as opt
    
 class sm:
-    def __init__(self):
-        pass
+    def __init__(self,labels,ycol,ranges,method):
+        self.labels=labels
+        self.ycol=ycol
+        self.method=method 
+        self.ranges=ranges
 
     # TODO sm.final(testdata[0]['meta'][el],
     #            blended_test,
@@ -23,7 +28,7 @@ class sm:
     #            figpath=outpath)
 
     # TODO rename this function to something better, later on
-    def final(self, testdata, blended_test, el, xcol='Ref Comp Wt%', ycol='Predicted Comp Wt%', figpath=None):
+    def one_to_one_plot(self, testdata, blended_test, el, xcol='Ref Comp Wt%', ycol='Predicted Comp Wt%', figpath=None):
         title = 'Reference and Predicted Comp of ' + el
         if figpath is not None:
             plot.figure()
@@ -35,14 +40,40 @@ class sm:
             plot.savefig(figpath+'/'+title+'.png')
 
     #This function does the fitting for each submodel.
-        self.ranges=ranges
+    def fit(self,trainsets,figpath=None,*args,**kwargs):
+               
+        submodels=[]    
+        mean_vects=[]
+        for i,rangei in enumerate(self.ranges):
+            data_tmp=within_range.within_range(trainsets[i],rangei,self.ycol)
+            #x=data_tmp.xs(self.labels,axis=1,level=0,drop_level=False)
+            x=data_tmp[self.labels]
+            y=data_tmp[self.ycol]
+            x_centered,x_mean_vect=meancenter(x) #mean center training data
+            if self.method is 'PLS':
+                model=PLSRegression(n_components=kwargs['nc'][i],scale=False)
+            if self.method is 'GP':
+                #for gaussian processes, the input data dimensionality needs to be reduced
+                #Default to using ICA to do this
+                ica=FastICA(n_components=kwargs['nc'])
+                self.do_ica=ica.fit(x)
+                x=self.do_ica.transform(x)
+                model=GaussianProcess(theta0=kwargs['theta0'],thetaL=kwargs['thetaL'],thetaU=kwargs['thetaU'],random_start=kwargs['random_start'],regr=kwargs['regr'])
+                
+            model.fit(x,y)
+            submodels.append(model)
+            mean_vects.append(x_mean_vect)
+            
+            self.outlier_plot(model,x_centered,rangei,figpath)
             self.submodels=submodels
             self.mean_vects=mean_vects
             
     #Function to create the Qres vs Leverage plot for outlier identification
     #needs scores and loadings, so currently only works for PLS            
-        if method is 'PLS':
+    def outlier_plot(self,model,x,rangei,figpath):
+        if self.method is 'PLS':
             #calculate spectral residuals
+            E=x-np.dot(model.x_scores_,model.x_loadings_.transpose())
             Q_res=np.dot(E,E.transpose()).diagonal()
             #calculate leverage                
             T=model.x_scores_
@@ -50,13 +81,13 @@ class sm:
             
             plot.figure()
             plot.scatter(leverage,Q_res,color='r',edgecolor='k')
-            plot.title(ycol+' ('+str(rangei[0])+'-'+str(rangei[1])+')')
+            plot.title(self.ycol[1]+' ('+str(rangei[0])+'-'+str(rangei[1])+')')
             plot.xlabel('Leverage')
             plot.ylabel('Q')
             plot.ylim([0,1.1*np.max(Q_res)])
             plot.xlim([0,1.1*np.max(leverage)])
                 
-            plot.savefig(figpath+'/'+ycol+'_'+str(rangei[0])+'-'+str(rangei[1])+'Qres_vs_Leverage.png',dpi=600)
+            plot.savefig(figpath+'/'+self.ycol[1]+'_'+str(rangei[0])+'-'+str(rangei[1])+'Qres_vs_Leverage.png',dpi=600)
             self.leverage=leverage
             self.Q_res=Q_res
      
@@ -139,7 +170,18 @@ class sm:
         #This allows different normalizations to be used with each submodel
         predictions=[]
         for i,k in enumerate(self.submodels):
-            xtemp=x[i].xs('wvl',axis=1,level=0,drop_level=False)
+            try:
+                #xtemp=x[i].xs('wvl',axis=1,level=0,drop_level=False)
+                xtemp=x[i][self.labels]
+            except:
+                pass
             xtemp,mean_vect=meancenter(xtemp,previous_mean=self.mean_vects[i])
-            predictions.append(k.predict(xtemp['wvl']))
+            
+            if self.method is 'GP':
+                 #for gaussian processes, the input data dimensionality needs to be reduced
+                #Default to using ICA to do this
+                xtemp=self.do_ica.transform(xtemp)
+            else:
+                pass
+            predictions.append(k.predict(xtemp))
         return predictions
