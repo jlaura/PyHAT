@@ -9,6 +9,9 @@ import numpy as np
 from pysat.spectral.spectral_data import spectral_data
 from pysat.regression.sm import sm
 from sklearn.decomposition import PCA, FastICA
+from sklearn import linear_model
+from sklearn.cross_decomposition.pls_ import PLSRegression
+from pysat.plotting import plots
 import time
 #from autocnet.regression.pls_cv import pls_cv
 
@@ -140,21 +143,59 @@ unkdata=[unknown_data3.df,unknown_data3.df,unknown_data1.df,unknown_data3.df] #p
 
 
 #create an instance of the submodel object to do pls
-labels=['wvl','ratio']
+labels=['wvl']#,'ratio']
 ycol=('meta',el)
 method='PLS'
-pls_sm=sm(labels,ycol,compranges,method)
+pls_sm_ransac=sm(labels,ycol,compranges,method,ransac=True)
+pls_sm=sm(labels,ycol,compranges,method,ransac=False)
+
+#pls_ransac=linear_model.RANSACRegressor(PLSRegression(n_components=ncs[0],scale=False),min_samples=0.8)
 
 #outpath specifies where to write the outlier check plots
-print('Fitting PLS Submodels')
+#print('Fitting PLS with RANSAC')
+#pls_ransac.fit(traindata[0][labels],traindata[0][ycol])
+#
+#print('Doing PLS RANSAC Predictions')
+#predictions_train_ransac=pls_ransac.predict(traindata[0][labels])
+#predictions_test_ransac=pls_ransac.predict(testdata[0][labels])
+#predictions_unk_ransac=pls_ransac.predict(unkdata[0][labels])
+
+
+print('Fitting PLS Submodels (with and without RANSAC)')
 pls_sm.fit(traindata,figpath=outpath,nc=ncs)
+pls_sm_ransac.fit(traindata,nc=ncs)
+
 
 print('Doing PLS Submodel Predictions')
 predictions_train=pls_sm.predict(traindata)
 predictions_test=pls_sm.predict(testdata)
 predictions_unk=pls_sm.predict(unkdata)
 
+print('Plotting training data predictions')
+truecomps=traindata[0][ycol]
+outpath=r'C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output'
+xtitle='Reference wt.%'
+ytitle='Predicted wt.%'
+plot_title=el
+figname='PLS_SM_train_1to1.png'
+plots.scatterplot([truecomps,truecomps,truecomps,truecomps],predictions_train,
+                  one_to_one=True,lbls=['Low','Mid','High','Full'],figpath=outpath,
+                    figname=figname,xtitle=xtitle,ytitle=ytitle,title=plot_title)
+    
+    
 
+
+print('Doing PLS Submodel Predictions (RANSAC)')
+predictions_train_ransac=pls_sm_ransac.predict(traindata)
+predictions_test_ransac=pls_sm_ransac.predict(testdata)
+predictions_unk_ransac=pls_sm_ransac.predict(unkdata)
+
+print('Plotting training data predictions (RANSAC)')
+figname='PLS_SM_RANSAC_train_1to1.png'
+plots.scatterplot([truecomps,truecomps,truecomps,truecomps],predictions_train_ransac,
+                  one_to_one=True,lbls=['Low','Mid','High','Full'],figpath=outpath,
+                    figname=figname,xtitle=xtitle,ytitle=ytitle,title=plot_title)
+    
 print('Blending PLS submodels')
 t=time.clock()
 blended_train=pls_sm.do_blend(predictions_train,traindata[0][ycol])
@@ -167,50 +208,73 @@ blended_unk=pls_sm.do_blend(predictions_unk)
 print(time.clock()-t)
 
 
-#create an instance of the submodel object to do gaussian processes
-method='GP'
-gp_sm=sm(labels,ycol,compranges,method)
-
-#outpath specifies where to write the outlier check plots
-print('Fitting GP model (can take a little while)')
+print('Blending PLS submodels (RANSAC)')
 t=time.clock()
-gp_sm.fit(traindata,figpath=outpath,nc=10,theta0=1.0,thetaL=0.1,thetaU=100,random_start=10,regr='linear')
+blended_train_ransac=pls_sm_ransac.do_blend(predictions_train_ransac,traindata[0][ycol])
+print(time.clock()-t)
+t=time.clock()
+blended_test_ransac=pls_sm_ransac.do_blend(predictions_test_ransac)
+print(time.clock()-t)
+t=time.clock()
+blended_unk_ransac=pls_sm.do_blend(predictions_unk_ransac)
 print(time.clock()-t)
 
-print('Doing GP Submodel Predictions')
-t=time.clock()
-predictions_train_gp=gp_sm.predict(traindata)
-print(time.clock()-t)
-t=time.clock()
-predictions_test_gp=gp_sm.predict(testdata)
-print(time.clock()-t)
-t=time.clock()
-predictions_unk_gp=gp_sm.predict(unkdata)
-print(time.clock()-t)
 
-print('Blending GP submodels')
-t=time.clock()
-
-blended_train_gp=gp_sm.do_blend(predictions_train_gp,traindata[0]['meta'][el])
-print(time.clock()-t)
-t=time.clock()
-blended_test_gp=gp_sm.do_blend(predictions_test_gp)
-print(time.clock()-t)
-t=time.clock()
-blended_unk_gp=gp_sm.do_blend(predictions_unk_gp)
-print(time.clock()-t)
-t=time.clock()
+RMSEP_pls_sm_ransac=np.sqrt(np.mean((blended_test_ransac-testdata[0]['meta'][el])**2.))
+RMSEP_pls_sm=np.sqrt(np.mean((blended_test-testdata[0]['meta'][el])**2.))
 
 
-outpath=r'C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output'
+#
+##create an instance of the submodel object to do gaussian processes
+#method='GP'
+#gp_sm=sm(labels,ycol,compranges,method)
+#
+##outpath specifies where to write the outlier check plots
+#print('Fitting GP model (can take a little while)')
+#t=time.clock()
+#gp_nc=[5,5,5,5]
+#gp_sm.fit(traindata,figpath=outpath,nc=gp_nc,theta0=1.0,thetaL=0.1,thetaU=100,random_start=10,regr='linear')
+#print(time.clock()-t)
+#
+#print('Doing GP Submodel Predictions')
+#t=time.clock()
+#predictions_train_gp=gp_sm.predict(traindata)
+#print(time.clock()-t)
+#t=time.clock()
+#predictions_test_gp=gp_sm.predict(testdata)
+#print(time.clock()-t)
+#t=time.clock()
+#predictions_unk_gp=gp_sm.predict(unkdata)
+#print(time.clock()-t)
+#
+#print('Blending GP submodels')
+#t=time.clock()
+#
+#blended_train_gp=gp_sm.do_blend(predictions_train_gp,traindata[0]['meta'][el])
+#print(time.clock()-t)
+#t=time.clock()
+#blended_test_gp=gp_sm.do_blend(predictions_test_gp)
+#print(time.clock()-t)
+#t=time.clock()
+#blended_unk_gp=gp_sm.do_blend(predictions_unk_gp)
+#print(time.clock()-t)
+#t=time.clock()
+#
+#print('Do GP with just one range')
+
+
+
 resultsfile='pls_sm_test_output.csv'
 resultsfile_gp='pls_sm_test_output_gp.csv'
 
 print('Make a figure showing the test set performance')
 plot.figure()
-plot.scatter(testdata[0]['meta'][el],blended_test,color='r')
-plot.scatter(testdata[0]['meta'][el],blended_test_gp,color='b')
+plot.scatter(testdata[0]['meta'][el],blended_test,color='r',label='PLS-SM (RMSEP='+str(RMSEP_pls_sm)+')')
+#plot.scatter(testdata[0]['meta'][el],blended_test_gp,color='b')
+plot.scatter(testdata[0]['meta'][el],blended_test_ransac,color='g',label='PLS-SM-RANSAC (RMSEP='+str(RMSEP_pls_sm_ransac)+')')
 plot.plot([0,100],[0,100])
+plot.legend()
+plot.savefig(outpath+'\\test_1to1.png',dpi=800)
 plot.show()
 
 unk_results=unkdata[0]['meta']

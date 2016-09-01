@@ -9,16 +9,18 @@ import pysat.spectral.within_range as within_range
 from sklearn.cross_decomposition.pls_ import PLSRegression
 from sklearn.decomposition import PCA, FastICA
 from sklearn.gaussian_process import GaussianProcess
+from sklearn.linear_model import RANSACRegressor as RANSAC
 from pysat.spectral.meancenter import meancenter
 from matplotlib import pyplot as plot
 import scipy.optimize as opt
    
 class sm:
-    def __init__(self,labels,ycol,ranges,method):
+    def __init__(self,labels,ycol,ranges,method,ransac=False):
         self.labels=labels
         self.ycol=ycol
         self.method=method 
         self.ranges=ranges
+        self.ransac=ransac
 
     # TODO sm.final(testdata[0]['meta'][el],
     #            blended_test,
@@ -28,16 +30,7 @@ class sm:
     #            figpath=outpath)
 
     # TODO rename this function to something better, later on
-    def one_to_one_plot(self, testdata, blended_test, el, xcol='Ref Comp Wt%', ycol='Predicted Comp Wt%', figpath=None):
-        title = 'Reference and Predicted Comp of ' + el
-        if figpath is not None:
-            plot.figure()
-            plot.scatter(testdata, blended_test, color='r')
-            plot.title(title)
-            plot.xlabel(xcol)
-            plot.ylabel(ycol)
-            plot.plot([0, 100], [0, 100])
-            plot.savefig(figpath+'/'+title+'.png')
+
 
     #This function does the fitting for each submodel.
     def fit(self,trainsets,figpath=None,*args,**kwargs):
@@ -51,46 +44,44 @@ class sm:
             y=data_tmp[self.ycol]
             x_centered,x_mean_vect=meancenter(x) #mean center training data
             if self.method is 'PLS':
-                model=PLSRegression(n_components=kwargs['nc'][i],scale=False)
+                if self.ransac:
+                    model=RANSAC(PLSRegression(n_components=kwargs['nc'][i],scale=False),min_samples=0.5)
+                else:
+                    model=PLSRegression(n_components=kwargs['nc'][i],scale=False)
             if self.method is 'GP':
                 #for gaussian processes, the input data dimensionality needs to be reduced
                 #Default to using ICA to do this
-                ica=FastICA(n_components=kwargs['nc'])
+                ica=FastICA(n_components=kwargs['nc'][i])
                 self.do_ica=ica.fit(x)
                 x=self.do_ica.transform(x)
-                model=GaussianProcess(theta0=kwargs['theta0'],thetaL=kwargs['thetaL'],thetaU=kwargs['thetaU'],random_start=kwargs['random_start'],regr=kwargs['regr'])
+                if self.ransac:
+                    model=RANSAC(GaussianProcess(theta0=kwargs['theta0'],thetaL=kwargs['thetaL'],thetaU=kwargs['thetaU'],random_start=kwargs['random_start'],regr=kwargs['regr']),min_samples=0.5)
+                else:
+                    model=GaussianProcess(theta0=kwargs['theta0'],thetaL=kwargs['thetaL'],thetaU=kwargs['thetaU'],random_start=kwargs['random_start'],regr=kwargs['regr'])
                 
             model.fit(x,y)
+            modelpred=model.predict(x)
             submodels.append(model)
             mean_vects.append(x_mean_vect)
-            
-            self.outlier_plot(model,x_centered,rangei,figpath)
+            if self.method is 'PLS' and self.ransac is False:
+                self.calc_Qres_Lev(model,x_centered)
+              
             self.submodels=submodels
             self.mean_vects=mean_vects
             
+    def calc_Qres_Lev(self,model,x):
+        #calculate spectral residuals
+        E=x-np.dot(model.x_scores_,model.x_loadings_.transpose())
+        Q_res=np.dot(E,E.transpose()).diagonal()
+        #calculate leverage                
+        T=model.x_scores_
+        leverage=np.diag(T@np.linalg.inv(T.transpose()@T)@T.transpose())
+        self.leverage=leverage
+        self.Q_res=Q_res
     #Function to create the Qres vs Leverage plot for outlier identification
     #needs scores and loadings, so currently only works for PLS            
-    def outlier_plot(self,model,x,rangei,figpath):
-        if self.method is 'PLS':
-            #calculate spectral residuals
-            E=x-np.dot(model.x_scores_,model.x_loadings_.transpose())
-            Q_res=np.dot(E,E.transpose()).diagonal()
-            #calculate leverage                
-            T=model.x_scores_
-            leverage=np.diag(T@np.linalg.inv(T.transpose()@T)@T.transpose())
-            
-            plot.figure()
-            plot.scatter(leverage,Q_res,color='r',edgecolor='k')
-            plot.title(self.ycol[1]+' ('+str(rangei[0])+'-'+str(rangei[1])+')')
-            plot.xlabel('Leverage')
-            plot.ylabel('Q')
-            plot.ylim([0,1.1*np.max(Q_res)])
-            plot.xlim([0,1.1*np.max(leverage)])
-                
-            plot.savefig(figpath+'/'+self.ycol[1]+'_'+str(rangei[0])+'-'+str(rangei[1])+'Qres_vs_Leverage.png',dpi=600)
-            self.leverage=leverage
-            self.Q_res=Q_res
-     
+
+ 
     def do_blend(self,predictions,truevals=None):
         
         
