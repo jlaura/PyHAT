@@ -11,9 +11,8 @@ from sklearn.decomposition import PCA, FastICA
 from sklearn.gaussian_process import GaussianProcess
 from sklearn.linear_model import RANSACRegressor as RANSAC
 from pysat.spectral.meancenter import meancenter
-from matplotlib import pyplot as plot
 import scipy.optimize as opt
-   
+from pysat.plotting import plots   
 class sm:
     def __init__(self,labels,ycol,ranges,method,ransac=False):
         self.labels=labels
@@ -21,7 +20,8 @@ class sm:
         self.method=method 
         self.ranges=ranges
         self.ransac=ransac
-
+        self.outliers=None
+        self.inliers=None
     # TODO sm.final(testdata[0]['meta'][el],
     #            blended_test,
     #            color='r',
@@ -37,6 +37,10 @@ class sm:
                
         submodels=[]    
         mean_vects=[]
+        rmsec=[]
+        if self.ransac: 
+            inliers=[]
+            outliers=[]
         for i,rangei in enumerate(self.ranges):
             data_tmp=within_range.within_range(trainsets[i],rangei,self.ycol)
             #x=data_tmp.xs(self.labels,axis=1,level=0,drop_level=False)
@@ -61,13 +65,35 @@ class sm:
                 
             model.fit(x,y)
             modelpred=model.predict(x)
+            rmsec.append(np.sqrt(np.mean((np.squeeze(modelpred)-y.values)**2)))
+            
             submodels.append(model)
             mean_vects.append(x_mean_vect)
+            
+            if self.ransac:
+                print('Recording outliers')
+                print('# spectra: '+str(len(y)))
+                print('Size of outliers vector: '+str(len(model.inlier_mask_)))
+                inliers.append(model.inlier_mask_)
+                outliers.append(np.logical_not(model.inlier_mask_))
+                self.inliers=inliers
+                self.outliers=outliers
             if self.method is 'PLS' and self.ransac is False:
                 self.calc_Qres_Lev(model,x_centered)
-              
             self.submodels=submodels
             self.mean_vects=mean_vects
+            
+            if figpath:
+                ransac_str=''
+                if self.ransac:
+                    ransac_str='_ransac'
+                figname=self.ycol[-1]+'_'+self.method+'_'+str(rangei[0])+'-'+str(rangei[1])+ransac_str+'.png'
+                lbl=['RMSEC = '+str(round(rmsec[i],2))]
+            #Plot the training set predictions
+                plots.scatterplot([y.values],[modelpred],one_to_one=True,figpath=figpath,
+                    figname=figname,xtitle='Reference (wt.%)',ytitle='Prediction (wt.%)',
+                    title=self.ycol[-1],lbls=lbl,annot_mask=self.outliers)
+
             
     def calc_Qres_Lev(self,model,x):
         #calculate spectral residuals

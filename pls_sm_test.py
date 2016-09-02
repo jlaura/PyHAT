@@ -163,7 +163,7 @@ pls_sm=sm(labels,ycol,compranges,method,ransac=False)
 
 print('Fitting PLS Submodels (with and without RANSAC)')
 pls_sm.fit(traindata,figpath=outpath,nc=ncs)
-pls_sm_ransac.fit(traindata,nc=ncs)
+pls_sm_ransac.fit(traindata,figpath=outpath,nc=ncs)
 
 
 print('Doing PLS Submodel Predictions')
@@ -191,10 +191,12 @@ predictions_test_ransac=pls_sm_ransac.predict(testdata)
 predictions_unk_ransac=pls_sm_ransac.predict(unkdata)
 
 print('Plotting training data predictions (RANSAC)')
-figname='PLS_SM_RANSAC_train_1to1.png'
-plots.scatterplot([truecomps,truecomps,truecomps,truecomps],predictions_train_ransac,
-                  one_to_one=True,lbls=['Low','Mid','High','Full'],figpath=outpath,
-                    figname=figname,xtitle=xtitle,ytitle=ytitle,title=plot_title)
+figname='PLS_SM_RANSAC_train_1to1_full_annot.png'
+plots.scatterplot([truecomps],predictions_train_ransac[-1],
+                  one_to_one=True,lbls=['Full'],figpath=outpath,
+                    figname=figname,xtitle=xtitle,ytitle=ytitle,title=plot_title,annot_mask=pls_sm_ransac.outliers[-1])
+                   
+                    
     
 print('Blending PLS submodels')
 t=time.clock()
