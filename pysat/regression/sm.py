@@ -12,7 +12,8 @@ from sklearn.gaussian_process import GaussianProcess
 from sklearn.linear_model import RANSACRegressor as RANSAC
 from pysat.spectral.meancenter import meancenter
 import scipy.optimize as opt
-from pysat.plotting import plots   
+from pysat.plotting import plots  
+from pysat.regression.regression import regression 
 class sm:
     def __init__(self,labels,ycol,ranges,method,ransac=False):
         self.labels=labels
@@ -33,7 +34,7 @@ class sm:
 
 
     #This function does the fitting for each submodel.
-    def fit(self,trainsets,figpath=None,*args,**kwargs):
+    def fit(self,trainsets,figpath=None,**kwargs):
                
         submodels=[]    
         mean_vects=[]
@@ -45,73 +46,21 @@ class sm:
             data_tmp=within_range.within_range(trainsets[i],rangei,self.ycol)
             #x=data_tmp.xs(self.labels,axis=1,level=0,drop_level=False)
             x=data_tmp[self.labels]
-            y=data_tmp[self.ycol]
+            y=data_tmp[self.ycol].values
             x_centered,x_mean_vect=meancenter(x) #mean center training data
-            if self.method is 'PLS':
-                if self.ransac:
-                    model=RANSAC(PLSRegression(n_components=kwargs['nc'][i],scale=False),min_samples=0.5)
-                else:
-                    model=PLSRegression(n_components=kwargs['nc'][i],scale=False)
-            if self.method is 'GP':
-                #for gaussian processes, the input data dimensionality needs to be reduced
-                #Default to using ICA to do this
-                ica=FastICA(n_components=kwargs['nc'][i])
-                self.do_ica=ica.fit(x)
-                x=self.do_ica.transform(x)
-                if self.ransac:
-                    model=RANSAC(GaussianProcess(theta0=kwargs['theta0'],thetaL=kwargs['thetaL'],thetaU=kwargs['thetaU'],random_start=kwargs['random_start'],regr=kwargs['regr']),min_samples=0.5)
-                else:
-                    model=GaussianProcess(theta0=kwargs['theta0'],thetaL=kwargs['thetaL'],thetaU=kwargs['thetaU'],random_start=kwargs['random_start'],regr=kwargs['regr'])
-                
-            model.fit(x,y)
-            modelpred=model.predict(x)
-            rmsec.append(np.sqrt(np.mean((np.squeeze(modelpred)-y.values)**2)))
-            
-            submodels.append(model)
+            kwargs['i']=i
+            kwargs['range']=rangei
+            reg=regression(self.ycol,self.method,ransac=self.ransac,**kwargs)
+            reg.fit(x_centered,y,figpath=figpath)
+            submodels.append(reg)
             mean_vects.append(x_mean_vect)
             
-            if self.ransac:
-                print('Recording outliers')
-                print('# spectra: '+str(len(y)))
-                print('Size of outliers vector: '+str(len(model.inlier_mask_)))
-                inliers.append(model.inlier_mask_)
-                outliers.append(np.logical_not(model.inlier_mask_))
-                self.inliers=inliers
-                self.outliers=outliers
-            if self.method is 'PLS' and self.ransac is False:
-                self.calc_Qres_Lev(model,x_centered)
             self.submodels=submodels
             self.mean_vects=mean_vects
             
-            if figpath:
-                ransac_str=''
-                if self.ransac:
-                    ransac_str='_ransac'
-                figname=self.ycol[-1]+'_'+self.method+'_'+str(rangei[0])+'-'+str(rangei[1])+ransac_str+'.png'
-                lbl=['RMSEC = '+str(round(rmsec[i],2))]
-            #Plot the training set predictions
-                plots.scatterplot([y.values],[modelpred],one_to_one=True,figpath=figpath,
-                    figname=figname,xtitle='Reference (wt.%)',ytitle='Prediction (wt.%)',
-                    title=self.ycol[-1],lbls=lbl,annot_mask=self.outliers)
-
-            
-    def calc_Qres_Lev(self,model,x):
-        #calculate spectral residuals
-        E=x-np.dot(model.x_scores_,model.x_loadings_.transpose())
-        Q_res=np.dot(E,E.transpose()).diagonal()
-        #calculate leverage                
-        T=model.x_scores_
-        leverage=np.diag(T@np.linalg.inv(T.transpose()@T)@T.transpose())
-        self.leverage=leverage
-        self.Q_res=Q_res
-    #Function to create the Qres vs Leverage plot for outlier identification
-    #needs scores and loadings, so currently only works for PLS            
-
  
     def do_blend(self,predictions,truevals=None):
-        
-        
- 
+
         #create the array indicating which models to blend for each blend range
         #For three models, this creates an array like: [[0,0],[0,1],[1,1],[1,2],[2,2]]
         #Which indicates that in the first range, just use model 0
