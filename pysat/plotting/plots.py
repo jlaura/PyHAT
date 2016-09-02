@@ -26,10 +26,9 @@ def scatterplot(x,y,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Pr
         plot.plot([0, 100], [0, 100],color='k')
     for i in np.arange(len(x)):
         plot.scatter(x[i],y[i],color=next(colors),label=lbls[i],edgecolors='black',linewidth=0.2,alpha=0.4)
-        print('foo')
         
-    if annot_mask is not None:
-        plot.scatter(x[i][annot_mask[i]],y[i][annot_mask[i]],facecolors='none',edgecolors='black',linewidth=1.0)
+        if annot_mask[i] is not None:
+            plot.scatter(x[i][annot_mask[i]],y[i][annot_mask[i]],facecolors='none',edgecolors='black',linewidth=1.0,label='RANSAC Outliers')
     if xrange:
         plot.xlim(xrange)
     else:

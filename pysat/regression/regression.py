@@ -49,8 +49,8 @@ class regression:
         
         if self.ransac:
             self.outliers=np.logical_not(self.model.inlier_mask_)
+            self.rmsec=np.sqrt(np.mean((np.squeeze(self.ypred)[self.model.inlier_mask_]-y[self.model.inlier_mask_])**2))
             print(str(np.sum(self.outliers))+' outliers removed with RANSAC')
-            pass
         if self.method is 'PLS' and self.ransac is False:
             self.calc_Qres_Lev(x_centered)
             
@@ -62,7 +62,7 @@ class regression:
             lbl=['RMSEC = '+str(round(self.rmsec,2))]
         #Plot the training set predictions
             plots.scatterplot([y],[self.ypred],one_to_one=True,figpath=figpath,
-                figname=figname,title=self.ycol[-1],lbls=lbl,annot_mask=self.outliers)
+                figname=figname,title=self.ycol[-1],lbls=lbl,annot_mask=[self.outliers])
                 
     def predict(self,x):
         return self.model.predict(x)

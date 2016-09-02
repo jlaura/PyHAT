@@ -146,7 +146,7 @@ unkdata=[unknown_data3.df,unknown_data3.df,unknown_data1.df,unknown_data3.df] #p
 labels=['wvl']#,'ratio']
 ycol=('meta',el)
 method='PLS'
-pls_sm_ransac=sm(labels,ycol,compranges,method,ransac=0.5)
+pls_sm_ransac=sm(labels,ycol,compranges,method,ransac=0.95)
 pls_sm=sm(labels,ycol,compranges,method,ransac=False)
 
 #pls_ransac=linear_model.RANSACRegressor(PLSRegression(n_components=ncs[0],scale=False),min_samples=0.8)
