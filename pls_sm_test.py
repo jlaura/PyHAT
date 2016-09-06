@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 from pysat.spectral.spectral_data import spectral_data
 from pysat.spectral.within_range import within_range
+from pysat.spectral.meancenter import meancenter
 from pysat.regression.sm import sm
 from sklearn.decomposition import PCA, FastICA
 from sklearn import linear_model
@@ -110,9 +111,14 @@ for n in compranges:
     train_cv=data1_tmp.df.loc[-data1_tmp.df[('meta','Folds')].isin([testfold_cv])]
     test_cv=data1_tmp.df.loc[data1_tmp.df[('meta','Folds')].isin([testfold_cv])]
 
-    figfile='PLS_CV_nc'+str(nc)+'_'+el+'_'+str(n[0])+'-'+str(n[1])+'_norm1.png'
-    norm1_rmses=cv(train_cv,Test=test_cv,nc=nc,nfolds=[nfolds_cv],ycol=('meta',el),doplot=True,
-           outpath=outpath,plotfile=figfile,range=[n])
+    #mean center data
+    #train_cv,mean_vect=meancenter(train_cv)
+    #test_cv,mean_vect=meancenter(test_cv,previous_mean=mean_vect)
+    figfile='PLS_CV_'+el+'_'+str(n[0])+'-'+str(n[1])+'_norm1.png'
+    params={'n_components':list(range(1,21))}
+    rmsecv,rmsecv_folds,all_params=cv(train_cv,params,xcols='wvl',ycol=('meta',el),method='PLS',ransac=False)
+           
+    plots.lineplot([params['n_components']],[rmsecv],lbls=['RMSECV'],figpath=outpath,figname=figfile)
 
     #next use the norm3 data
 #    data3_tmp=within_range(data3_train,n,el)
