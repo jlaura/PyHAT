@@ -37,8 +37,34 @@ def scatterplot(x,y,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Pr
     if yrange:
         plot.ylim(yrange)
     else:
-        plot.ylim([0.9*np.min([0,np.min(y)]),1.1*np.max(y)])
+        plot.ylim([0.9*np.min([0,np.min(y)]),np.min([100,1.1*np.max(y)])])
 
     plot.legend(loc='best',fontsize=8,scatterpoints=1)
     if figpath and figname:
         plot.savefig(figpath+'/'+figname,dpi=dpi)
+        
+def lineplot(x,y,xrange=None,yrange=None,xtitle='',ytitle='',title=None,
+                lbls=None,figpath=None,figname=None,dpi=1000,
+                colors=None):
+    if colors==None:
+        colors=itertools.cycle(['r','g','b','c','m','y',])
+    
+    plot.figure()
+    if title:
+        plot.title(title)
+    if xtitle:
+        plot.xlabel(xtitle)
+    if ytitle:
+        plot.ylabel(ytitle)
+    for i in np.arange(len(x)):
+        plot.plot(x[i],y[i],color=next(colors),label=lbls[i],linewidth=1)
+    if xrange:
+        plot.xlim(xrange)
+    if yrange:
+        plot.ylim(yrange)
+    
+    plot.legend(loc='best',fontsize=8)
+    if figpath and figname:
+        plot.savefig(figpath+'/'+figname,dpi=dpi)
+    pass
+    

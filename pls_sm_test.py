@@ -7,13 +7,14 @@ Created on Tue May 10 12:09:29 2016
 import pandas as pd
 import numpy as np
 from pysat.spectral.spectral_data import spectral_data
+from pysat.spectral.within_range import within_range
 from pysat.regression.sm import sm
 from sklearn.decomposition import PCA, FastICA
 from sklearn import linear_model
 from sklearn.cross_decomposition.pls_ import PLSRegression
 from pysat.plotting import plots
 import time
-#from autocnet.regression.pls_cv import pls_cv
+from pysat.regression.cv import cv
 
 import matplotlib.pyplot as plot
 
@@ -100,20 +101,20 @@ data1_test=data1.rows_match(('meta','Folds'),[testfold_test])
 
 #do cross validation for each compositional range
 #If you know how many components you want to use for each submodel, you can comment this loop out
-#for n in compranges:
-#    #First use the norm1 data
-#    data1_tmp=within_range(data1_train,n,el)
-#    #Split the known data into stratified train/test sets for the element desired
-#    data1_tmp=folds.stratified(data1_tmp,nfolds=nfolds_cv,sortby=('meta',el))
-#    #Separate out the train and test data
-#    train_cv=data1_tmp.loc[-data1_tmp[('meta','Folds')].isin([testfold_cv])]
-#    test_cv=data1_tmp.loc[data1_tmp[('meta','Folds')].isin([testfold_cv])]
-#
-#    figfile='PLS_CV_nc'+str(nc)+'_'+el+'_'+str(n[0])+'-'+str(n[1])+'_norm1.png'
-#    norm1_rmses=pls_cv(train_cv,Test=test_cv,nc=nc,nfolds=nfolds_cv,ycol=el,doplot=True,
-#           outpath=outpath,plotfile=figfile)
-#
-#    #next use the norm3 data
+for n in compranges:
+    #First use the norm1 data
+    data1_tmp=spectral_data(within_range(data1_train.df,n,('meta',el)))
+    #Split the known data into stratified train/test sets for the element desired
+    data1_tmp.stratified_folds(nfolds=nfolds_cv,sortby=('meta',el))
+    #Separate out the train and test data
+    train_cv=data1_tmp.df.loc[-data1_tmp.df[('meta','Folds')].isin([testfold_cv])]
+    test_cv=data1_tmp.df.loc[data1_tmp.df[('meta','Folds')].isin([testfold_cv])]
+
+    figfile='PLS_CV_nc'+str(nc)+'_'+el+'_'+str(n[0])+'-'+str(n[1])+'_norm1.png'
+    norm1_rmses=cv(train_cv,Test=test_cv,nc=nc,nfolds=[nfolds_cv],ycol=('meta',el),doplot=True,
+           outpath=outpath,plotfile=figfile,range=[n])
+
+    #next use the norm3 data
 #    data3_tmp=within_range(data3_train,n,el)
 #    #Split the known data into stratified train/test sets for the element desired
 #    data3_tmp=folds.stratified(data3_tmp,nfolds=nfolds_cv,sortby=('meta',el))
@@ -124,7 +125,7 @@ data1_test=data1.rows_match(('meta','Folds'),[testfold_test])
 #    figfile='PLS_CV_nc'+str(nc)+'_'+el+'_'+str(n[0])+'-'+str(n[1])+'_norm3.png'
 #    norm3_rmses=pls_cv(train_cv,Test=test_cv,nc=nc,nfolds=nfolds_cv,ycol=el,doplot=True,
 #           outpath=outpath,plotfile=figfile)
-#
+
 
 #At this point, stop and look at the plots produced by cross validation and 
 #use them to choose the number of components for each of the submodels. 

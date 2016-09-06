@@ -6,13 +6,8 @@ Created on Sat Mar 26 20:15:46 2016
 """
 import numpy as np
 import pysat.spectral.within_range as within_range
-from sklearn.cross_decomposition.pls_ import PLSRegression
-from sklearn.decomposition import PCA, FastICA
-from sklearn.gaussian_process import GaussianProcess
-from sklearn.linear_model import RANSACRegressor as RANSAC
 from pysat.spectral.meancenter import meancenter
 import scipy.optimize as opt
-from pysat.plotting import plots  
 from pysat.regression.regression import regression 
 class sm:
     def __init__(self,labels,ycol,ranges,method,ransac=False):
@@ -38,10 +33,7 @@ class sm:
                
         submodels=[]    
         mean_vects=[]
-        rmsec=[]
-        if self.ransac: 
-            inliers=[]
-            outliers=[]
+
         for i,rangei in enumerate(self.ranges):
             data_tmp=within_range.within_range(trainsets[i],rangei,self.ycol)
             #x=data_tmp.xs(self.labels,axis=1,level=0,drop_level=False)

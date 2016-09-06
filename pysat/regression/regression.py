@@ -23,7 +23,10 @@ class regression:
         self.inliers=None
         self.reduce_dim=False
         self.kwargs=kwargs  #pass kwargs to other functions
-        self.i=kwargs['i']  #kwargs must include an entry 'i' to index into the other keywords. This lets regression work with submodels
+        try:
+            self.i=kwargs['i']  #kwargs must include an entry 'i' to index into the other keywords. This lets regression work with submodels
+        except:
+            print('kwargs must include an entry "i" to index into the other keywords. This lets regression work with submodels')
         self.range=kwargs['range']
         if self.method is 'PLS':
            self.model=PLSRegression(n_components=kwargs['nc'][self.i],scale=False)
@@ -33,18 +36,22 @@ class regression:
                                         regr=kwargs['regr'][self.i])
         if self.ransac:
             self.model=RANSAC(self.model,min_samples=self.ransac)
+            #TO DO: enable changing other parameters of RANSAC
+            
         
     def fit(self,x,y,figpath=None):
-        x_centered,x_mean_vect=meancenter(x) #mean center training data
+        #x_centered,x_mean_vect=meancenter(x) #mean center training data
         if self.reduce_dim is 'ICA':
-            #for gaussian processes, the input data dimensionality needs to be reduced
-            #Default to using ICA to do this
             ica=FastICA(n_components=self.kwargs['nc'][self.i])
             self.do_ica=ica.fit(x)
-            x=self.do_ica.transform(x)
+            x_centered=self.do_ica.transform(x)
+        if self.reduce_dim is 'PCA':
+            pca=PCA(n_components=self.kwargs['nc'][self.i])
+            self.do_pca=pca.fit(x)
+            x_centered=self.do_pca.transform(x)
             
-        self.model.fit(x_centered,y)
-        self.ypred=self.predict(x_centered)
+        self.model.fit(x,y)
+        self.ypred=self.predict(x)
         self.rmsec=np.sqrt(np.mean((np.squeeze(self.ypred)-y)**2))
         
         if self.ransac:
@@ -52,13 +59,13 @@ class regression:
             self.rmsec=np.sqrt(np.mean((np.squeeze(self.ypred)[self.model.inlier_mask_]-y[self.model.inlier_mask_])**2))
             print(str(np.sum(self.outliers))+' outliers removed with RANSAC')
         if self.method is 'PLS' and self.ransac is False:
-            self.calc_Qres_Lev(x_centered)
+            self.calc_Qres_Lev(x)
             
         if figpath:
             ransac_str=''
             if self.ransac:
                 ransac_str='_ransac'
-            figname=self.ycol[-1]+'_'+self.method+'_'+str(self.range[0])+'-'+str(self.range[1])+ransac_str+'.png'
+            figname=self.ycol[-1]+'_'+self.method+'_'+str(self.range[0])+'-'+str(self.range[1])+ransac_str+'_train.png'
             lbl=['RMSEC = '+str(round(self.rmsec,2))]
         #Plot the training set predictions
             plots.scatterplot([y],[self.ypred],one_to_one=True,figpath=figpath,
