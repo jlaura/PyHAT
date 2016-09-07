@@ -15,68 +15,43 @@ import scipy.optimize as opt
 from pysat.plotting import plots 
 
 class regression:
-    def __init__(self,xcols,ycol,method,ransac=False,**kwargs):
-        self.ycol=ycol
+    def __init__(self,method,params,i=0,ransacparams=None):
         self.method=method 
-        self.ransac=ransac
         self.outliers=None
         self.inliers=None
-        self.reduce_dim=False
-        self.kwargs=kwargs  #pass kwargs to other functions
-        try:
-            self.i=kwargs['i']  #kwargs must include an entry 'i' to index into the other keywords. This lets regression work with submodels
-        except:
-            print('kwargs must include an entry "i" to index into the other keywords. This lets regression work with submodels')
-        self.range=kwargs['range']
+        self.ransac=False
+        
         if self.method is 'PLS':
-           self.model=PLSRegression(n_components=kwargs['nc'][self.i],scale=False)
+           self.model=PLSRegression(**params[i])
         if self.method is 'GP':
-            self.model=GaussianProcess(theta0=kwargs['theta0'][self.i],thetaL=kwargs['thetaL'][self.i],
-                                       thetaU=kwargs['thetaU'][self.i],random_start=kwargs['random_start'][self.i],
-                                        regr=kwargs['regr'][self.i])
-        if self.ransac:
-            self.model=RANSAC(self.model,min_samples=self.ransac)
-            #TO DO: enable changing other parameters of RANSAC
+            self.model=GaussianProcess(**params[i])
+        if ransacparams is not None:
+            self.model=RANSAC(self.model,**ransacparams[i])
+            self.ransac=True
             
         
-    def fit(self,x,y,figpath=None):
-        #x_centered,x_mean_vect=meancenter(x) #mean center training data
-        if self.reduce_dim is 'ICA':
-            ica=FastICA(n_components=self.kwargs['nc'][self.i])
-            self.do_ica=ica.fit(x[xcols])
-            x_centered=self.do_ica.transform(x[xcols])
-        if self.reduce_dim is 'PCA':
-            pca=PCA(n_components=self.kwargs['nc'][self.i])
-            self.do_pca=pca.fit(x[xcols])
-            x_centered=self.do_pca.transform(x[xcols])
+    def fit(self,x,y,figparams=None):
             
-        self.model.fit(x[xcols],y[ycol])
-        self.ypred=self.predict(x[xcols])
-        self.rmsec=np.sqrt(np.mean((np.squeeze(self.ypred)-y[ycol])**2))
+        self.model.fit(x,y)
+        self.ypred=self.predict(x)
+        self.rmsec=np.sqrt(np.mean((np.squeeze(self.ypred)-y)**2))
         
         if self.ransac:
             self.outliers=np.logical_not(self.model.inlier_mask_)
-            self.rmsec=np.sqrt(np.mean((np.squeeze(self.ypred)[self.model.inlier_mask_]-y[self.model.inlier_mask_])**2))
+            self.rmsec_ransac=np.sqrt(np.mean((np.squeeze(self.ypred)[self.model.inlier_mask_]-y[self.model.inlier_mask_])**2))
             print(str(np.sum(self.outliers))+' outliers removed with RANSAC')
         if self.method is 'PLS' and self.ransac is False:
-            self.calc_Qres_Lev(x[xcols])
+            self.calc_Qres_Lev(x)
             
-        if figpath:
-            ransac_str=''
-            if self.ransac:
-                ransac_str='_ransac'
-            figname=self.ycol[-1]+'_'+self.method+'_'+str(self.range[0])+'-'+str(self.range[1])+ransac_str+'_train.png'
-            lbl=['RMSEC = '+str(round(self.rmsec,2))]
-        #Plot the training set predictions
-            plots.scatterplot([y[ycol]],[self.ypred],one_to_one=True,figpath=figpath,
-                figname=figname,title=self.ycol[-1],lbls=lbl,annot_mask=[self.outliers])
+        if figparams:
+            plots.scatterplot(y,[self.ypred],figparams)
                 
     def predict(self,x):
-        return self.model.predict(x[xcols])
+        return self.model.predict(x)
         
     def calc_Qres_Lev(self,x):
         #calculate spectral residuals
-        E=x[xcols]-np.dot(self.model.x_scores_,self.model.x_loadings_.transpose())
+        E=x-np.dot(self.model.x_scores_,self.model.x_loadings_.transpose())
         Q_res=np.dot(E,E.transpose()).diagonal()
         #calculate leverage                
         T=self.model.x_scores_
