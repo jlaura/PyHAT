@@ -10,9 +10,6 @@ according to a user-specified column
 import numpy as np
 from sklearn.cross_decomposition.pls_ import PLSRegression
 from sklearn.cross_validation import LeaveOneLabelOut
-from pysat.spectral.meancenter import meancenter
-from pysat.regression.regression import regression 
-from pysat.plotting import plots 
 from sklearn.grid_search import GridSearchCV
 import sklearn.metrics as metrics
 
@@ -23,11 +20,12 @@ def cv(Train,params,xcols='wvl',ycol=('meta','SiO2'),method='PLS',ransac=False):
         model=PLSRegression(scale=False)
         
     
-    cv_iterator=LeaveOneLabelOut(Train[('meta','Folds')])
-    scorer=metrics.make_scorer(metrics.mean_squared_error,greater_is_better=False)
-    do_cv=GridSearchCV(model,params,cv=cv_iterator,scoring=scorer,verbose=1)
-    do_cv.fit(Train[xcols],Train[ycol])
+    cv_iterator=LeaveOneLabelOut(Train[('meta','Folds')])  #create an iterator for cross validation based on the predefined folds
+    scorer=metrics.make_scorer(metrics.mean_squared_error,greater_is_better=False)  #Use built-in MSE scorer
+    do_cv=GridSearchCV(model,params,cv=cv_iterator,scoring=scorer,verbose=1)  #set up for grid search
+    do_cv.fit(Train[xcols],Train[ycol])  #do the actual cross validation
 
+    #Put the results into an easier-to-use output format
     all_params=[]
     mse_ave=[]
     mse_folds=[]
@@ -36,7 +34,8 @@ def cv(Train,params,xcols='wvl',ycol=('meta','SiO2'),method='PLS',ransac=False):
         all_params.append(i.parameters)
         mse_ave.append(-1*i.mean_validation_score)
         mse_folds.append(-1*i.cv_validation_scores)
-        
+
+    #convert MSE to RMSE        
     rmsecv=np.sqrt(mse_ave)
     rmsecv_folds=np.sqrt(mse_folds)
     

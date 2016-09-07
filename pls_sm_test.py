@@ -83,8 +83,7 @@ print('set up for cross validation')
 el='SiO2'
 nfolds_test=6 #number of folds to divide data into to extract an overall test set
 testfold_test=4 #which fold to use as the overall test set
-nfolds_cv=5  #number of folds to use for CV
-testfold_cv=3 #which fold to use as test set for the cross validation models
+nfolds_cv=10  #number of folds to use for CV
 
 compranges=[[-20,50],[30,70],[60,100],[0,120]] #these are the composition ranges for the submodels
 nc=20  #max number of components
@@ -108,8 +107,8 @@ for n in compranges:
     #Split the known data into stratified train/test sets for the element desired
     data1_tmp.stratified_folds(nfolds=nfolds_cv,sortby=('meta',el))
     #Separate out the train and test data
-    train_cv=data1_tmp.df.loc[-data1_tmp.df[('meta','Folds')].isin([testfold_cv])]
-    test_cv=data1_tmp.df.loc[data1_tmp.df[('meta','Folds')].isin([testfold_cv])]
+    train_cv=data1_tmp
+    #test_cv=data1_tmp.df.loc[data1_tmp.df[('meta','Folds')].isin([testfold_cv])]
 
     #mean center data
     #train_cv,mean_vect=meancenter(train_cv)
@@ -117,8 +116,12 @@ for n in compranges:
     figfile='PLS_CV_'+el+'_'+str(n[0])+'-'+str(n[1])+'_norm1.png'
     params={'n_components':list(range(1,21))}
     rmsecv,rmsecv_folds,all_params=cv(train_cv,params,xcols='wvl',ycol=('meta',el),method='PLS',ransac=False)
-           
-    plots.lineplot([params['n_components']],[rmsecv],lbls=['RMSECV'],figpath=outpath,figname=figfile)
+    plotx=[params['n_components'],params['n_components'],params['n_components'],params['n_components'],params['n_components']]
+    ploty=[rmsecv,rmsecv_folds[:,0],rmsecv_folds[:,1],rmsecv_folds[:,2],rmsecv_folds[:,3]]
+    colors=['r']
+    alphas=[1.0,0.25,0.25,0.25,0.25]
+    lbls=['RMSECV',None,None,None,None]
+    plots.lineplot(plotx,ploty,lbls=lbls,figpath=outpath,figname=figfile,colors=colors,alphas=alphas)
 
     #next use the norm3 data
 #    data3_tmp=within_range(data3_train,n,el)
