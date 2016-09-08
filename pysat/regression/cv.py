@@ -38,8 +38,11 @@ def cv(Train,params,xcols='wvl',ycol=('meta','SiO2'),method='PLS',ransac=False):
             resultcol=('meta',ycol[-1]+'_cv_'+method+'_param'+str(i))  #create the name of the column in which results will be stored
             cv_train=Train.iloc[train]   #extract the data to be used to create the model
             cv_holdout=Train.iloc[holdout]  #extract the data that will be held out of the model
-            model.fit(cv_train[xcols],cv_train[ycol])            
-            y_pred_holdout=model.predict(cv_holdout[xcols])
+            model.fit(cv_train[xcols],cv_train[ycol])
+            if model.goodfit:            
+                y_pred_holdout=model.predict(cv_holdout[xcols])
+            else:
+                y_pred_holdout=cv_holdout[ycol]*0
             Train.set_value(Train.index[holdout],resultcol,y_pred_holdout)
             rmsecv_folds_tmp.append(RMSE(y_pred_holdout,cv_holdout[ycol]))
         
@@ -47,7 +50,10 @@ def cv(Train,params,xcols='wvl',ycol=('meta','SiO2'),method='PLS',ransac=False):
         rmsecv.append(RMSE(Train[ycol],Train[resultcol]))
           
         model.fit(Train[xcols],Train[ycol])
-        ypred_train=model.predict(Train[xcols])        
+        if model.goodfit:
+            ypred_train=model.predict(Train[xcols])        
+        else:
+            ypred_train=Train[ycol]*0
         rmsec.append(RMSE(ypred_train,Train[ycol]))
     
     
