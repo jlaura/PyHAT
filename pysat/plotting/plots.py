@@ -13,7 +13,8 @@ def scatterplot(x,y,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Pr
                 colors=None,annot_mask=None):
     if colors==None:
         colors=itertools.cycle(['r','g','b','c','m','y',])
-
+    if annot_mask==None:
+        annot_mask=[None]*len(x)
     
     plot.figure()
     if title:
@@ -31,13 +32,13 @@ def scatterplot(x,y,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Pr
             plot.scatter(x[i][annot_mask[i]],y[i][annot_mask[i]],facecolors='none',edgecolors='black',linewidth=1.0,label='RANSAC Outliers')
     if xrange:
         plot.xlim(xrange)
-    else:
-        plot.xlim([0.9*np.min([0,np.min(x)]),1.1*np.max(x)])
-        
+#    else:
+#        plot.xlim([0.9*np.min([0,np.min(x)]),1.1*np.max(x)])
+#        
     if yrange:
         plot.ylim(yrange)
-    else:
-        plot.ylim([0.9*np.min([0,np.min(y)]),np.min([100,1.1*np.max(y)])])
+#    else:
+#        plot.ylim([0.9*np.min([0,np.min(y)]),np.min([100,1.1*np.max(y)])])
 
     plot.legend(loc='best',fontsize=8,scatterpoints=1)
     if figpath and figname:
@@ -70,7 +71,7 @@ def lineplot(x,y,xrange=None,yrange=None,xtitle='',ytitle='',title=None,
     if yrange:
         plot.ylim(yrange)
     else:
-        plot.ylim([0,np.max(y)])
+        plot.ylim([0,np.max(y[-np.isnan(y)])])
     
     plot.legend(loc='best',fontsize=8)
     if figpath and figname:

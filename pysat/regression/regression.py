@@ -40,7 +40,7 @@ class regression:
             self.ransac=True
             
         
-    def fit(self,x,y,figparams=None):
+    def fit(self,x,y):
         #if gaussian processes are being used, data dimensionality needs to be reduced before fitting        
         if self.method is 'GP':
             if self.reduce_dim is 'ICA':

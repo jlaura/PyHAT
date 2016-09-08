@@ -83,7 +83,6 @@ print('set up for cross validation')
 el='SiO2'
 nfolds_test=6 #number of folds to divide data into to extract an overall test set
 testfold_test=4 #which fold to use as the overall test set
-nfolds_cv=10  #number of folds to use for CV
 
 compranges=[[-20,50],[30,70],[60,100],[0,120]] #these are the composition ranges for the submodels
 nc=20  #max number of components
@@ -101,27 +100,27 @@ data1_test=data1.rows_match(('meta','Folds'),[testfold_test])
 
 #do cross validation for each compositional range
 #If you know how many components you want to use for each submodel, you can comment this loop out
-for n in compranges:
-    #First use the norm1 data
-    data1_tmp=spectral_data(within_range(data1_train.df,n,('meta',el)))
-    #Split the known data into stratified train/test sets for the element desired
-    data1_tmp.stratified_folds(nfolds=nfolds_cv,sortby=('meta',el))
-    #Separate out the train and test data
-    train_cv=data1_tmp
-    #test_cv=data1_tmp.df.loc[data1_tmp.df[('meta','Folds')].isin([testfold_cv])]
-
-    #mean center data
-    #train_cv,mean_vect=meancenter(train_cv)
-    #test_cv,mean_vect=meancenter(test_cv,previous_mean=mean_vect)
-    figfile='PLS_CV_'+el+'_'+str(n[0])+'-'+str(n[1])+'_norm1.png'
-    params={'n_components':list(range(1,21))}
-    rmsecv,rmsecv_folds,all_params=cv(train_cv,params,xcols='wvl',ycol=('meta',el),method='PLS',ransac=False)
-    plotx=[params['n_components'],params['n_components'],params['n_components'],params['n_components'],params['n_components']]
-    ploty=[rmsecv,rmsecv_folds[:,0],rmsecv_folds[:,1],rmsecv_folds[:,2],rmsecv_folds[:,3]]
-    colors=['r']
-    alphas=[1.0,0.25,0.25,0.25,0.25]
-    lbls=['RMSECV',None,None,None,None]
-    plots.lineplot(plotx,ploty,lbls=lbls,figpath=outpath,figname=figfile,colors=colors,alphas=alphas)
+#for n in compranges:
+#    #First use the norm1 data
+#    data1_tmp=spectral_data(within_range(data1_train.df,n,('meta',el)))
+#    #Split the known data into stratified train/test sets for the element desired
+#    data1_tmp.stratified_folds(nfolds=nfolds_cv,sortby=('meta',el))
+#    #Separate out the train and test data
+#    train_cv=data1_tmp
+#    #test_cv=data1_tmp.df.loc[data1_tmp.df[('meta','Folds')].isin([testfold_cv])]
+#
+#    #mean center data
+#    #train_cv,mean_vect=meancenter(train_cv)
+#    #test_cv,mean_vect=meancenter(test_cv,previous_mean=mean_vect)
+#    figfile='PLS_CV_'+el+'_'+str(n[0])+'-'+str(n[1])+'_norm1.png'
+#    params={'n_components':list(range(1,21))}
+#    rmsecv,rmsecv_folds,all_params=cv(train_cv,params,xcols='wvl',ycol=('meta',el),method='PLS',ransac=False)
+#    plotx=[params['n_components'],params['n_components'],params['n_components'],params['n_components'],params['n_components']]
+#    ploty=[rmsecv,rmsecv_folds[:,0],rmsecv_folds[:,1],rmsecv_folds[:,2],rmsecv_folds[:,3]]
+#    colors=['r']
+#    alphas=[1.0,0.25,0.25,0.25,0.25]
+#    lbls=['RMSECV',None,None,None,None]
+#    plots.lineplot(plotx,ploty,lbls=lbls,figpath=outpath,figname=figfile,colors=colors,alphas=alphas)
 
     #next use the norm3 data
 #    data3_tmp=within_range(data3_train,n,el)
@@ -156,8 +155,13 @@ unkdata=[unknown_data3.df,unknown_data3.df,unknown_data1.df,unknown_data3.df] #p
 labels=['wvl']#,'ratio']
 ycol=('meta',el)
 method='PLS'
-pls_sm_ransac=sm(labels,ycol,compranges,method,ransac=0.95)
-pls_sm=sm(labels,ycol,compranges,method,ransac=False)
+#pls_sm_ransac=sm(labels,ycol,compranges,method,ransac=0.95)
+params=[{'n_components':ncs[0],'scale':False},
+       {'n_components':ncs[1],'scale':False},
+       {'n_components':ncs[2],'scale':False},
+       {'n_components':ncs[3],'scale':False}]
+         
+pls_sm=sm(compranges,method,params)
 
 #pls_ransac=linear_model.RANSACRegressor(PLSRegression(n_components=ncs[0],scale=False),min_samples=0.8)
 
@@ -172,67 +176,77 @@ pls_sm=sm(labels,ycol,compranges,method,ransac=False)
 
 
 print('Fitting PLS Submodels (with and without RANSAC)')
-pls_sm.fit(traindata,figpath=outpath,nc=ncs)
-pls_sm_ransac.fit(traindata,figpath=outpath,nc=ncs)
+x=[]
+y=[]
+for i in traindata:
+    x.append(i[labels])
+    y.append(i[ycol])
+pls_sm.fit(x,y)
+#pls_sm_ransac.fit(traindata,figpath=outpath,nc=ncs)
 
 
 print('Doing PLS Submodel Predictions')
-predictions_train=pls_sm.predict(traindata)
-predictions_test=pls_sm.predict(testdata)
-predictions_unk=pls_sm.predict(unkdata)
+predictions_train=pls_sm.predict(x)
+x_test=[]
+y_test=[]
+for i in testdata:
+    x_test.append(i[labels])
+    y_test.append(i[ycol])
+
+x_unk=[]
+for i in unkdata:
+    x_unk.append(i[labels])    
+predictions_test=pls_sm.predict(x_test)
+predictions_unk=pls_sm.predict(x_unk)
 
 print('Plotting training data predictions')
-truecomps=traindata[0][ycol]
+
 outpath=r'C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output'
 xtitle='Reference wt.%'
 ytitle='Predicted wt.%'
 plot_title=el
 figname='PLS_SM_train_1to1.png'
-plots.scatterplot([truecomps,truecomps,truecomps,truecomps],predictions_train,
+plots.scatterplot(y,predictions_train,
                   one_to_one=True,lbls=['Low','Mid','High','Full'],figpath=outpath,
                     figname=figname,xtitle=xtitle,ytitle=ytitle,title=plot_title)
     
     
 
 
-print('Doing PLS Submodel Predictions (RANSAC)')
-predictions_train_ransac=pls_sm_ransac.predict(traindata)
-predictions_test_ransac=pls_sm_ransac.predict(testdata)
-predictions_unk_ransac=pls_sm_ransac.predict(unkdata)
-
-print('Plotting training data predictions (RANSAC)')
-figname='PLS_SM_RANSAC_train_1to1_full_annot.png'
-plots.scatterplot([truecomps],predictions_train_ransac[-1],
-                  one_to_one=True,lbls=['Full'],figpath=outpath,
-                    figname=figname,xtitle=xtitle,ytitle=ytitle,title=plot_title,annot_mask=pls_sm_ransac.outliers[-1])
-                   
-                    
+#print('Doing PLS Submodel Predictions (RANSAC)')
+#predictions_train_ransac=pls_sm_ransac.predict(traindata)
+#predictions_test_ransac=pls_sm_ransac.predict(testdata)
+#predictions_unk_ransac=pls_sm_ransac.predict(unkdata)
+#
+#print('Plotting training data predictions (RANSAC)')
+#figname='PLS_SM_RANSAC_train_1to1_full_annot.png'
+#plots.scatterplot([truecomps],predictions_train_ransac[-1],
+#                  one_to_one=True,lbls=['Full'],figpath=outpath,
+#                    figname=figname,xtitle=xtitle,ytitle=ytitle,title=plot_title,annot_mask=pls_sm_ransac.outliers[-1])
+#                   
+#                    
     
 print('Blending PLS submodels')
-t=time.clock()
 blended_train=pls_sm.do_blend(predictions_train,traindata[0][ycol])
-print(time.clock()-t)
-t=time.clock()
 blended_test=pls_sm.do_blend(predictions_test)
-print(time.clock()-t)
-t=time.clock()
 blended_unk=pls_sm.do_blend(predictions_unk)
-print(time.clock()-t)
+
+figname='PLS_SM_blended.png'
+plots.scatterplot([y[0],testdata[0][ycol]],[blended_train,blended_test],one_to_one=True,lbls=['Train','Test'],figpath=outpath,figname=figname,xtitle=xtitle,ytitle=ytitle,title=plot_title)
+
+#print('Blending PLS submodels (RANSAC)')
+#t=time.clock()
+#blended_train_ransac=pls_sm_ransac.do_blend(predictions_train_ransac,traindata[0][ycol])
+#print(time.clock()-t)
+#t=time.clock()
+#blended_test_ransac=pls_sm_ransac.do_blend(predictions_test_ransac)
+#print(time.clock()-t)
+#t=time.clock()
+#blended_unk_ransac=pls_sm.do_blend(predictions_unk_ransac)
+#print(time.clock()-t)
 
 
-print('Blending PLS submodels (RANSAC)')
-t=time.clock()
-blended_train_ransac=pls_sm_ransac.do_blend(predictions_train_ransac,traindata[0][ycol])
-print(time.clock()-t)
-t=time.clock()
-blended_test_ransac=pls_sm_ransac.do_blend(predictions_test_ransac)
-print(time.clock()-t)
-t=time.clock()
-blended_unk_ransac=pls_sm.do_blend(predictions_unk_ransac)
-print(time.clock()-t)
-
-
-RMSEP_pls_sm_ransac=np.sqrt(np.mean((blended_test_ransac-testdata[0]['meta'][el])**2.))
+#RMSEP_pls_sm_ransac=np.sqrt(np.mean((blended_test_ransac-testdata[0]['meta'][el])**2.))
 RMSEP_pls_sm=np.sqrt(np.mean((blended_test-testdata[0]['meta'][el])**2.))
 
 
@@ -276,26 +290,26 @@ RMSEP_pls_sm=np.sqrt(np.mean((blended_test-testdata[0]['meta'][el])**2.))
 
 
 
-resultsfile='pls_sm_test_output.csv'
-resultsfile_gp='pls_sm_test_output_gp.csv'
-
-print('Make a figure showing the test set performance')
-plot.figure()
-plot.scatter(testdata[0]['meta'][el],blended_test,color='r',label='PLS-SM (RMSEP='+str(RMSEP_pls_sm)+')')
-#plot.scatter(testdata[0]['meta'][el],blended_test_gp,color='b')
-plot.scatter(testdata[0]['meta'][el],blended_test_ransac,color='g',label='PLS-SM-RANSAC (RMSEP='+str(RMSEP_pls_sm_ransac)+')')
-plot.plot([0,100],[0,100])
-plot.legend()
-plot.savefig(outpath+'\\test_1to1.png',dpi=800)
-plot.show()
-
-unk_results=unkdata[0]['meta']
-unk_results[el]=blended_unk
-unk_results.to_csv(outpath+'\\'+resultsfile)
-
-unk_results_gp=unkdata[0]['meta']
-unk_results_gp[el]=blended_unk_gp
-unk_results.to_csv(outpath+'\\'+resultsfile_gp)
+#resultsfile='pls_sm_test_output.csv'
+#resultsfile_gp='pls_sm_test_output_gp.csv'
+#
+#print('Make a figure showing the test set performance')
+#plot.figure()
+#plot.scatter(testdata[0]['meta'][el],blended_test,color='r',label='PLS-SM (RMSEP='+str(RMSEP_pls_sm)+')')
+##plot.scatter(testdata[0]['meta'][el],blended_test_gp,color='b')
+##plot.scatter(testdata[0]['meta'][el],blended_test_ransac,color='g',label='PLS-SM-RANSAC (RMSEP='+str(RMSEP_pls_sm_ransac)+')')
+#plot.plot([0,100],[0,100])
+#plot.legend()
+#plot.savefig(outpath+'\\test_1to1.png',dpi=800)
+#plot.show()
+#
+#unk_results=unkdata[0]['meta']
+#unk_results[el]=blended_unk
+#unk_results.to_csv(outpath+'\\'+resultsfile)
+#
+#unk_results_gp=unkdata[0]['meta']
+#unk_results_gp[el]=blended_unk_gp
+#unk_results.to_csv(outpath+'\\'+resultsfile_gp)
 
 print(foo)
     

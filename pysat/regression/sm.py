@@ -5,50 +5,24 @@ Created on Sat Mar 26 20:15:46 2016
 @author: rbanderson
 """
 import numpy as np
-import pysat.spectral.within_range as within_range
-from pysat.spectral.meancenter import meancenter
 import scipy.optimize as opt
 from pysat.regression.regression import regression 
+from pysat.spectral.within_range import within_range
 class sm:
-    def __init__(self,labels,ycol,ranges,method,ransac=False):
-        self.labels=labels
-        self.ycol=ycol
+    def __init__(self,ranges,method,params,ransacparams=None):
         self.method=method 
         self.ranges=ranges
-        self.ransac=ransac
-        self.outliers=None
-        self.inliers=None
-    # TODO sm.final(testdata[0]['meta'][el],
-    #            blended_test,
-    #            color='r',
-    #            xcol='Ref Comp Wt. %',
-    #            ycol='Predicted Comp Wt. %',
-    #            figpath=outpath)
-
-    # TODO rename this function to something better, later on
-
-
+        self.ransacparams=ransacparams
+        self.params=params
+        self.submodels=[]
+        for i,rangei in enumerate(ranges):
+            self.submodels.append(regression(method,params,i=i,ransacparams=ransacparams))
+        
     #This function does the fitting for each submodel.
-    def fit(self,trainsets,figpath=None,**kwargs):
-               
-        submodels=[]    
-        mean_vects=[]
-
-        for i,rangei in enumerate(self.ranges):
-            data_tmp=within_range.within_range(trainsets[i],rangei,self.ycol)
-            #x=data_tmp.xs(self.labels,axis=1,level=0,drop_level=False)
-            x=data_tmp[self.labels]
-            y=data_tmp[self.ycol].values
-            x_centered,x_mean_vect=meancenter(x) #mean center training data
-            kwargs['i']=i
-            kwargs['range']=rangei
-            reg=regression(self.ycol,self.method,ransac=self.ransac,**kwargs)
-            reg.fit(x_centered,y,figpath=figpath)
-            submodels.append(reg)
-            mean_vects.append(x_mean_vect)
-            
-            self.submodels=submodels
-            self.mean_vects=mean_vects
+    def fit(self,x,y):
+        for i,model in enumerate(self.submodels):
+            xtemp,ytemp=within_range(x[i],y[i],self.ranges[i])
+            model.fit(xtemp,ytemp)
             
  
     def do_blend(self,predictions,truevals=None):
@@ -129,17 +103,8 @@ class sm:
         predictions=[]
         for i,k in enumerate(self.submodels):
             try:
-                #xtemp=x[i].xs('wvl',axis=1,level=0,drop_level=False)
-                xtemp=x[i][self.labels]
+                xtemp=x[i]
             except:
-                pass
-            xtemp,mean_vect=meancenter(xtemp,previous_mean=self.mean_vects[i])
-            
-            if self.method is 'GP':
-                 #for gaussian processes, the input data dimensionality needs to be reduced
-                #Default to using ICA to do this
-                xtemp=self.do_ica.transform(xtemp)
-            else:
                 pass
             predictions.append(k.predict(xtemp))
         return predictions

@@ -93,7 +93,7 @@ lbls=['RMSECV (rand_start=1)','RMSECV (rand_start=5)','RMSECV (rand_start=10)']
 
 plots.lineplot(plotx,ploty,lbls=lbls,figpath=outpath,figname=figfile,colors=colors,alphas=alphas,xtitle='# of Components',ytitle='RMSE (wt.%)')
 
-print(foo)
+pass
     
 
 
