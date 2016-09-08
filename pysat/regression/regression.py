@@ -13,7 +13,7 @@ from sklearn.linear_model import RANSACRegressor as RANSAC
 from pysat.spectral.meancenter import meancenter
 import scipy.optimize as opt
 from pysat.plotting import plots 
-
+import copy
 
 
 class regression:
@@ -29,10 +29,12 @@ class regression:
             #get the method for dimensionality reduction and the number of components
             self.reduce_dim=params[i]['reduce_dim']
             self.n_components=params[i]['n_components']
-            #Then removed these from the parameters so params can be passed to Gaussian Process
-            params[i].pop('reduce_dim')
-            params[i].pop('n_components')
-            self.model=GaussianProcess(**params[i])
+            #create a temporary set of parameters            
+            params_temp=copy.copy(params[i])
+            #Remove parameters not accepted by Gaussian Process
+            params_temp.pop('reduce_dim')
+            params_temp.pop('n_components')
+            self.model=GaussianProcess(**params_temp)
         if ransacparams is not None:
             self.model=RANSAC(self.model,**ransacparams[i])
             self.ransac=True

@@ -42,7 +42,7 @@ def cv(Train,params,xcols='wvl',ycol=('meta','SiO2'),method='PLS',ransac=False):
             if model.goodfit:            
                 y_pred_holdout=model.predict(cv_holdout[xcols])
             else:
-                y_pred_holdout=cv_holdout[ycol]*0
+                y_pred_holdout=cv_holdout[ycol]*np.nan
             Train.set_value(Train.index[holdout],resultcol,y_pred_holdout)
             rmsecv_folds_tmp.append(RMSE(y_pred_holdout,cv_holdout[ycol]))
         
@@ -53,9 +53,15 @@ def cv(Train,params,xcols='wvl',ycol=('meta','SiO2'),method='PLS',ransac=False):
         if model.goodfit:
             ypred_train=model.predict(Train[xcols])        
         else:
-            ypred_train=Train[ycol]*0
+            ypred_train=Train[ycol]*np.nan
         rmsec.append(RMSE(ypred_train,Train[ycol]))
     
-    
-    return rmsec,rmsecv,rmsecv_folds,pd.DataFrame(paramgrid)
+    output=pd.DataFrame(paramgrid)
+    output['rmsec']=rmsec
+    output['rmsecv']=rmsecv
+    rmsecv_folds=np.array(rmsecv_folds)
+    for i in list(range(len(rmsecv_folds[0,:]))):
+        label='Fold'+str(i)
+        output[label]=rmsecv_folds[:,i]
+    return output
            

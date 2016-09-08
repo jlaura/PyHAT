@@ -50,10 +50,12 @@ def lineplot(x,y,xrange=None,yrange=None,xtitle='',ytitle='',title=None,
         colors=itertools.cycle(['r','g','b','c','m','y',])
     else:
         colors=itertools.cycle(colors)
+        
     if alphas==None:
         alphas=itertools.cycle([1.0])
     else:
         alphas=itertools.cycle(alphas)
+        
     plot.figure()
     if title:
         plot.title(title)
@@ -73,5 +75,5 @@ def lineplot(x,y,xrange=None,yrange=None,xtitle='',ytitle='',title=None,
     plot.legend(loc='best',fontsize=8)
     if figpath and figname:
         plot.savefig(figpath+'/'+figname,dpi=dpi)
-    pass
+    
     

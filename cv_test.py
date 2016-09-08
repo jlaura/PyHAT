@@ -65,43 +65,31 @@ data3.stratified_folds(nfolds=nfolds,sortby=('meta',el))
 data3_train=data3.rows_match(('meta','Folds'),[testfold],invert=True)
 data3_test=data3.rows_match(('meta','Folds'),[testfold])
  
-#print('Do PLS CV')
-#figfile='PLS_CV_0-100_norm3.png'
-#params={'n_components':list(range(1,nc+1)),'scale':[False]}
-#rmsec,rmsecv,rmsecv_folds,paramgrid=cv(data3_train.df,params,xcols='wvl',ycol=('meta',el),method='PLS',ransac=False)
-#
-#plotx=[list(range(1,nc+1)),list(range(1,nc+1))]
-#ploty=[rmsecv,rmsec]
-#alphas=[1.0,1.0]
-#colors=['r','g']
-#lbls=['RMSECV','RMSEC']
-##for i in list(range(nfolds-1)):
-##    plotx.append(list(range(1,nc+1)))
-##    ploty.append(rmsecv_folds[i])
-##    alphas.append(0.25)
-##    lbls.append(None)
-##    colors.append('r')
-##
-#
-#plots.lineplot(plotx,ploty,lbls=lbls,figpath=outpath,figname=figfile,colors=colors,alphas=alphas,xtitle='# of Components',ytitle='RMSE (wt.%)')
+print('Do PLS CV')
+figfile='PLS_CV_0-100_norm3.png'
+params={'n_components':list(range(1,nc+1)),'scale':[False]}
+output_pls=cv(data3_train.df,params,xcols='wvl',ycol=('meta',el),method='PLS',ransac=False)
 
-print('Do GP CV')
-figfile='GP_CV_0-100_norm3.png'
-params={'n_components':list(range(1,nc+1)),'reduce_dim':['ICA'],'regr':['linear'],'theta0':[1],'thetaL':[0.1],'thetaU':[100],'random_start':[5]}
-rmsec,rmsecv,rmsecv_folds,paramgrid=cv(data3_train.df,params,xcols='wvl',ycol=('meta',el),method='GP',ransac=False)
+plotx=[output_pls['n_components'],output_pls['n_components']]
+ploty=[output_pls['rmsecv'],output_pls['rmsec']]      
 
-plotx=[list(range(1,nc+1)),list(range(2,nc+1))]
-ploty=[rmsecv,rmsec]
 alphas=[1.0,1.0]
 colors=['r','g']
 lbls=['RMSECV','RMSEC']
-#for i in list(range(nfolds-1)):
-#    plotx.append(list(range(1,nc+1)))
-#    ploty.append(rmsecv_folds[i])
-#    alphas.append(0.25)
-#    lbls.append(None)
-#    colors.append('r')
-#
+
+plots.lineplot(plotx,ploty,lbls=lbls,figpath=outpath,figname=figfile,colors=colors,alphas=alphas,xtitle='# of Components',ytitle='RMSE (wt.%)')
+
+print('Do GP CV - NOTE: This demonstrates looping over several parameters, and GP is slow to begin with, so this will take a while!!')
+figfile='GP_CV_0-100_norm3.png'
+params={'n_components':list(range(1,nc+1)),'reduce_dim':['ICA'],'regr':['linear'],'theta0':[1],'thetaL':[0.1],'thetaU':[100],'random_start':[1,5,10]}
+output=cv(data3_train.df,params,xcols='wvl',ycol=('meta',el),method='GP',ransac=False)
+
+#access the output data frame to create the lists of data to feed to the plotting script
+plotx=[output[output['random_start']==1]['n_components'],output[output['random_start']==5]['n_components'],output[output['random_start']==10]['n_components']]
+ploty=[output[output['random_start']==1]['rmsecv'],output[output['random_start']==5]['rmsecv'],output[output['random_start']==10]['rmsecv']]      
+alphas=[1.0,1.0,1.0]
+colors=['r','g','b']
+lbls=['RMSECV (rand_start=1)','RMSECV (rand_start=5)','RMSECV (rand_start=10)']
 
 plots.lineplot(plotx,ploty,lbls=lbls,figpath=outpath,figname=figfile,colors=colors,alphas=alphas,xtitle='# of Components',ytitle='RMSE (wt.%)')
 
