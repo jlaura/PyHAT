@@ -212,4 +212,3 @@ class spectral_data(object):
     def col_within_range(self,rangevals,col):
         mask=(self.df[('meta',col)]>rangevals[0])&(self.df[('meta',col)]<rangevals[1])
         return self.df.loc[mask]
-        
