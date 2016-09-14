@@ -1,4 +1,5 @@
 @echo off
+:top
 for /r %USERPROFILE% %%I in (*git.exe) do (
 
 	%%I config remote.origin.url git@github.com:tisaconundrum2/PySAT.git
@@ -10,3 +11,4 @@ for /r %USERPROFILE% %%I in (*git.exe) do (
 	%%I push -u origin master
 	timeout /t 600
 )
+goto :top
