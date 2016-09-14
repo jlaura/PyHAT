@@ -75,7 +75,5 @@ target/
 *.user
 *.csv
 *.dll
-src/Python PYSAT_GUI/.idea/misc.xml
-src/Python PYSAT_GUI/.idea/Python PYSAT_GUI.iml
 *.xml
 *.iml
