@@ -311,7 +311,7 @@ RMSEP_pls_sm=np.sqrt(np.mean((blended_test-testdata[0]['meta'][el])**2.))
 #unk_results_gp[el]=blended_unk_gp
 #unk_results.to_csv(outpath+'\\'+resultsfile_gp)
 
-print(foo)
+pass
     
 
 

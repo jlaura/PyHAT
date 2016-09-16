@@ -71,7 +71,6 @@ def lineplot(x,y,xrange=None,yrange=None,xtitle='',ytitle='',title=None,
     if yrange:
         plot.ylim(yrange)
     else:
-        plot.ylim([0,np.max(y[-np.isnan(y)])])
     
     plot.legend(loc='best',fontsize=8)
     if figpath and figname:

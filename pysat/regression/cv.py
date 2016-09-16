@@ -19,7 +19,9 @@ warnings.filterwarnings('ignore')
 def RMSE(ypred,y):
     return np.sqrt(np.mean((np.squeeze(ypred)-np.squeeze(y))**2))
 
-def cv(Train,params,xcols='wvl',ycol=('meta','SiO2'),method='PLS',ransac=False):
+def cv(Train,params,xcols='wvl',ycol=('meta','SiO2'),method='PLS',ransacparams=None):
+    if ransacparams:
+        self.ransacparams=ransacparams
     paramgrid=list(ParameterGrid(params))  #create a grid of parameter permutations
     cv_iterator=LeaveOneLabelOut(Train[('meta','Folds')])  #create an iterator for cross validation based on the predefined folds
 

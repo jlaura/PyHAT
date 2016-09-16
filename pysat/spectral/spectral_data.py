@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 from sklearn import cross_validation
+from sklearn.preprocessing import StandardScaler
 from pysat.spectral.baseline_code.als import ALS
 from pysat.spectral.baseline_code.dietrich import Dietrich
 from pysat.spectral.baseline_code.polyfit import PolyFit
@@ -242,5 +243,9 @@ class spectral_data(object):
         ratio=sum1/sum2
         
         self.df[('ratio',rationame)]=ratio
+        
+    def standard_scale(self,col):
+        self.df[col]=StandardScaler().fit_transform(self.df[col])
+        
         
         
