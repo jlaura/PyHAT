@@ -5,76 +5,28 @@ Created on Sat Mar 26 20:15:46 2016
 @author: rbanderson
 """
 import numpy as np
-import pysat.spectral.within_range as within_range
-from sklearn.cross_decomposition.pls_ import PLSRegression
-from pysat.spectral.meancenter import meancenter
-from matplotlib import pyplot as plot
 import scipy.optimize as opt
-   
-class pls_sm:
-    def __init__(self):
-        pass
-
-    # TODO sm.final(testdata[0]['meta'][el],
-    #            blended_test,
-    #            color='r',
-    #            xcol='Ref Comp Wt. %',
-    #            ycol='Predicted Comp Wt. %',
-    #            figpath=outpath)
-
-    # TODO rename this function to something better, later on
-    def final(self, testdata, blended_test, el, xcol='Ref Comp Wt%', ycol='Predicted Comp Wt%', figpath=None):
-        title = 'Reference and Predicted Comp of ' + el
-        if figpath is not None:
-            plot.figure()
-            plot.scatter(testdata, blended_test, color='r')
-            plot.title(title)
-            plot.xlabel(xcol)
-            plot.ylabel(ycol)
-            plot.plot([0, 100], [0, 100])
-            plot.savefig(figpath+'/'+title+'.png')
-
-    def fit(self,trainsets,ranges,ncs,ycol,figpath=None):
+from pysat.regression.regression import regression 
+from pysat.spectral.within_range import within_range
+class sm:
+    def __init__(self,ranges,method,params,ransacparams=None):
+        self.method=method 
         self.ranges=ranges
-        self.ncs=ncs        
-        self.ycol=ycol
-        submodels=[]    
-        mean_vects=[]
+        self.ransacparams=ransacparams
+        self.params=params
+        self.submodels=[]
         for i,rangei in enumerate(ranges):
-            data_tmp=within_range.within_range(trainsets[i],rangei,ycol)
-            x=data_tmp.xs('wvl',axis=1,level=0,drop_level=False)
-            y=data_tmp['meta'][ycol]
-            x_centered,x_mean_vect=meancenter(x) #mean center training data
-            pls=PLSRegression(n_components=ncs[i],scale=False)
-            pls.fit(x,y)
-            submodels.append(pls)
-            mean_vects.append(x_mean_vect)
-            if figpath is not None:
-                #calculate spectral residuals
-                E=x_centered-np.dot(pls.x_scores_,pls.x_loadings_.transpose())
-                Q_res=np.dot(E,E.transpose()).diagonal()
-                #calculate leverage                
-                T=pls.x_scores_
-                leverage=np.diag(T@np.linalg.inv(T.transpose()@T)@T.transpose())
-                
-                plot.figure()
-                plot.scatter(leverage,Q_res,color='r',edgecolor='k')
-                plot.title(ycol+' ('+str(rangei[0])+'-'+str(rangei[1])+')')
-                plot.xlabel('Leverage')
-                plot.ylabel('Q')
-                plot.ylim([0,1.1*np.max(Q_res)])
-                plot.xlim([0,1.1*np.max(leverage)])
-                    
-                plot.savefig(figpath+'/'+ycol+'_'+str(rangei[0])+'-'+str(rangei[1])+'Qres_vs_Leverage.png',dpi=600)
-                self.leverage=leverage
-                self.Q_res=Q_res
-            self.submodels=submodels
-            self.mean_vects=mean_vects
-         
-    def do_blend(self,predictions,truevals=None):
+            self.submodels.append(regression(method,params,i=i,ransacparams=ransacparams))
         
-        
+    #This function does the fitting for each submodel.
+    def fit(self,x,y):
+        for i,model in enumerate(self.submodels):
+            xtemp,ytemp=within_range(x[i],y[i],self.ranges[i])
+            model.fit(xtemp,ytemp)
+            
  
+    def do_blend(self,predictions,truevals=None):
+
         #create the array indicating which models to blend for each blend range
         #For three models, this creates an array like: [[0,0],[0,1],[1,1],[1,2],[2,2]]
         #Which indicates that in the first range, just use model 0
@@ -150,7 +102,9 @@ class pls_sm:
         #This allows different normalizations to be used with each submodel
         predictions=[]
         for i,k in enumerate(self.submodels):
-            xtemp=x[i].xs('wvl',axis=1,level=0,drop_level=False)
-            xtemp,mean_vect=meancenter(xtemp,previous_mean=self.mean_vects[i])
-            predictions.append(k.predict(xtemp['wvl']))
+            try:
+                xtemp=x[i]
+            except:
+                pass
+            predictions.append(k.predict(xtemp))
         return predictions
