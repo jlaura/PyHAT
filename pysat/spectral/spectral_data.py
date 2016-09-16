@@ -244,8 +244,10 @@ class spectral_data(object):
         
         self.df[('ratio',rationame)]=ratio
         
-    def standard_scale(self,col):
-        self.df[col]=StandardScaler().fit_transform(self.df[col])
-        
-        
-        
+    def standard_scale(self.col):
+		self.df[col]=StandardScaler().fit_transform(slf.df[col])
+		
+		
+    def col_within_range(self,rangevals,col):
+        mask=(self.df[('meta',col)]>rangevals[0])&(self.df[('meta',col)]<rangevals[1])
+        return self.df.loc[mask]
