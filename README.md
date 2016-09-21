@@ -28,8 +28,8 @@ It is a prototype and only displays what we want to accomplish in a working UI
 
 # PYSAT UI in Python
 
-- This version of PYSAT has a backend that has been created in Python specifically.
-- It is being built so it can work as close to the original libraries as physically possible
+- This version of PYSAT has a backend that has been created in Python.
+- This version is being built to work as close to the original libraries as physically possible
 
 Current Road Ahead
 - [x] Working Modules on UI
@@ -41,3 +41,34 @@ Current Road Ahead
 - [ ] Add ability to save state of GUI, i.e. all number that user inputs will be there again after closing GUI
 - [ ] Add ability to save data frame at any point in the workflow 
 - [ ] Setup a way to select points on a scatter plot.
+
+
+
+|--------------------|
+|        USER        |
+|--------------------|<----
+          |               |
+          V               |
+|--------------------|    |
+|    PYSAT_MAIN      |    | DISPLAY THE RESULTS TO THE USER
+|--------------------|    |
+          |               |
+          V               |
+|--------------------| ----
+|      PYSAT_UI      |
+|--------------------| <---
+     |    |    |          |  U_DATA
+     V    V    V          |  K_DATA
+|--------------------|    |
+|     PYSAT_FUNC     | ----
+|--------------------|
+    |     |      |
+    V     V      V
+|-----| |----| |----|
+|     | |    | |    |
+|-----| |----| |----|
+
+
+
+
+
