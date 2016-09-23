@@ -7,31 +7,23 @@ Created on Thu Sep  1 13:09:21 2016
 from matplotlib import pyplot as plot
 import numpy as np
 import itertools
+import colormaps
 
 def scatterplot(x,y,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Prediction (wt.%)',title=None,
                 lbls=None,one_to_one=False,figpath=None,figname=None,dpi=1000,
-                colors=None,annot_mask=None):
-    if colors==None:
-        colors=itertools.cycle(['r','g','b','c','m','y',])
-        
-    if annot_mask==None:
-        annot_mask=[None]*len(x)
-    if lbls==None:
-        lbls=['']*len(x)
+                colors=None,annot_mask=None,alpha=0.4,cmap=None,colortitle=''):
     plot.figure()
+    plot.register_cmap(name='viridis',cmap=colormaps.viridis)
+    plot.register_cmap(name='magma',cmap=colormaps.magma)
+    plot.register_cmap(name='inferno',cmap=colormaps.inferno)
+    plot.register_cmap(name='plasma',cmap=colormaps.plasma)
+    
     if title:
         plot.title(title)
     if xtitle:
         plot.xlabel(xtitle)
     if ytitle:
         plot.ylabel(ytitle)
-    if one_to_one:
-        plot.plot([0, 100], [0, 100],color='k')
-    for i in np.arange(len(x)):
-        plot.scatter(x[i],y[i],color=next(colors),label=lbls[i],edgecolors='black',linewidth=0.2,alpha=0.4)
-        
-        if annot_mask[i] is not None:
-            plot.scatter(x[i][annot_mask[i]],y[i][annot_mask[i]],facecolors='none',edgecolors='black',linewidth=1.0,label='RANSAC Outliers')
     if xrange:
         plot.xlim(xrange)
 #    else:
@@ -41,8 +33,33 @@ def scatterplot(x,y,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Pr
         plot.ylim(yrange)
 #    else:
 #        plot.ylim([0.9*np.min([0,np.min(y)]),np.min([100,1.1*np.max(y)])])
-
-    plot.legend(loc='best',fontsize=8,scatterpoints=1)
+    
+    if one_to_one:
+        plot.plot([0, 100], [0, 100],color='k')
+    
+    if cmap is not None:
+        plot.scatter(x,y,c=colors,edgecolors='black',linewidth=0.2,alpha=alpha,cmap=cmap)  
+        plot.colorbar(label=colortitle)
+    else:
+        try:
+            if isinstance(colors[0],tuple):
+                plot.scatter(x,y,color=colors,edgecolors='black',linewidth=0.2,alpha=alpha)  
+        except:
+            if colors==None:
+                colors=itertools.cycle(['r','g','b','c','m','y',])
+            
+            if annot_mask==None:
+                annot_mask=[None]*len(x)
+            if lbls==None:
+                lbls=['']*len(x)
+        
+            for i in np.arange(len(x)):
+                plot.scatter(x[i],y[i],color=next(colors),label=lbls[i],edgecolors='black',linewidth=0.2,alpha=alpha)
+                if annot_mask[i] is not None:
+                    plot.scatter(x[i][annot_mask[i]],y[i][annot_mask[i]],facecolors='none',edgecolors='black',linewidth=1.0,label='RANSAC Outliers')
+       
+    
+            plot.legend(loc='best',fontsize=8,scatterpoints=1)
     if figpath and figname:
         plot.savefig(figpath+'/'+figname,dpi=dpi)
         
