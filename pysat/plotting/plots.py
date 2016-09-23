@@ -13,9 +13,11 @@ def scatterplot(x,y,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Pr
                 colors=None,annot_mask=None):
     if colors==None:
         colors=itertools.cycle(['r','g','b','c','m','y',])
+        
     if annot_mask==None:
         annot_mask=[None]*len(x)
-    
+    if lbls==None:
+        lbls=['']*len(x)
     plot.figure()
     if title:
         plot.title(title)
@@ -56,6 +58,9 @@ def lineplot(x,y,xrange=None,yrange=None,xtitle='',ytitle='',title=None,
         alphas=itertools.cycle([1.0])
     else:
         alphas=itertools.cycle(alphas)
+        
+    if lbls==None:
+        lbls=['']*len(x)
         
     plot.figure()
     if title:
