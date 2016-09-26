@@ -10,9 +10,14 @@ from pysat.plotting import plots
 import numpy as np
 import warnings
 import itertools
-from matplotlib import pyplot as plot
-
+import matplotlib.pyplot as plot
+import colormaps
+import matplotlib
+plot.register_cmap(name='viridis',cmap=colormaps.viridis)
+    
 warnings.filterwarnings('ignore')
+
+
 
 print('Read training database')
 db=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Sample_Data\full_db_mars_corrected_dopedTiO2_pandas_format.csv"
@@ -43,113 +48,124 @@ data3.norm(ranges3)
 unknown_data3=unknown_data
 unknown_data3.norm(ranges3)
 
+print('Do PCA on data')
 data3.pca('wvl',nc=8)
 unknown_data3.pca('wvl',load_fit=data3.do_pca)
 
-x=data3.df['wvl'].columns.values
-x=[x,x]
-pcs=[data3.do_pca.components_[0,:],data3.do_pca.components_[1,:]]
-plots.lineplot(x,pcs,figpath=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output",figname='PCA_loadings_test.png')
-
-x=[data3.df[('PCA',1)],unknown_data3.df[('PCA',1)]]
-y=[data3.df[('PCA',2)],unknown_data3.df[('PCA',2)]]
-pc1_var=data3.do_pca.explained_variance_ratio_[0]*100
-pc2_var=data3.do_pca.explained_variance_ratio_[1]*100
-
-lbls=['Training','Unknown']
-plots.scatterplot(x,y,xtitle='PC1 ('+str(round(pc1_var,1))+r'%)',ytitle='PC2 ('+str(round(pc2_var,1))+r'%)',figname='PCA_scores_test.png',figpath=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output",lbls=lbls)
-
-x=np.array(data3.df[('PCA',1)])
-y=np.array(data3.df[('PCA',2)])
-pc1_var=data3.do_pca.explained_variance_ratio_[0]*100
-pc2_var=data3.do_pca.explained_variance_ratio_[1]*100
-colors=[]
-SiO2_colors=[]
-CaO_colors=[]
-Na2O_colors=[]
-MgO_colors=[]
-FeOT_colors=[]
-K2O_colors=[]
-
-for i in list(range(len(data3.df.index))):
-    print(i)
-    SiO2=data3.df[('meta','SiO2')].iloc[i]
-    CaO=data3.df[('meta','CaO')].iloc[i]
-    Na2O=data3.df[('meta','Na2O')].iloc[i]
-    MgO=data3.df[('meta','MgO')].iloc[i]
-    FeOT=data3.df[('meta','FeOT')].iloc[i]
-    K2O=data3.df[('meta','K2O')].iloc[i]
+print('make a pretty plot of PCA results')
+elems=['SiO2','TiO2','Al2O3','FeOT','MgO','CaO','Na2O','K2O']
+for elem in elems:
+    #set up the subplots
+    fig=plot.figure()
+    fig.set_size_inches(10,4)
+    ax1=fig.add_subplot(2,2,(1,3))
+    ax2=fig.add_subplot(2,2,2)
+    ax3=fig.add_subplot(2,2,4,xlabel='Wavelength (nm)')
     
+    #plot the scores
+    x=[data3.df[('PCA',1)]]
+    y=[data3.df[('PCA',2)]]
+    pc1_var=data3.do_pca.explained_variance_ratio_[0]*100
+    pc2_var=data3.do_pca.explained_variance_ratio_[1]*100
     
-    SiO2_colors.append(SiO2)
-    CaO_colors.append(CaO)
-    Na2O_colors.append(Na2O)
-    MgO_colors.append(MgO)     
-    FeOT_colors.append(FeOT)     
-    K2O_colors.append(K2O)     
+    mappable=ax1.scatter(x,y,c=data3.df[('meta',elem)],cmap='viridis',linewidth=0.2) 
+    ax1.set_xlabel('PC1 ('+str(round(pc1_var,1))+r'%)')
+    ax1.set_ylabel('PC2 ('+str(round(pc2_var,1))+r'%)')
     
-       
-    SiO2=SiO2/(SiO2+CaO+Na2O)    
-    CaO=SiO2/(SiO2+CaO+Na2O)    
-    Na2O=SiO2/(SiO2+CaO+Na2O)    
-    colors.append((SiO2,CaO,Na2O))
-
-
-plots.scatterplot(x,y,xtitle='PC1 ('+str(round(pc1_var,1))+r'%)',ytitle='PC2 ('+str(round(pc2_var,1))+r'%)',figname='PCA_scores_SiO2_test.png',figpath=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output",colors=SiO2_colors,alpha=1,cmap='viridis',colortitle='SiO2')
-plots.scatterplot(x,y,xtitle='PC1 ('+str(round(pc1_var,1))+r'%)',ytitle='PC2 ('+str(round(pc2_var,1))+r'%)',figname='PCA_scores_CaO_test.png',figpath=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output",colors=CaO_colors,alpha=1,cmap='viridis',colortitle='CaO')
-plots.scatterplot(x,y,xtitle='PC1 ('+str(round(pc1_var,1))+r'%)',ytitle='PC2 ('+str(round(pc2_var,1))+r'%)',figname='PCA_scores_Na2O_test.png',figpath=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output",colors=Na2O_colors,alpha=1,cmap='viridis',colortitle='Na2O')
-plots.scatterplot(x,y,xtitle='PC1 ('+str(round(pc1_var,1))+r'%)',ytitle='PC2 ('+str(round(pc2_var,1))+r'%)',figname='PCA_scores_MgO_test.png',figpath=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output",colors=MgO_colors,alpha=1,cmap='viridis',colortitle='MgO')
-plots.scatterplot(x,y,xtitle='PC1 ('+str(round(pc1_var,1))+r'%)',ytitle='PC2 ('+str(round(pc2_var,1))+r'%)',figname='PCA_scores_FeOT_test.png',figpath=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output",colors=FeOT_colors,alpha=1,cmap='viridis',colortitle='FeOT')
-plots.scatterplot(x,y,xtitle='PC1 ('+str(round(pc1_var,1))+r'%)',ytitle='PC2 ('+str(round(pc2_var,1))+r'%)',figname='PCA_scores_K2O_test.png',figpath=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output",colors=K2O_colors,alpha=1,cmap='viridis',colortitle='K2O')
-
-
-plots.scatterplot(x,y,xtitle='PC1 ('+str(round(pc1_var,1))+r'%)',ytitle='PC2 ('+str(round(pc2_var,1))+r'%)',figname='PCA_scores_gradient_test.png',figpath=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output",colors=colors,alpha=1)
-
-
-print('Do ICA using FastICA algorithm')
-data3.ica('wvl',nc=8)
-unknown_data3.ica('wvl',load_fit=data3.do_ica)
-
-
-x=data3.df['wvl'].columns.values
-x=[x,x]
-ics=[data3.do_ica.components_[0,:],data3.do_ica.components_[1,:]]
-plots.lineplot(x,ics,figpath=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output",figname='ICA_loadings_test.png')
-
-x=[data3.df[('ICA',1)],unknown_data3.df[('ICA',1)]]
-y=[data3.df[('ICA',2)],unknown_data3.df[('ICA',2)]]
-
-lbls=['Training','Unknown']
-plots.scatterplot(x,y,xtitle='IC1',ytitle='IC2',figname='ICA_scores_test.png',figpath=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output",lbls=lbls)
+    fig.colorbar(mappable,label=elem,ax=ax1)
+    
+    #plot the loadings
+    x=data3.df['wvl'].columns.values
+    pcs=[data3.do_pca.components_[0,:],data3.do_pca.components_[1,:]]
+    ax2.plot(x,pcs[0])
+    ax3.plot(x,pcs[1])
+    
+    ax2.set_yticklabels([])
+    ax2.set_xticklabels([])
+    ax2.set_ylabel('PC1')
+    
+    ax3.set_yticklabels([])
+    ax3.set_ylabel('PC2')
+    
+    fig.subplots_adjust(hspace=0)
+    
+    figpath=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output"
+    fig.savefig(figpath+r'\PCA_fig'+elem+'.png',dpi=1000)
+    
 
 print('Do ICA using JADE algorithm')
-data3.ica_jade('wvl',nc=8)
-#unknown_data3.ica_jade('wvl',load_fit=data3.ica_jade_loadings)
+#for nc in list(range(7,15)):
+nc=11 
+data3.ica_jade('wvl',nc=nc,corrcols=[('meta','SiO2'),('meta','TiO2'),('meta','Al2O3'),('meta','FeOT'),('meta','MgO'),('meta','CaO'),('meta','Na2O'),('meta','K2O')])
 
 x=data3.df['wvl'].columns.values
 ics=[data3.ica_jade_loadings[0,:].T,data3.ica_jade_loadings[1,:].T]
 
-f,ax=plot.subplots(8,sharex=True)
+fig,ax=plot.subplots(nc)
+fig.set_size_inches(8,nc)
+minorticks=matplotlib.ticker.MultipleLocator(25)
 
-ax[0].plot(x,data3.ica_jade_loadings[0,:].T)
-ax[1].plot(x,data3.ica_jade_loadings[1,:].T)
-ax[2].plot(x,data3.ica_jade_loadings[2,:].T)
-ax[3].plot(x,data3.ica_jade_loadings[3,:].T)
-ax[4].plot(x,data3.ica_jade_loadings[4,:].T)
-ax[5].plot(x,data3.ica_jade_loadings[5,:].T)
-ax[6].plot(x,data3.ica_jade_loadings[6,:].T)
-ax[7].plot(x,data3.ica_jade_loadings[7,:].T)
-plot.savefig(r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output\ICA_loadings_JADE_test.png",dpi=1000)
-plot.show()
+for i,axis in enumerate(ax):
+    axis.plot(x,data3.ica_jade_loadings[i,:].T)
+    axis.set_yticklabels([])
+    axis.xaxis.set_minor_locator(minorticks)
+    axis.set_ylabel(data3.ica_jade_ids[i],fontsize=8)
+    
+    if i<(nc-1):
+        axis.set_xticklabels([])
+ax[-1].set_xlabel('Wavelength (nm)')
+    
+fig.subplots_adjust(hspace=0)
+plot.savefig(r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output\ICA_loadings_JADE_test_"+str(nc)+".png",dpi=1000)
+
+#O=[data3.df[('ICA_JADE',1)]]
+#Ca=[data3.df[('ICA_JADE',2)]]
+Na=[data3.df[('ICA_JADE',4)]]
+#Mg=[data3.df[('ICA_JADE',4)]]
+K=[data3.df[('ICA_JADE',5)]]
+#Ca2=[data3.df[('ICA_JADE',6)]]
+#Si=[data3.df[('ICA_JADE',7)]]
+#Ti=[data3.df[('ICA_JADE',8)]]
 
 
-#plots.lineplot(x,ics,figpath=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output",figname='ICA_jade_sources_test.png')
+print('make a pretty plot of ICA JADE results')
+elems=['SiO2','TiO2','Al2O3','FeOT','MgO','CaO','Na2O','K2O']
+for elem in elems:
+    #set up the subplots
+    fig=plot.figure()
+    fig.set_size_inches(10,4)
+    ax1=fig.add_subplot(2,2,(1,3))
+    ax2=fig.add_subplot(2,2,2)
+    ax3=fig.add_subplot(2,2,4,xlabel='Wavelength (nm)')
+    
+    #plot the scores
+    
+    mappable=ax1.scatter(Na,K,c=data3.df[('meta',elem)],cmap='viridis',linewidth=0.2) 
+    ax1.set_xlabel('Na Score')
+    ax1.set_ylabel('K score')
+    
+    fig.colorbar(mappable,label=elem,ax=ax1)
+    
+    #plot the loadings
+    x=data3.df['wvl'].columns.values
+    
+    ax2.plot(x,data3.ica_jade_loadings[3,:].T)
+    ax2.set_yticklabels([])
+    ax2.set_xticklabels([])
+    ax2.set_ylabel('Na Source')
+    
+    
+    ax3.plot(x,data3.ica_jade_loadings[4,:].T)
+    ax3.set_yticklabels([])
+    ax3.set_ylabel('K Source')
+    
+    
+    
+    fig.subplots_adjust(hspace=0)
+    
+    figpath=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output"
+    fig.savefig(figpath+r'\ICA_fig'+elem+'.png',dpi=1000)
 
-x=[data3.df[('ICA_JADE',1)]]#,unknown_data3.df[('ICA_JADE',1)]]
-y=[data3.df[('ICA_JADE',2)]]#,unknown_data3.df[('ICA_JADE',2)]]
-
-lbls=['Training']
-plots.scatterplot(x,y,xtitle='IC1',ytitle='IC2',figname='ICA_jade_scores_test.png',figpath=r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Output",lbls=lbls)
 
 pass
     

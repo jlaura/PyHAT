@@ -269,16 +269,34 @@ class spectral_data(object):
             self.df[('ICA',i)]=ica_result[:,i-1]
         
 		
-    def ica_jade(self,col,nc=None,load_fit=None):
+    def ica_jade(self,col,nc=None,load_fit=None,corrcols=None):
         if load_fit is not None:
             scores=np.dot(load_fit,self.df[col])
         else:
             scores= jade(self.df[col].values,m=nc,verbose=False) 
         loadings=np.dot(scores,self.df[col])
-        for i in list(range(1,len(scores[:,0]))):
-            print(i)
+        
+        icacols=[]        
+        for i in list(range(1,len(scores[:,0])+1)):
+            if np.abs(np.max(loadings[i-1,:]))<np.abs(np.min(loadings[i-1,:])): #flip the sign if necessary to look nicer
+                loadings[i-1,:]=loadings[i-1,:]*-1
+                scores[i-1,:]=scores[i-1,:]*-1
+            icacols.append(('ICA_JADE',i))
             self.df[('ICA_JADE',i)]=scores[i-1,:].T
         self.ica_jade_loadings=loadings
+        
+        if corrcols:
+            combined_cols=corrcols+icacols
+            corrdf=self.df[combined_cols].corr().drop(icacols,1).drop(corrcols,0)
+            ica_jade_ids=[]
+            for i in corrdf.loc['ICA_JADE'].index:
+                tmp=corrdf.loc[('ICA_JADE',i)]
+                match=tmp.values==np.max(tmp)
+                ica_jade_ids.append(corrcols[np.where(match)[0]][1]+' (r='+str(np.round(np.max(tmp),1))+')')
+                pass
+            self.ica_jade_corr=corrdf
+            self.ica_jade_ids=ica_jade_ids
+            
         
         
     def col_within_range(self,rangevals,col):
