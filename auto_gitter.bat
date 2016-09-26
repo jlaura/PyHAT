@@ -6,6 +6,6 @@ for /f "delims=" %%I in ('dir %USERPROFILE% /b/o/w/s ^| find /i "cmd\git.exe"') 
 	%%I add -A
 	%%I commit -m "Auto Generated Update:_
 	%%I push -u origin master
-	timeout /t 600
 )
+pause
 goto :top
