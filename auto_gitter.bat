@@ -11,3 +11,4 @@ for /f "delims=" %%I in ('dir %USERPROFILE% /b/o/w/s ^| find /i "cmd\git.exe"') 
 	set "commit="
 )
 goto :top
+test
