@@ -28,16 +28,18 @@ It is a prototype and only displays what we want to accomplish in a working UI
 
 # PYSAT UI in Python
 
-- This version of PYSAT has a backend that has been created in Python specifically.
-- It is being built so it can work as close to the original libraries as physically possible
+- This version of PYSAT has a backend that has been created in Python.
+- This version is being built to work as close to the original libraries as physically possible
 
 Current Road Ahead
 - [x] Working Modules on UI
 - [x] Selecting functions from Menubar adds functions dynamically
-- [ ] Shortcuts such as Ctrl S to save
+- [x] Shortcuts such as Ctrl S to save
 - [ ] Embedded Plots and Graphs from data collected
-- [ ] Package all python packages: sklearn, scipy, numpy, matplotlib, pysat for user consumption
+- [x] ~~Package all python packages: sklearn, scipy, numpy, matplotlib, pysat for user consumption~~ It has been discovered that the user can download Anaconda, and run our files as normal.
 - [ ] Add ability to save plots in personal files
 - [ ] Add ability to save state of GUI, i.e. all number that user inputs will be there again after closing GUI
 - [ ] Add ability to save data frame at any point in the workflow 
 - [ ] Setup a way to select points on a scatter plot.
+
+![PYSAT](https://github.com/tisaconundrum2/PySAT/blob/master/src/installer/Flowchart.png)
