@@ -23,9 +23,9 @@ class regression:
         self.inliers=None
         self.ransac=False
         
-        if self.method is 'PLS':
+        if self.method[i] is 'PLS':
             self.model=PLSRegression(**params[i])
-        if self.method is 'GP':
+        if self.method[i] is 'GP':
             #get the method for dimensionality reduction and the number of components
             self.reduce_dim=params[i]['reduce_dim']
             self.n_components=params[i]['n_components']

@@ -44,7 +44,7 @@ class pls_sm:
             data_tmp=within_range.within_range(trainsets[i],rangei,ycol)
             x=data_tmp.xs('wvl',axis=1,level=0,drop_level=False)
             y=data_tmp['meta'][ycol]
-            x_centered,x_mean_vect=meancenter(x) #mean center training data
+            x_centered,x_mean_vect=meancenter(x,'wvl') #mean center training data
             pls=PLSRegression(n_components=ncs[i],scale=False)
             pls.fit(x,y)
             submodels.append(pls)
@@ -151,6 +151,6 @@ class pls_sm:
         predictions=[]
         for i,k in enumerate(self.submodels):
             xtemp=x[i].xs('wvl',axis=1,level=0,drop_level=False)
-            xtemp,mean_vect=meancenter(xtemp,previous_mean=self.mean_vects[i])
+            xtemp,mean_vect=meancenter(xtemp,'wvl',previous_mean=self.mean_vects[i])
             predictions.append(k.predict(xtemp['wvl']))
         return predictions
