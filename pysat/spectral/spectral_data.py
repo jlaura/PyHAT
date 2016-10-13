@@ -9,6 +9,7 @@ import pandas as pd
 import scipy as sp
 from sklearn import cross_validation
 from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA,FastICA
 from pysat.spectral.baseline_code.als import ALS
 from pysat.spectral.baseline_code.dietrich import Dietrich
 from pysat.spectral.baseline_code.polyfit import PolyFit
@@ -18,7 +19,7 @@ from pysat.spectral.baseline_code.kajfosz_kwiatek import KajfoszKwiatek as KK
 from pysat.spectral.baseline_code.mario import Mario
 from pysat.spectral.baseline_code.median import MedianFilter
 from pysat.spectral.baseline_code.rubberband import Rubberband
-
+from pysat.spectral.jade import jadeR as jade
 
 def norm_total(df):
     df=df.div(df.sum(axis=1),axis=0)
@@ -244,10 +245,60 @@ class spectral_data(object):
         
         self.df[('ratio',rationame)]=ratio
         
-    def standard_scale(self.col):
-		self.df[col]=StandardScaler().fit_transform(slf.df[col])
+    def standard_scale(self,col):
+        self.df[col]=StandardScaler().fit_transform(self.df[col])
+	
+    def pca(self,col,nc=None,load_fit=None):
+        if nc:        
+            self.do_pca=PCA(n_components=nc)
+            self.do_pca.fit(self.df[col])
+        if load_fit:
+            self.do_pca=load_fit
+        pca_result=self.do_pca.transform(self.df[col])
+        for i in list(range(1,self.do_pca.n_components+1)):
+            self.df[('PCA',i)]=pca_result[:,i-1]
+            
+    def ica(self,col,nc=None,load_fit=None):
+        if nc:        
+            self.do_ica=FastICA(n_components=nc)
+            self.do_ica.fit(self.df[col])
+        if load_fit:
+            self.do_ica=load_fit
+        ica_result=self.do_ica.transform(self.df[col])
+        for i in list(range(1,self.do_ica.n_components+1)):
+            self.df[('ICA',i)]=ica_result[:,i-1]
+        
 		
-		
+    def ica_jade(self,col,nc=None,load_fit=None,corrcols=None):
+        if load_fit is not None:
+            scores=np.dot(load_fit,self.df[col])
+        else:
+            scores= jade(self.df[col].values,m=nc,verbose=False) 
+        loadings=np.dot(scores,self.df[col])
+        
+        icacols=[]        
+        for i in list(range(1,len(scores[:,0])+1)):
+            if np.abs(np.max(loadings[i-1,:]))<np.abs(np.min(loadings[i-1,:])): #flip the sign if necessary to look nicer
+                loadings[i-1,:]=loadings[i-1,:]*-1
+                scores[i-1,:]=scores[i-1,:]*-1
+            icacols.append(('ICA_JADE',i))
+            self.df[('ICA_JADE',i)]=scores[i-1,:].T
+        self.ica_jade_loadings=loadings
+        
+        if corrcols:
+            combined_cols=corrcols+icacols
+            corrdf=self.df[combined_cols].corr().drop(icacols,1).drop(corrcols,0)
+            ica_jade_ids=[]
+            for i in corrdf.loc['ICA_JADE'].index:
+                tmp=corrdf.loc[('ICA_JADE',i)]
+                match=tmp.values==np.max(tmp)
+                ica_jade_ids.append(corrcols[np.where(match)[0]][1]+' (r='+str(np.round(np.max(tmp),1))+')')
+                pass
+            self.ica_jade_corr=corrdf
+            self.ica_jade_ids=ica_jade_ids
+            
+        
+        
     def col_within_range(self,rangevals,col):
         mask=(self.df[('meta',col)]>rangevals[0])&(self.df[('meta',col)]<rangevals[1])
         return self.df.loc[mask]
