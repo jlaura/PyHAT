@@ -53,19 +53,19 @@ Created on Tue Nov 04 16:31:33 2014
 import numpy
 import scipy
 #import scipy.signal
-import watrous
+import baseline_code.watrous
 import matplotlib.pyplot as plot
-import decimalpy 
-import decimal
-import decimalVectorList
-import spl_init
-import spl_interp      
+#import decimalpy 
+#import decimal
+#import decimalVectorList
+import baseline_code.spl_init
+import baseline_code.spl_interp      
 def chemcam_continuum(x,sp,int_flag,lvmin=-9999):
     n=len(sp)
     lv=int(numpy.log(n-1)/numpy.log(2))
     sp1=sp
     #sp1=scipy.signal.medfilt(sp1,kernel_size=9)
-    w=watrous.watrous(sp1,lv)
+    w=baseline_code.watrous.watrous(sp1,lv)
     lvmn=lv-1
     if lvmin != -9999:
         if lvmin<lv:
@@ -125,8 +125,8 @@ def chemcam_continuum(x,sp,int_flag,lvmin=-9999):
         y=decimalpy.NaturalCubicSpline(xi_dec,yi_dec)    
         yf=numpy.array(y(x_dec),dtype='float')
         """
-        y=spl_init.spl_init(x[i0],yi)
-        yf=spl_interp.spl_interp(x[i0],yi,y,x)
+        y=baseline_code.spl_init.spl_init(x[i0],yi)
+        yf=baseline_code.spl_interp.spl_interp(x[i0],yi,y,x)
         
     return yf
         
