@@ -98,8 +98,8 @@ def chemcam_continuum(x,sp,int_flag,lvmin=-9999):
         if dx2 >= n:
             dx2=n-1
         yi[i]=min(sp[dx1:dx2])
-    print(x[i0])
-    print(yi)
+   # print(x[i0])
+   # print(yi)
     #if len(i0)==2: int_flag=0 #If there are only 2 points, just use a linear fit
     if int_flag==0:
         yf=scipy.interpolate.interp1d(x[i0],yi)
@@ -168,8 +168,8 @@ def ccam_remove_continuum(x,y,lv,lvmin,int_flag):
         while stdb > stdb0*1e-2:
             sc=chemcam_continuum(x,y,int_flag,lvmin=il)
             counter=counter+1
-            print(il,counter)
-            print(sc[1000])
+            #print(il,counter)
+            #print(sc[1000])
             y=y-sc
             stdb=numpy.std(sc,ddof=1)
 

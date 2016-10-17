@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Nov 11 18:21:47 2014
-
+Translated to Python from IDL by Ryan Anderson
 @author: rbanderson
 """
 import numpy 

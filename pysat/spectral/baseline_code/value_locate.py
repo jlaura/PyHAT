@@ -139,55 +139,47 @@ def is_scalar(var):
 """ 
 
 
-def val_loc_inc(x, u, l64=False):
+def val_loc_inc(x, u):
     
-    maxlong = 2.**31-1
-    
-    if l64 or x.size > maxlong:
-        y64=True
-    else: y64=False
-    if y64:
-        one=numpy.float64(1)
-    else:
-        one=numpy.float32(1)
-    
-    nx  = x.size + one
-    nu  = u.size*one
+
+    nx  = x.size
+    nu  = u.size
     mm  = max(x[-1],max(u))*1.01
     xx  = numpy.append([x],[mm])
     c1   = numpy.append([xx],[u])
     
     ord1 = numpy.argsort(c1)
     d1   = numpy.append([-1],numpy.append(numpy.where(ord1<nx), nx))
-    out=numpy.zeros_like(u)
+    out=numpy.zeros(nu)
     
-    
-    #for i=0,(nx-one)+1 do begin
-    #	if d[i+1] gt d[i] then out[ord[d[i]+1:d[i+1]-1]-nx] = i-1
-    
+
     j0  = d1+1
     j1  = d1[1:]-1
     nouti = j1-j0[:len(j1)]+1
-    nouts = numpy.cumsum(nouti)
-    
+    oldout=out
     for i in list(range(0,int(nx)+1)):
         if nouti[i] >= 1:
-            tmp=ord1[j0[i]:j1[i]+1]            
-            out[numpy.array(tmp-nx,dtype='int')]= int(i-1)
+            tmp=ord1[j0[i]:j1[i]+1]-nx
+            #print(tmp)            
+            out[tmp]= int(i-1)
     #check boundaries
     nlow = 1
     itst = 0
     while nlow >= 1:
-        bound = numpy.where(xx[out+1]<= u and xx[out+1]==u)
+        xxout=[]
+        for i in out+1:
+            xxout.append(xx[i])
+        bound = numpy.where(numpy.all(numpy.array([xxout<= u,xxout==u]),axis=0)==True)[0]
         nlow=bound.size
         if nlow>= 1: 
-            out[bound]=out[bound]+1 #< (nx-2)
-    	#stop
+            out[bound]=out[bound]+1
+    	
         itst = itst + 1
         if itst > numpy.float32(999999): print('Boundary Check Failed')
-    	#print, itst
-    out = out < (nx-2)
-    if len(u.shape)[0] == 0: out = out[0]
+    	
+    for i in out:
+        i = min(i,(nx-2))
+    if u.shape[0] == 0: out = out[0]
     return out
     
 
@@ -209,7 +201,7 @@ def value_locate(x,u1,l64=False):
     if x[-1] < x[0]:
         temp=x.size-2-val_loc_inc(x[::-1],u1,l64=l64)
     else:
-        temp = val_loc_inc(x, u1, l64=l64)
+        temp = val_loc_inc(x, u1)
     
     out = out + temp
     return out
