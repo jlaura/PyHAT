@@ -61,7 +61,7 @@ def spl_interp(xa, ya, y2a, x):
     n = xa.size
 
 #    valloc=baseline_code.value_locate.value_locate(xa, x)
-    valloc=numpy.digitize(x,xa)-1 #The numpy routing digitize appears to basically do what value_locate does in IDL
+    valloc=numpy.digitize(x,xa)-1 #The numpy routine digitize appears to basically do what value_locate does in IDL
     klo=[]
     for i in valloc:
         klo.append(min(max(i,0),(n-2)))
@@ -79,7 +79,7 @@ def spl_interp(xa, ya, y2a, x):
     
     a = ( xa[khi] - x ) / h
     b = ( x - xa[klo] ) / h
-    output=a*ya[klo]+b*ya[khi]+((a**3-a)*y2a[klo]+(b**3-b)*y2a[khi])*(h**2)/6.
+    output=a*ya[klo]+b*ya[khi]+((a**3.-a)*y2a[klo]+(b**3.-b)*y2a[khi])*(h**2.)/6.
     return output
     
     	# spl_interp.pro
