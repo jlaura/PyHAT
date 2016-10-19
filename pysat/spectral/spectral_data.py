@@ -20,7 +20,6 @@ from pysat.spectral.baseline_code.mario import Mario
 from pysat.spectral.baseline_code.median import MedianFilter
 from pysat.spectral.baseline_code.rubberband import Rubberband
 from pysat.spectral.jade import jadeR as jade
-from pysat.spectral.baseline_code.ccam_remove_continuum import ccam_br
 
 def norm_total(df):
     df=df.div(df.sum(axis=1),axis=0)
@@ -201,22 +200,18 @@ class spectral_data(object):
             br=MedianFilter()
         if method is 'rubberband':
             br=Rubberband()
-        if method is 'ccam':
-            br=ccam_br()
         #if method is 'wavelet':
          #   br=Wavelet()
             
             
         #if parameters are provided, use them to set the parameters of br
         if params is not None:
-            for i in params.keys():
+            for i in br.__dict__.keys():
                 try:
-                    setattr(br,i,params[i])
+                    br[i]=params[i]
                 except:
                     print('Required keys are:')
                     print(br.__dict__.keys())
-                    print('Exiting without removing baseline!')
-                    return
         br.fit(wvls,spectra,segment=segment)
         self.df_baseline=self.df.copy()
         self.df_baseline['wvl']=br.baseline
