@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Nov 04 16:31:33 2014
+Translation to Python begun on Tue Nov 04 16:31:33 2014 by Ryan Anderson
+
 ;+
 ; NAME:
 ;       REMOVE_CONTINUUM
@@ -47,19 +48,16 @@ Created on Tue Nov 04 16:31:33 2014
 ;      Add interpolation Flag October 2009
 ;      Modify convex hull October 2011
 ;      Translated to Python by Ryan Anderson Nov 2014
+;      
 
-@author: rbanderson
 """
 import numpy
 import scipy
-#import scipy.signal
 import baseline_code.watrous
-import matplotlib.pyplot as plot
-#import decimalpy 
-#import decimal
-#import decimalVectorList
 import baseline_code.spl_init
-import baseline_code.spl_interp      
+import baseline_code.spl_interp 
+from pysat.spectral.baseline_code.common import Baseline
+     
 def chemcam_continuum(x,sp,int_flag,lvmin=-9999):
     n=len(sp)
     lv=int(numpy.log(n-1)/numpy.log(2))
@@ -125,13 +123,20 @@ def chemcam_continuum(x,sp,int_flag,lvmin=-9999):
         y=decimalpy.NaturalCubicSpline(xi_dec,yi_dec)    
         yf=numpy.array(y(x_dec),dtype='float')
         """
+        #TODO: There are probably python spline interpolation functions that would give the same result
+        #But for now, use the translated functions from IDL
+        
         y=baseline_code.spl_init.spl_init(x[i0],yi)
         yf=baseline_code.spl_interp.spl_interp(x[i0],yi,y,x)
+        
+        
         
     return yf
         
 
-def ccam_remove_continuum(x,y,lv,lvmin,int_flag):
+def ccam_remove_continuum(x,y,lv,lvmin=2,int_flag=2):
+    x=numpy.array(x,dtype='float64')
+    y=numpy.array(y,dtype='float64')    
     y_old=y    
     if len(x.shape) != 1:
         print("Wavelength must be a 1D array!")
@@ -172,13 +177,25 @@ def ccam_remove_continuum(x,y,lv,lvmin,int_flag):
             #print(sc[1000])
             y=y-sc
             stdb=numpy.std(sc,ddof=1)
-
         stdb0=numpy.std(y,ddof=1)
         stdb=stdb0
         y=y-sc
     
-    return y,y_old-y
+    baseline=y_old-y
+    return baseline
         
+
+class ccam_br(Baseline):
+  def __init__(self,lv=10,lvmin=2,int_flag=2):
+    self.lv_ = lv
+    self.lvmin_ = lvmin
+    self.int_flag_ = int_flag
     
+
+  def _fit_one(self, x, y):
+    return ccam_remove_continuum(x,y, self.lv_, lvmin=self.lvmin_,
+                           int_flag=self.int_flag_)
+
+ 
                 
         
