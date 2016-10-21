@@ -9,8 +9,8 @@ import numpy as np
 import itertools
 import colormaps
 
-def scatterplot(x,y,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Prediction (wt.%)',title=None,
-                lbls=None,one_to_one=False,figpath=None,figname=None,dpi=1000,
+def scatterplot(x,y,figpath,figname,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Prediction (wt.%)',title=None,
+                lbls=None,one_to_one=False,dpi=1000,
                 colors=None,annot_mask=None,alpha=0.4,cmap=None,colortitle=''):
     plot.figure()
     plot.register_cmap(name='viridis',cmap=colormaps.viridis)
