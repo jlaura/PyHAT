@@ -2,7 +2,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/USGS-Astrogeology/PySAT/badge.svg?branch=master)](https://coveralls.io/github/USGS-Astrogeology/PySAT?branch=master)
 # Installation
 
-  - Install [Anaconda Python](https://www.continuum.io/downloads).  Be sure to get Python 3.x
+  - Click and download [Anaconda Python 4.1.1](https://repo.continuum.io/archive/Anaconda3-4.1.1-Windows-x86.exe).  The pysat package and UI has been designed specifically with 4.1.1. Newer versions of Anaconda breaks this package. 
+  - If you're using a non-Windows machine go to Anaconda's [download page](https://www.continuum.io/downloads) and pick up the 4.1.1 package
   - Download or clone this repository
   - `cd` into this repository and execute `conda env create`.  This will read the `environment.yml` file and install (using conda) all dependencies in a self-contained environment.
   - `source activate pysat` to activate said environment.
@@ -41,5 +42,5 @@ Current Road Ahead
 - [ ] Add ability to save state of GUI, i.e. all number that user inputs will be there again after closing GUI
 - [ ] Add ability to save data frame at any point in the workflow 
 - [ ] Setup a way to select points on a scatter plot.
-TEST TEST
+
 ![PYSAT](https://github.com/tisaconundrum2/PySAT/blob/master/src/installer/Flowchart.png)
