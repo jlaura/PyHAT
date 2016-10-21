@@ -7,6 +7,8 @@ Translated to Python from IDL by Ryan Anderson
 import numpy 
 import scipy
 import scipy.signal
+
+
 def watrous(z,scale,kernel=numpy.array([1.,4.,6.,4.,1.])/16.):
     z=numpy.float32(z)
     s=z.shape

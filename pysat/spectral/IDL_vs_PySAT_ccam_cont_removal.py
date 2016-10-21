@@ -15,6 +15,7 @@ import matplotlib.pyplot as plot
 import numpy
 import pandas as pd
 from pysat.spectral.spectral_data import spectral_data
+import mlpy.wavelet
 
 filelist=glob.glob(r"E:\ChemCam\Calibration Data\LANL_testbed\Caltargets\*calib.sav")
 filelist2=glob.glob(r"E:\ChemCam\Calibration Data\LANL_testbed\Caltargets\test.sav")
@@ -31,7 +32,9 @@ for i,j in enumerate(x):
     colnames.append(('wvl',x[i]))
 muv.columns=pd.MultiIndex.from_tuples(colnames)
 muv=spectral_data(muv)
+muv2=spectral_data(muv)
 muv.remove_baseline(method='ccam',params={'int_flag_':2,'lvmin_':6,'lv_':10})
+muv2.remove_baseline(method='wavelet',params=)
 #muv_denoise,muv_noise=ccam_denoise.ccam_denoise(muv,sig=3,niter=4)
 #plot.figure()
 #plot.plot(muv_noise)

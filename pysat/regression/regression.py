@@ -17,7 +17,7 @@ import copy
 
 
 class regression:
-    def __init__(self,method,params,i=0,ransacparams=None):
+    def __init__(self,method,params,i=0,ransacparams={}):
         self.method=method 
         self.outliers=None
         self.inliers=None
@@ -35,14 +35,16 @@ class regression:
             params_temp.pop('reduce_dim')
             params_temp.pop('n_components')
             self.model=GaussianProcess(**params_temp)
-        if ransacparams is not None:
-            self.model=RANSAC(self.model,**ransacparams[i])
-            self.ransac=True
+#TODO: Why doesn't this if statement work correctly?            
+#        if bool(ransacparams[i]):
+#            print('RANSAC')
+#            self.model=RANSAC(self.model,**ransacparams[i])
+#            self.ransac=True
             
         
-    def fit(self,x,y):
+    def fit(self,x,y,i=0):
         #if gaussian processes are being used, data dimensionality needs to be reduced before fitting        
-        if self.method is 'GP':
+        if self.method[i] is 'GP':
             if self.reduce_dim is 'ICA':
                 do_ica=FastICA(n_components=self.n_components)
                 self.do_reduce_dim=do_ica.fit(x)
@@ -57,7 +59,7 @@ class regression:
                 self.outliers=np.logical_not(self.model.inlier_mask_)
                 print(str(np.sum(self.outliers))+' outliers removed with RANSAC')
         
-            if self.method is 'PLS' and self.ransac is False:
+            if self.method[i] is 'PLS' and self.ransac is False:
                 self.calc_Qres_Lev(x)
             self.goodfit=True
         except:
