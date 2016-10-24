@@ -53,10 +53,11 @@ Translation to Python begun on Tue Nov 04 16:31:33 2014 by Ryan Anderson
 """
 import numpy
 import scipy
-import baseline_code.watrous
-import baseline_code.spl_init
-import baseline_code.spl_interp 
+import pysat.spectral.baseline_code.watrous
+import pysat.spectral.baseline_code.spl_init
+import pysat.spectral.baseline_code.spl_interp 
 from pysat.spectral.baseline_code.common import Baseline
+import pywt
      
 def chemcam_continuum(x,sp,int_flag,lvmin=-9999):
     n=len(sp)
