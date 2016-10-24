@@ -7,7 +7,7 @@ Created on Thu Sep  1 13:09:21 2016
 from matplotlib import pyplot as plot
 import numpy as np
 import itertools
-import colormaps
+import pysat.plotting.colormaps as colormaps
 
 def scatterplot(x,y,figpath,figname,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Prediction (wt.%)',title=None,
                 lbls=None,one_to_one=False,dpi=1000,
