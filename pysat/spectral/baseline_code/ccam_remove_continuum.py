@@ -57,7 +57,7 @@ import pysat.spectral.baseline_code.watrous
 import pysat.spectral.baseline_code.spl_init
 import pysat.spectral.baseline_code.spl_interp 
 from pysat.spectral.baseline_code.common import Baseline
-import pywt
+# import pywt <- this needs to be fixed, it doesn't exist in and outside pysat
      
 def chemcam_continuum(x,sp,int_flag,lvmin=-9999):
     n=len(sp)

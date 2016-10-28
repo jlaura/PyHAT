@@ -71,7 +71,6 @@ target/
 #Data and output files
 .png
 .SAV
-*.bat
 *.user
 *.csv
 *.dll
