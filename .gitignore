@@ -76,3 +76,6 @@ target/
 *.dll
 *.xml
 *.iml
+src/PYSAT_Gui_UI_Forms/FINISHED/01_mainwindow_file_out.py
+src/PYSAT_Gui_UI_Forms/FINISHED/01_mainwindow_get_data.py
+src/PYSAT_Gui_UI_Forms/FINISHED/01_mainwindow_get_mask.py
