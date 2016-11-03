@@ -99,4 +99,59 @@ def lineplot(x,y,xrange=None,yrange=None,xtitle='',ytitle='',title=None,
     if figpath and figname:
         plot.savefig(figpath+'/'+figname,dpi=dpi)
     
+def pca_ica_plot(data,x_component,y_component,colorvar=None,cmap='viridis',method='PCA',figpath=None,figname=None):
+    plot.register_cmap(name='viridis',cmap=colormaps.viridis)
+    plot.register_cmap(name='magma',cmap=colormaps.magma)
+    plot.register_cmap(name='inferno',cmap=colormaps.inferno)
+    plot.register_cmap(name='plasma',cmap=colormaps.plasma)
     
+
+    x=[data.df[(method,x_component)]]
+    y=[data.df[(method,y_component)]]
+    if method=='PCA':
+        x_loading=data.do_pca.components_[x_component,:]
+        y_loading=data.do_pca.components_[y_component,:]
+        
+        x_variance=data.do_pca.explained_variance_ratio_[x_component]*100
+        y_variance=data.do_pca.explained_variance_ratio_[y_component]*100
+        x_label='PC '+str(x_component)+' ('+str(round(x_variance,1))+r'%)'       
+        y_label='PC '+str(y_component)+' ('+str(round(y_variance,1))+r'%)'       
+        
+    if method=='ICA_JADE':
+        x_loading=data.ica_jade_loadings[x_component,:].T
+        y_loading=data.ica_jade_loadings[y_component,:].T
+        x_label='Source '+str(x_component)  
+        y_label='Source '+str(y_component)       
+        
+    #set up the subplots
+    fig=plot.figure()
+    fig.set_size_inches(10,4)
+    ax1=fig.add_subplot(2,2,(1,3))
+    ax2=fig.add_subplot(2,2,2)
+    ax3=fig.add_subplot(2,2,4,xlabel='Wavelength (nm)')
+
+    ax1.set_xlabel(x_label)
+    ax1.set_ylabel(y_label)
+    
+    if colorvar:
+        mappable=ax1.scatter(x,y,c=data.df[colorvar],cmap=cmap,linewidth=0.2) 
+        fig.colorbar(mappable,label=colorvar[1],ax=ax1)    
+    else:
+        mappable=ax1.scatter(x,y,linewidth=0.2) 
+    
+    #plot the loadings
+    wvls=data.df['wvl'].columns.values
+    ax2.plot(wvls,x_loading)
+    ax3.plot(wvls,y_loading)
+    
+    ax2.set_yticklabels([])
+    ax2.set_xticklabels([])
+    ax2.set_ylabel(x_label)
+    
+    ax3.set_yticklabels([])
+    ax3.set_ylabel(y_label)
+    
+    fig.subplots_adjust(hspace=0)
+    
+    if figpath and figname:
+        fig.savefig(figpath+'\\'+figname,dpi=1000)    

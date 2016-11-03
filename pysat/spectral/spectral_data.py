@@ -139,10 +139,12 @@ class spectral_data(object):
         #sort by index to return the df to its original order
         self.df.sort_index(inplace=True)
         
-    #This function normalizes specified ranges of the data by their respective sums    
+    #This function normalizes specified ranges of the data by their respective sums  
+        #TODO: Fix this function so that it doesn't have to split the data frame apart and then put it back together, avoid hard-coded column names
     def norm(self,ranges):
         df_spect=self.df['wvl']
         df_meta=self.df['meta']
+        df_comp=self.df['comp']
         wvls=df_spect.columns.values
         df_sub_norm=[]
         allind=[]    
@@ -170,9 +172,10 @@ class spectral_data(object):
         df_excluded.columns=[['masked']*len(df_excluded.columns),df_excluded.columns]    
         df_norm.columns=[['wvl']*len(df_norm.columns),df_norm.columns.values] 
         df_meta.columns=[['meta']*len(df_meta.columns),df_meta.columns.values]
+        df_comp.columns=[['comp']*len(df_comp.columns),df_comp.columns.values]
         
         #combine the normalized data frames, the excluded columns, and the metadata into a single data frame
-        df_new=pd.concat([df_meta,df_norm,df_excluded],axis=1)
+        df_new=pd.concat([df_meta,df_comp,df_norm,df_excluded],axis=1)
         self.df=df_new
 
 
@@ -257,17 +260,18 @@ class spectral_data(object):
         if nc:        
             self.do_pca=PCA(n_components=nc)
             self.do_pca.fit(self.df[col])
-        if load_fit:
+        if load_fit: #use this to load a previous fit rather than fit the current data
             self.do_pca=load_fit
         pca_result=self.do_pca.transform(self.df[col])
         for i in list(range(1,self.do_pca.n_components+1)):
             self.df[('PCA',i)]=pca_result[:,i-1]
+        pass
             
     def ica(self,col,nc=None,load_fit=None):
         if nc:        
             self.do_ica=FastICA(n_components=nc)
             self.do_ica.fit(self.df[col])
-        if load_fit:
+        if load_fit: #use this to load a previous fit rather than fit the current data
             self.do_ica=load_fit
         ica_result=self.do_ica.transform(self.df[col])
         for i in list(range(1,self.do_ica.n_components+1)):
@@ -275,7 +279,7 @@ class spectral_data(object):
         
 		
     def ica_jade(self,col,nc=None,load_fit=None,corrcols=None):
-        if load_fit is not None:
+        if load_fit is not None: #use this to load a previous fit rather than fit the current data
             scores=np.dot(load_fit,self.df[col])
         else:
             scores= jade(self.df[col].values,m=nc,verbose=False) 
