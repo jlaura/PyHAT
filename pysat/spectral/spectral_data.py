@@ -265,7 +265,7 @@ class spectral_data(object):
         pca_result=self.do_pca.transform(self.df[col])
         for i in list(range(1,self.do_pca.n_components+1)):
             self.df[('PCA',i)]=pca_result[:,i-1]
-        pass
+        
             
     def ica(self,col,nc=None,load_fit=None):
         if nc:        
