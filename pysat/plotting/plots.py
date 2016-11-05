@@ -50,8 +50,9 @@ def scatterplot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Referen
         axes.colorbar(label=colortitle)
     else:
         try:
-            if isinstance(colors[0],tuple):
-                axes.scatter(x,y,color=colors,edgecolors='black',linewidth=0.2,alpha=alpha)  
+            if colors is not None:
+                axes.scatter(x,y,color=colors,edgecolors='black',linewidth=0.2,alpha=alpha,label=lbls)
+                
         except:
             if colors==None:
                 colors=itertools.cycle(['r','g','b','c','m','y',])
@@ -67,7 +68,7 @@ def scatterplot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Referen
                     axes.scatter(x[i][annot_mask[i]],y[i][annot_mask[i]],facecolors='none',edgecolors='black',linewidth=1.0,label='RANSAC Outliers')
        
     
-            axes.legend(loc='best',fontsize=8,scatterpoints=1)
+    axes.legend(loc='best',fontsize=8,scatterpoints=1)
     if figpath and figfile:
         fig.savefig(figpath+'/'+figfile,dpi=dpi)
     return fig
