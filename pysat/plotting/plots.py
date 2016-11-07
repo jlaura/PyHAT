@@ -9,41 +9,50 @@ import numpy as np
 import itertools
 import pysat.plotting.colormaps as colormaps
 
-def scatterplot(x,y,figpath,figname,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Prediction (wt.%)',title=None,
-                lbls=None,one_to_one=False,dpi=1000,
-                colors=None,annot_mask=None,alpha=0.4,cmap=None,colortitle=''):
-    plot.figure()
+def cmaps():
     plot.register_cmap(name='viridis',cmap=colormaps.viridis)
     plot.register_cmap(name='magma',cmap=colormaps.magma)
     plot.register_cmap(name='inferno',cmap=colormaps.inferno)
     plot.register_cmap(name='plasma',cmap=colormaps.plasma)
     
-    if title:
-        plot.title(title)
-    if xtitle:
-        plot.xlabel(xtitle)
-    if ytitle:
-        plot.ylabel(ytitle)
-    if xrange:
-        plot.xlim(xrange)
-#    else:
-#        plot.xlim([0.9*np.min([0,np.min(x)]),1.1*np.max(x)])
-#        
-    if yrange:
-        plot.ylim(yrange)
+
+def scatterplot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Prediction (wt.%)',title=None,
+                lbls=None,one_to_one=False,dpi=1000,
+                colors=None,annot_mask=None,alpha=0.4,cmap=None,colortitle='',loadfig=None):
+    if loadfig is not None:
+        fig=loadfig
+        axes=fig.gca()
+    else:
+        fig=plot.figure()
+            
+        axes=fig.gca()
+        if title:
+            fig.suptitle(title)        
+        if xtitle:
+            axes.set_xlabel(xtitle)
+        if ytitle:
+            axes.set_ylabel(ytitle)
+        if xrange:
+            axes.xlim(xrange)
+    #    else:
+    #        plot.xlim([0.9*np.min([0,np.min(x)]),1.1*np.max(x)])
+    #        
+        if yrange:
+            axes.ylim(yrange)
 #    else:
 #        plot.ylim([0.9*np.min([0,np.min(y)]),np.min([100,1.1*np.max(y)])])
     
     if one_to_one:
-        plot.plot([0, 100], [0, 100],color='k')
+        axes.plot([0, 100], [0, 100],color='k')
     
     if cmap is not None:
-        plot.scatter(x,y,c=colors,edgecolors='black',linewidth=0.2,alpha=alpha,cmap=cmap)  
-        plot.colorbar(label=colortitle)
+        axes.scatter(x,y,c=colors,edgecolors='black',linewidth=0.2,alpha=alpha,cmap=cmap)  
+        axes.colorbar(label=colortitle)
     else:
         try:
-            if isinstance(colors[0],tuple):
-                plot.scatter(x,y,color=colors,edgecolors='black',linewidth=0.2,alpha=alpha)  
+            if colors is not None:
+                axes.scatter(x,y,color=colors,edgecolors='black',linewidth=0.2,alpha=alpha,label=lbls)
+                
         except:
             if colors==None:
                 colors=itertools.cycle(['r','g','b','c','m','y',])
@@ -54,17 +63,18 @@ def scatterplot(x,y,figpath,figname,xrange=None,yrange=None,xtitle='Reference (w
                 lbls=['']*len(x)
         
             for i in np.arange(len(x)):
-                plot.scatter(x[i],y[i],color=next(colors),label=lbls[i],edgecolors='black',linewidth=0.2,alpha=alpha)
+                axes.scatter(x[i],y[i],color=next(colors),label=lbls[i],edgecolors='black',linewidth=0.2,alpha=alpha)
                 if annot_mask[i] is not None:
-                    plot.scatter(x[i][annot_mask[i]],y[i][annot_mask[i]],facecolors='none',edgecolors='black',linewidth=1.0,label='RANSAC Outliers')
+                    axes.scatter(x[i][annot_mask[i]],y[i][annot_mask[i]],facecolors='none',edgecolors='black',linewidth=1.0,label='RANSAC Outliers')
        
     
-            plot.legend(loc='best',fontsize=8,scatterpoints=1)
-    if figpath and figname:
-        plot.savefig(figpath+'/'+figname,dpi=dpi)
+    axes.legend(loc='best',fontsize=8,scatterpoints=1)
+    if figpath and figfile:
+        fig.savefig(figpath+'/'+figfile,dpi=dpi)
+    return fig
         
 def lineplot(x,y,xrange=None,yrange=None,xtitle='',ytitle='',title=None,
-                lbls=None,figpath=None,figname=None,dpi=1000,
+                lbls=None,figpath=None,figfile=None,dpi=1000,
                 colors=None,alphas=None):
     if colors==None:
         colors=itertools.cycle(['r','g','b','c','m','y',])
@@ -96,14 +106,11 @@ def lineplot(x,y,xrange=None,yrange=None,xtitle='',ytitle='',title=None,
         pass#plot.ylim([0,np.max(y[-np.isnan(y)])])  --- This was causing issues, comment out for now
     
     plot.legend(loc='best',fontsize=8)
-    if figpath and figname:
-        plot.savefig(figpath+'/'+figname,dpi=dpi)
+    if figpath and figfile:
+        plot.savefig(figpath+'/'+figfile,dpi=dpi)
     
-def pca_ica_plot(data,x_component,y_component,colorvar=None,cmap='viridis',method='PCA',figpath=None,figname=None):
-    plot.register_cmap(name='viridis',cmap=colormaps.viridis)
-    plot.register_cmap(name='magma',cmap=colormaps.magma)
-    plot.register_cmap(name='inferno',cmap=colormaps.inferno)
-    plot.register_cmap(name='plasma',cmap=colormaps.plasma)
+def pca_ica_plot(data,x_component,y_component,colorvar=None,cmap='viridis',method='PCA',figpath=None,figfile=None):
+    cmaps()    
     
 
     x=[data.df[(method,x_component)]]
@@ -153,5 +160,5 @@ def pca_ica_plot(data,x_component,y_component,colorvar=None,cmap='viridis',metho
     
     fig.subplots_adjust(hspace=0)
     
-    if figpath and figname:
-        fig.savefig(figpath+'\\'+figname,dpi=1000)    
+    if figpath and figfile:
+        fig.savefig(figpath+'\\'+figfile,dpi=1000)    
