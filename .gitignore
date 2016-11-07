@@ -76,3 +76,6 @@ target/
 *.dll
 *.xml
 *.iml
+src/PYSAT_Gui_UI_Forms/FINISHED/*.*
+src/PYSAT_Gui_UI_Forms/PythonUI/*.*
+
