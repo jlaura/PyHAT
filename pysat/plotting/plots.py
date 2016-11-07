@@ -46,12 +46,12 @@ def scatterplot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Referen
         axes.plot([0, 100], [0, 100],color='k')
     
     if cmap is not None:
-        axes.scatter(x,y,c=colors,edgecolors='black',linewidth=0.2,alpha=alpha,cmap=cmap)  
+        axes.scatter(x,y,c=colors,edgecolors='k',linewidth=0.2,alpha=alpha,cmap=cmap)  
         axes.colorbar(label=colortitle)
     else:
         try:
             if colors is not None:
-                axes.scatter(x,y,color=colors,edgecolors='black',linewidth=0.2,alpha=alpha,label=lbls)
+                axes.scatter(x,y,color=colors,edgecolors='k',linewidth=0.2,alpha=alpha,label=lbls)
                 
         except:
             if colors==None:
@@ -63,9 +63,9 @@ def scatterplot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Referen
                 lbls=['']*len(x)
         
             for i in np.arange(len(x)):
-                axes.scatter(x[i],y[i],color=next(colors),label=lbls[i],edgecolors='black',linewidth=0.2,alpha=alpha)
+                axes.scatter(x[i],y[i],color=next(colors),label=lbls[i],edgecolors='k',linewidth=0.2,alpha=alpha)
                 if annot_mask[i] is not None:
-                    axes.scatter(x[i][annot_mask[i]],y[i][annot_mask[i]],facecolors='none',edgecolors='black',linewidth=1.0,label='RANSAC Outliers')
+                    axes.scatter(x[i][annot_mask[i]],y[i][annot_mask[i]],facecolors='none',edgecolors='k',linewidth=1.0,label='RANSAC Outliers')
        
     
     axes.legend(loc='best',fontsize=8,scatterpoints=1)
@@ -75,7 +75,7 @@ def scatterplot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Referen
         
 def lineplot(x,y,xrange=None,yrange=None,xtitle='',ytitle='',title=None,
                 lbls=None,figpath=None,figfile=None,dpi=1000,
-                colors=None,alphas=None):
+                colors=None,alphas=None,loadfig=None):
     if colors==None:
         colors=itertools.cycle(['r','g','b','c','m','y',])
     else:
@@ -89,25 +89,31 @@ def lineplot(x,y,xrange=None,yrange=None,xtitle='',ytitle='',title=None,
     if lbls==None:
         lbls=['']*len(x)
         
-    plot.figure()
-    if title:
-        plot.title(title)
-    if xtitle:
-        plot.xlabel(xtitle)
-    if ytitle:
-        plot.ylabel(ytitle)
+    if loadfig is not None:
+        fig=loadfig
+        axes=fig.gca()
+    else:
+        fig=plot.figure()
+            
+        axes=fig.gca()
+        if title:
+            axes.suptitle(title)
+        if xtitle:
+            axes.set_xlabel(xtitle)
+        if ytitle:
+            axes.set_ylabel(ytitle)
+        if xrange:
+            axes.xlim(xrange)
+        if yrange:
+            axes.ylim(yrange)
+
     for i in np.arange(len(x)):
         plot.plot(x[i],y[i],color=next(colors),label=lbls[i],linewidth=1,alpha=next(alphas))
-    if xrange:
-        plot.xlim(xrange)
-    if yrange:
-        plot.ylim(yrange)
-    else:
-        pass#plot.ylim([0,np.max(y[-np.isnan(y)])])  --- This was causing issues, comment out for now
     
-    plot.legend(loc='best',fontsize=8)
+    axes.legend(loc='best',fontsize=8)
     if figpath and figfile:
-        plot.savefig(figpath+'/'+figfile,dpi=dpi)
+        fig.savefig(figpath+'/'+figfile,dpi=dpi)
+    return fig
     
 def pca_ica_plot(data,x_component,y_component,colorvar=None,cmap='viridis',method='PCA',figpath=None,figfile=None):
     cmaps()    
