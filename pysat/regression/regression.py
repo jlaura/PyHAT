@@ -46,14 +46,17 @@ class regression:
         #if gaussian processes are being used, data dimensionality needs to be reduced before fitting        
         if self.method[i]=='GP':
             if self.reduce_dim=='ICA':
+                print('Reducing dimensionality with ICA')
                 do_ica=FastICA(n_components=self.n_components)
                 self.do_reduce_dim=do_ica.fit(x)
             if self.reduce_dim=='PCA':
+                print('Reducing dimensionality with PCA')                
                 do_pca=PCA(n_components=self.n_components)
                 self.do_reduce_dim=do_pca.fit(x)
             x=self.do_reduce_dim.transform(x)
         try:
-            print('Training model...')            
+            print('Training model...') 
+            
             self.model.fit(x,y)
         
             if self.ransac:
@@ -68,9 +71,10 @@ class regression:
             self.goodfit=False  #This can happen for GP when dimensionality is reduced too much. Use try/except to handle these cases.
             
                 
-    def predict(self,x):
-        if self.method=='GP':
+    def predict(self,x,i=0):
+        if self.method[i]=='GP':
             x=self.do_reduce_dim.transform(x)
+        print(len(x))
         return self.model.predict(x)
         
     def calc_Qres_Lev(self,x):
