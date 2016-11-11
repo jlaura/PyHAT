@@ -33,12 +33,12 @@ def scatterplot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Referen
         if ytitle:
             axes.set_ylabel(ytitle)
         if xrange:
-            axes.xlim(xrange)
+            axes.set_xlim(xrange)
     #    else:
     #        plot.xlim([0.9*np.min([0,np.min(x)]),1.1*np.max(x)])
     #        
         if yrange:
-            axes.ylim(yrange)
+            axes.set_ylim(yrange)
 #    else:
 #        plot.ylim([0.9*np.min([0,np.min(y)]),np.min([100,1.1*np.max(y)])])
     
