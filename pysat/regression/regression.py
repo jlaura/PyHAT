@@ -23,9 +23,9 @@ class regression:
         self.inliers=None
         self.ransac=False
         
-        if self.method[i] is 'PLS':
+        if self.method[i]=='PLS':
             self.model=PLSRegression(**params[i])
-        if self.method[i] is 'GP':
+        if self.method[i]=='GP':
             #get the method for dimensionality reduction and the number of components
             self.reduce_dim=params[i]['reduce_dim']
             self.n_components=params[i]['n_components']
@@ -44,31 +44,37 @@ class regression:
         
     def fit(self,x,y,i=0):
         #if gaussian processes are being used, data dimensionality needs to be reduced before fitting        
-        if self.method[i] is 'GP':
-            if self.reduce_dim is 'ICA':
+        if self.method[i]=='GP':
+            if self.reduce_dim=='ICA':
+                print('Reducing dimensionality with ICA')
                 do_ica=FastICA(n_components=self.n_components)
                 self.do_reduce_dim=do_ica.fit(x)
-            if self.reduce_dim is 'PCA':
+            if self.reduce_dim=='PCA':
+                print('Reducing dimensionality with PCA')                
                 do_pca=PCA(n_components=self.n_components)
                 self.do_reduce_dim=do_pca.fit(x)
             x=self.do_reduce_dim.transform(x)
         try:
+            print('Training model...') 
+            
             self.model.fit(x,y)
         
             if self.ransac:
                 self.outliers=np.logical_not(self.model.inlier_mask_)
                 print(str(np.sum(self.outliers))+' outliers removed with RANSAC')
         
-            if self.method[i] is 'PLS' and self.ransac is False:
+            if self.method[i]=='PLS' and self.ransac==False:
                 self.calc_Qres_Lev(x)
             self.goodfit=True
         except:
+            print('There was a problem with training the model!')
             self.goodfit=False  #This can happen for GP when dimensionality is reduced too much. Use try/except to handle these cases.
             
                 
-    def predict(self,x):
-        if self.method is 'GP':
+    def predict(self,x,i=0):
+        if self.method[i]=='GP':
             x=self.do_reduce_dim.transform(x)
+        print(len(x))
         return self.model.predict(x)
         
     def calc_Qres_Lev(self,x):
