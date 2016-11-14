@@ -50,9 +50,9 @@ Current Road Ahead
 - The user begins by starting PYSAT_MAIN.
 - PYSAT_MAIN will begin by loading the splash screen and all necessary UI pieces
 - PYSAT_MAIN will then forward control to PYSAT_UI
-- PYSAT_UI displays the mainframe in which the UI's submoduels will be loaded into
-- PYSAT_UI will then foward control to each submoduel of focus
-- Each submoduel builds the collective UI library
-- Each submoduel fowards control to PYAT_FUNC which holds all the necessary logic functions
+- PYSAT_UI displays the mainframe in which the UI's submodules will be loaded into
+- PYSAT_UI will then foward control to each submodule of focus
+- Each submodule builds the collective UI library
+- Each submodule fowards control to PYAT_FUNC which holds all the necessary logic functions
 - These logic functions then forward commands to the various PYSAT and Anaconda libraries
 - The values are then returned back up to PYSAT_FUNC which will then deal with changed data
