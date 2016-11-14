@@ -43,4 +43,6 @@ Current Road Ahead
 - [ ] Add ability to save data frame at any point in the workflow 
 - [ ] Setup a way to select points on a scatter plot.
 
+## Control Flow
+
 ![PYSAT](https://github.com/tisaconundrum2/PySAT/blob/master/src/installer/Flowchart.png)
