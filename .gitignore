@@ -78,4 +78,4 @@ target/
 *.iml
 src/PYSAT_Gui_UI_Forms/FINISHED/*.*
 src/PYSAT_Gui_UI_Forms/PythonUI/*.*
-
+!"src/installer/Flowchart (Draw.io).xml"
