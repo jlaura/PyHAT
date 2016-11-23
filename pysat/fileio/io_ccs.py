@@ -52,7 +52,7 @@ def CCS(input_data):
     dt2=time.time()-t
     return df
         
-def CCS_SAV(input_data):
+def CCS_SAV(input_data,ave=True):
         
     #read the IDL .SAV file
     data=scipy.io.readsav(input_data,python_dict=True)
@@ -75,7 +75,6 @@ def CCS_SAV(input_data):
     df_med=pd.concat([df_mUV,df_mVIS,df_mVNIR])            
     
     df=pd.concat([df_spect,df_ave,df_med],axis=1)
-    
     #create multiindex to access wavelength values
     #also, round the wavlength values to a more reasonable level of precision
     df.index=[['wvl']*len(df.index),df.index.values.round(4)]
@@ -126,10 +125,15 @@ def CCS_SAV(input_data):
     metadata=pd.DataFrame(metadata,columns=pd.MultiIndex.from_tuples(metadata_cols),index=df.index) 
 
     df=pd.concat([metadata,df],axis=1)            
+    if ave==True:
+        df=df.loc['average']
+        df=df.to_frame().T
+    else:
+        pass
                   
     return df    
 
-def ccs_batch(directory,searchstring='*CCS*.csv',is_sav=False,to_csv=None,lookupfile=None):
+def ccs_batch(directory,searchstring='*CCS*.csv',is_sav=False,to_csv=None,lookupfile=None,ave=True):
     #Determine if the file is a .csv or .SAV
     if 'SAV' in searchstring:
         is_sav=True
@@ -157,10 +161,10 @@ def ccs_batch(directory,searchstring='*CCS*.csv',is_sav=False,to_csv=None,lookup
     #Should add a progress bar for importing large numbers of files    
     dt=[]
     for i in filelist:
-        
+        print(i)
         if is_sav:
             t=time.time()
-            tmp=CCS_SAV(i)
+            tmp=CCS_SAV(i,ave=ave)
             dt.append(time.time()-t)
         else:
             t=time.time()
@@ -169,6 +173,7 @@ def ccs_batch(directory,searchstring='*CCS*.csv',is_sav=False,to_csv=None,lookup
             dt.append(time.time()-t)
         if i==filelist[0]:
             combined=tmp
+            
         else:
             #This ensures that rounding errors are not causing mismatches in columns            
             cols1=list(combined['wvl'].columns)

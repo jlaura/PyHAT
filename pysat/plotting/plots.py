@@ -51,7 +51,8 @@ def scatterplot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Referen
     else:
         try:
             if colors is not None:
-                axes.scatter(x,y,color=colors,edgecolors='k',linewidth=0.2,alpha=alpha,label=lbls)
+                for i in np.arange(len(x)):
+                    axes.scatter(x[i],y[i],color=colors[i],edgecolors='k',linewidth=0.2,alpha=alpha[i],label=lbls[i])
                 
         except:
             if colors==None:
