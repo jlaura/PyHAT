@@ -49,14 +49,11 @@ def scatterplot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Referen
         axes.scatter(x,y,c=colors,edgecolors='k',linewidth=0.2,alpha=alpha,cmap=cmap)  
         axes.colorbar(label=colortitle)
     else:
-        try:
-            if colors is not None:
-                for i in np.arange(len(x)):
-                    axes.scatter(x[i],y[i],color=colors[i],edgecolors='k',linewidth=0.2,alpha=alpha[i],label=lbls[i])
-                
-        except:
-            if colors==None:
-                colors=itertools.cycle(['r','g','b','c','m','y',])
+        if colors!=None:
+            for i in np.arange(len(x)):
+                axes.scatter(x[i],y[i],color=colors[i],edgecolors='k',linewidth=0.2,alpha=alpha[i],label=lbls[i])
+        else:
+            colors=itertools.cycle(['r','g','b','c','m','y',])
             
             if annot_mask==None:
                 annot_mask=[None]*len(x)
