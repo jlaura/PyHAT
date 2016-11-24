@@ -17,8 +17,8 @@ def cmaps():
     
 
 def scatterplot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Prediction (wt.%)',title=None,
-                lbls=None,one_to_one=False,dpi=1000,
-                colors=None,annot_mask=None,alpha=0.4,cmap=None,colortitle='',loadfig=None):
+                lbl='',one_to_one=False,dpi=1000,
+                color=None,annot_mask=None,cmap=None,colortitle='',loadfig=None,masklabel=''):
     if loadfig is not None:
         fig=loadfig
         axes=fig.gca()
@@ -34,36 +34,20 @@ def scatterplot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Referen
             axes.set_ylabel(ytitle)
         if xrange:
             axes.set_xlim(xrange)
-    #    else:
-    #        plot.xlim([0.9*np.min([0,np.min(x)]),1.1*np.max(x)])
-    #        
         if yrange:
             axes.set_ylim(yrange)
-#    else:
-#        plot.ylim([0.9*np.min([0,np.min(y)]),np.min([100,1.1*np.max(y)])])
     
     if one_to_one:
         axes.plot([0, 100], [0, 100],color='k')
     
     if cmap is not None:
-        axes.scatter(x,y,c=colors,edgecolors='k',linewidth=0.2,alpha=alpha,cmap=cmap)  
+        axes.scatter(x,y,c=color,edgecolors='k',linewidth=0.5,cmap=cmap)  
         axes.colorbar(label=colortitle)
     else:
-        if colors!=None:
-            for i in np.arange(len(x)):
-                axes.scatter(x[i],y[i],color=colors[i],edgecolors='k',linewidth=0.2,alpha=alpha[i],label=lbls[i])
-        else:
-            colors=itertools.cycle(['r','g','b','c','m','y',])
-            
-            if annot_mask==None:
-                annot_mask=[None]*len(x)
-            if lbls==None:
-                lbls=['']*len(x)
+        axes.scatter(x,y,color=color,edgecolors='k',linewidth=0.5,label=lbl)
         
-            for i in np.arange(len(x)):
-                axes.scatter(x[i],y[i],color=next(colors),label=lbls[i],edgecolors='k',linewidth=0.2,alpha=alpha)
-                if annot_mask[i] is not None:
-                    axes.scatter(x[i][annot_mask[i]],y[i][annot_mask[i]],facecolors='none',edgecolors='k',linewidth=1.0,label='RANSAC Outliers')
+        if annot_mask is not None:
+            axes.scatter(x[annot_mask],y[annot_mask],facecolors='none',edgecolors='k',linewidth=1.0,label=masklabel)
        
     
     axes.legend(loc='best',fontsize=8,scatterpoints=1)

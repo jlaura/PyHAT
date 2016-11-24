@@ -47,7 +47,7 @@ class cv:
             rmsecv_folds_tmp=[]  #Create empty list to hold RMSECV for each fold
             for train,holdout in cv_iterator:  #Iterate through each of the folds in the training set
                 
-                resultcol=('meta',method+'-CV-'+str(self.paramgrid[i]))#ycol[-1]+'_cv_'+method+'_param'+str(i))  #create the name of the column in which results will be stored
+                cvcol=('meta',method+'-CV-'+str(self.paramgrid[i]))#ycol[-1]+'_cv_'+method+'_param'+str(i))  #create the name of the column in which results will be stored
                                 
                 cv_train=Train.iloc[train]   #extract the data to be used to create the model
                 cv_holdout=Train.iloc[holdout]  #extract the data that will be held out of the model
@@ -56,17 +56,19 @@ class cv:
                     y_pred_holdout=model.predict(cv_holdout[xcols])
                 else:
                     y_pred_holdout=cv_holdout[ycol]*np.nan
-                Train.set_value(Train.index[holdout],resultcol,y_pred_holdout)
+                Train.set_value(Train.index[holdout],cvcol,y_pred_holdout)
                 rmsecv_folds_tmp.append(RMSE(y_pred_holdout,cv_holdout[ycol]))
             
             rmsecv_folds.append(rmsecv_folds_tmp)
-            rmsecv.append(RMSE(Train[ycol],Train[resultcol]))
+            rmsecv.append(RMSE(Train[ycol],Train[cvcol]))
               
             model.fit(Train[xcols],Train[ycol])
             if model.goodfit:
                 ypred_train=model.predict(Train[xcols])        
             else:
                 ypred_train=Train[ycol]*np.nan
+            calcol=('meta',method+'-Cal-'+str(self.paramgrid[i]))    
+            Train[calcol]=ypred_train
             rmsec.append(RMSE(ypred_train,Train[ycol]))
             
         
