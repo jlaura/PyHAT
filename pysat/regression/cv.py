@@ -35,6 +35,7 @@ class cv:
         rmsec=[]
         rmsecv=[]
         
+       
         #loop through the grid of parameters, do cross validation for each permutation
         for i in list(range(len(self.paramgrid))):
             print(self.paramgrid[i])
@@ -45,7 +46,9 @@ class cv:
           
             rmsecv_folds_tmp=[]  #Create empty list to hold RMSECV for each fold
             for train,holdout in cv_iterator:  #Iterate through each of the folds in the training set
-                resultcol=('meta','foo')#ycol[-1]+'_cv_'+method+'_param'+str(i))  #create the name of the column in which results will be stored
+                
+                resultcol=('meta',method+'-CV-'+str(self.paramgrid[i]))#ycol[-1]+'_cv_'+method+'_param'+str(i))  #create the name of the column in which results will be stored
+                                
                 cv_train=Train.iloc[train]   #extract the data to be used to create the model
                 cv_holdout=Train.iloc[holdout]  #extract the data that will be held out of the model
                 model.fit(cv_train[xcols],cv_train[ycol])
@@ -65,6 +68,8 @@ class cv:
             else:
                 ypred_train=Train[ycol]*np.nan
             rmsec.append(RMSE(ypred_train,Train[ycol]))
+            
+        
         
         output=pd.DataFrame(self.paramgrid)
         output['rmsec']=rmsec
