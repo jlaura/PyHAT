@@ -74,8 +74,8 @@ class cv:
         
         
         output=pd.DataFrame(self.paramgrid)
-        output['rmsec']=rmsec
-        output['rmsecv']=rmsecv
+        output['RMSEC']=rmsec
+        output['RMSECV']=rmsecv
         rmsecv_folds=np.array(rmsecv_folds)
         for i in list(range(len(rmsecv_folds[0,:]))):
             label='Fold'+str(i)
