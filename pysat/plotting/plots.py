@@ -16,9 +16,9 @@ def cmaps():
     plot.register_cmap(name='plasma',cmap=colormaps.plasma)
     
 
-def scatterplot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Prediction (wt.%)',title=None,
-                lbls=None,one_to_one=False,dpi=1000,
-                colors=None,annot_mask=None,alpha=0.4,cmap=None,colortitle='',loadfig=None):
+def make_plot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Prediction (wt.%)',title=None,
+                lbl='',one_to_one=False,dpi=1000,
+                color=None,annot_mask=None,cmap=None,colortitle='',loadfig=None,masklabel='',marker='o',linestyle='None'):
     if loadfig is not None:
         fig=loadfig
         axes=fig.gca()
@@ -34,83 +34,23 @@ def scatterplot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Referen
             axes.set_ylabel(ytitle)
         if xrange:
             axes.set_xlim(xrange)
-    #    else:
-    #        plot.xlim([0.9*np.min([0,np.min(x)]),1.1*np.max(x)])
-    #        
         if yrange:
             axes.set_ylim(yrange)
-#    else:
-#        plot.ylim([0.9*np.min([0,np.min(y)]),np.min([100,1.1*np.max(y)])])
     
     if one_to_one:
         axes.plot([0, 100], [0, 100],color='k')
     
     if cmap is not None:
-        axes.scatter(x,y,c=colors,edgecolors='k',linewidth=0.2,alpha=alpha,cmap=cmap)  
+        axes.plot(x,y,c=color,cmap=cmap,marker=marker)  
         axes.colorbar(label=colortitle)
     else:
-        try:
-            if colors is not None:
-                axes.scatter(x,y,color=colors,edgecolors='k',linewidth=0.2,alpha=alpha,label=lbls)
-                
-        except:
-            if colors==None:
-                colors=itertools.cycle(['r','g','b','c','m','y',])
-            
-            if annot_mask==None:
-                annot_mask=[None]*len(x)
-            if lbls==None:
-                lbls=['']*len(x)
+        axes.plot(x,y,color=color,label=lbl,marker=marker,ls=linestyle)
         
-            for i in np.arange(len(x)):
-                axes.scatter(x[i],y[i],color=next(colors),label=lbls[i],edgecolors='k',linewidth=0.2,alpha=alpha)
-                if annot_mask[i] is not None:
-                    axes.scatter(x[i][annot_mask[i]],y[i][annot_mask[i]],facecolors='none',edgecolors='k',linewidth=1.0,label='RANSAC Outliers')
+        if annot_mask is not None:
+            axes.plot(x[annot_mask],y[annot_mask],facecolors='none',linewidth=1.0,label=masklabel,marker=marker)
        
     
-    axes.legend(loc='best',fontsize=8,scatterpoints=1)
-    if figpath and figfile:
-        fig.savefig(figpath+'/'+figfile,dpi=dpi)
-    return fig
-        
-def lineplot(x,y,xrange=None,yrange=None,xtitle='',ytitle='',title=None,
-                lbls=None,figpath=None,figfile=None,dpi=1000,
-                colors=None,alphas=None,loadfig=None):
-    if colors==None:
-        colors=itertools.cycle(['r','g','b','c','m','y',])
-    else:
-        colors=itertools.cycle(colors)
-        
-    if alphas==None:
-        alphas=itertools.cycle([1.0])
-    else:
-        alphas=itertools.cycle(alphas)
-        
-    if lbls==None:
-        lbls=['']*len(x)
-        
-    if loadfig is not None:
-        fig=loadfig
-        axes=fig.gca()
-    else:
-        fig=plot.figure()
-            
-        axes=fig.gca()
-        if title:
-            axes.suptitle(title)
-        if xtitle:
-            axes.set_xlabel(xtitle)
-        if ytitle:
-            axes.set_ylabel(ytitle)
-        if xrange:
-            axes.xlim(xrange)
-        if yrange:
-            axes.ylim(yrange)
-
-    for i in np.arange(len(x)):
-        plot.plot(x[i],y[i],color=next(colors),label=lbls[i],linewidth=1,alpha=next(alphas))
-    
-    axes.legend(loc='best',fontsize=8)
+    axes.legend(loc='best',fontsize=8,scatterpoints=1,numpoints=1)
     if figpath and figfile:
         fig.savefig(figpath+'/'+figfile,dpi=dpi)
     return fig
