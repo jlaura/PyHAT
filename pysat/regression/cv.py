@@ -13,7 +13,6 @@ from sklearn.grid_search import ParameterGrid
 from pysat.regression.regression import regression
 #from sklearn.linear_model import RANSACRegressor as RANSAC
 import pandas as pd
-from PYSAT_UI_MODULES.Error_ import error_print
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -64,7 +63,8 @@ class cv:
               
             model.fit(Train[xcols],Train[ycol])
             if model.goodfit:
-                ypred_train=model.predict(Train[xcols])        
+                ypred_train=model.predict(Train[xcols])
+                pass
             else:
                 ypred_train=Train[ycol]*np.nan
             calcol=('meta',method+'-Cal-'+str(self.paramgrid[i]))    
@@ -74,8 +74,8 @@ class cv:
         
         
         output=pd.DataFrame(self.paramgrid)
-        output['rmsec']=rmsec
-        output['rmsecv']=rmsecv
+        output['RMSEC']=rmsec
+        output['RMSECV']=rmsecv
         rmsecv_folds=np.array(rmsecv_folds)
         for i in list(range(len(rmsecv_folds[0,:]))):
             label='Fold'+str(i)
