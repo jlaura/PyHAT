@@ -63,8 +63,8 @@ class regression:
                 self.outliers=np.logical_not(self.model.inlier_mask_)
                 print(str(np.sum(self.outliers))+' outliers removed with RANSAC')
         
-            if self.method[i]=='PLS' and self.ransac==False:
-                self.calc_Qres_Lev(x)
+            #if self.method[i]=='PLS' and self.ransac==False:
+            #    self.calc_Qres_Lev(x)
             self.goodfit=True
         except:
             print('There was a problem with training the model!')
