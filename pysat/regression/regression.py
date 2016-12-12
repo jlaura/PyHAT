@@ -17,11 +17,12 @@ import copy
 
 
 class regression:
-    def __init__(self,method,params,i=0,ransacparams={}):
+    def __init__(self,method,yrange,params,i=0,ransacparams={}):
         self.method=method 
         self.outliers=None
         self.inliers=None
         self.ransac=False
+        self.yrange=yrange[i]
         
         if self.method[i]=='PLS':
             self.model=PLSRegression(**params[i])

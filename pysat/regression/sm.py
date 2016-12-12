@@ -9,20 +9,9 @@ import scipy.optimize as opt
 from pysat.regression.regression import regression 
 from pysat.spectral.within_range import within_range
 class sm:
-    def __init__(self,ranges,method,params,ransacparams=None):
-        self.method=method 
+    def __init__(self,ranges,submodels):
         self.ranges=ranges
-        self.ransacparams=ransacparams
-        self.params=params
-        self.submodels=[]
-        for i,rangei in enumerate(ranges):
-            self.submodels.append(regression(method,params,i=i,ransacparams=ransacparams))
-        
-    #This function does the fitting for each submodel.
-    def fit(self,x,y):
-        for i,model in enumerate(self.submodels):
-            xtemp,ytemp=within_range(x[i],y[i],self.ranges[i])
-            model.fit(xtemp,ytemp)
+        self.submodels=submodels
             
  
     def do_blend(self,predictions,truevals=None):
