@@ -38,7 +38,8 @@ Current Road Ahead
 - [x] Shortcuts such as Ctrl S to save
 - [ ] Embedded Plots and Graphs from data collected
 - [x] ~~Package all python packages: sklearn, scipy, numpy, matplotlib, pysat for user consumption~~ It has been discovered that the user can download Anaconda, and run our files as normal.
-- [ ] Add ability to save plots in personal files
+- [x] Add ability to delete modules
+- [x] Add ability to save plots in personal files
 - [ ] Add ability to save state of GUI, i.e. all number that user inputs will be there again after closing GUI
 - [ ] Add ability to save data frame at any point in the workflow 
 - [ ] Setup a way to select points on a scatter plot.
