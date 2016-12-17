@@ -16,7 +16,7 @@
 
 
 # PYSAT UI in C++
-![PYSAT](https://github.com/tisaconundrum2/PySAT/blob/master/src/installer/splash.png)  
+![PYSAT](./src/res/splash.png)  
 - This program was compiled in C++ it's backend does not rely on python
 This was done for rapid protoyping purposes.
 Please note that this is not a functional version of PYSAT.
