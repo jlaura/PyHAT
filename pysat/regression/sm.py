@@ -12,8 +12,7 @@ class sm:
     def __init__(self,ranges,submodels):
         self.ranges=ranges
         self.submodels=submodels
-            
- 
+
     def do_blend(self,predictions,truevals=None):
 
         #create the array indicating which models to blend for each blend range
@@ -40,6 +39,8 @@ class sm:
          
             result=opt.minimize(self.get_rmse,blendranges,(predictions,truevals))
             self.blendranges=result.x
+        else:
+            self.blendranges=self.ranges
 
             
         #calculate the blended results
@@ -47,9 +48,10 @@ class sm:
         return blended
         
     def get_rmse(self,blendranges,predictions,truevals):
-        blendranges  #show the blendranges being used for the current calculation
+        print(blendranges)  #show the blendranges being used for the current calculation
         blended=self.submodels_blend(predictions,blendranges,overwrite=False,noneg=False)
-        RMSE=np.sqrt(np.mean((blended-truevals)**2))  #calculate the RMSE
+        RMSE=np.sqrt(np.mean((blended-np.array(truevals))**2))  #calculate the RMSE
+        print(RMSE)
         return RMSE
         
     def submodels_blend(self,predictions,blendranges,overwrite=False,noneg=False):
