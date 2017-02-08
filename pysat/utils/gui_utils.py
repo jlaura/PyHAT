@@ -9,7 +9,9 @@ from PyQt4 import QtGui
 
 def make_combobox(choices):
     combo=QtGui.QComboBox()
-   
+    font = QtGui.QFont()
+    font.setPointSize(10)
+    combo.setFont(font)
     for i,choice in enumerate(choices):
         combo.addItem("")
         combo.setItemText(i,choice)

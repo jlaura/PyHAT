@@ -12,8 +12,7 @@ class sm:
     def __init__(self,ranges,submodels):
         self.ranges=ranges
         self.submodels=submodels
-            
- 
+
     def do_blend(self,predictions,truevals=None):
 
         #create the array indicating which models to blend for each blend range
@@ -31,15 +30,20 @@ class sm:
                 self.toblend.append([i,i+1])
             
         #If the true compositions are provided, then optimize the ranges over which the results are blended to minimize the RMSEC
+        # get the ranges that are not the reference model (assumed to be the last model)
+        ranges_sub = self.ranges[:-1]
+        blendranges = np.array(ranges_sub).flatten()  # squash them to be a 1d array
+        blendranges.sort()  # sort the entries. These will be used by submodels_blend to decide how to combine the predictions
+
+
+
         if truevals is not None:
             print('Optimizing blending ranges')
-            #get the ranges that are not the reference model (assumed to be the last model)
-            ranges_sub=self.ranges[:-1]
-            blendranges=np.array(ranges_sub).flatten() #squash them to be a 1d array
-            blendranges.sort()  #sort the entries. These will be used by submodels_blend to decide how to combine the predictions
-         
+
             result=opt.minimize(self.get_rmse,blendranges,(predictions,truevals))
             self.blendranges=result.x
+        else:
+            self.blendranges=blendranges
 
             
         #calculate the blended results
@@ -47,9 +51,14 @@ class sm:
         return blended
         
     def get_rmse(self,blendranges,predictions,truevals):
-        blendranges  #show the blendranges being used for the current calculation
+        blendranges[1:-1][blendranges[1:-1] < 0] = 0.0  #ensure range boundaries don't drift below zero
+        blendranges[1:-1][blendranges[1:-1] > 100] = 100  # ensure range boundaries don't drift above 100
+        blendranges.sort() #ensure range boundaries stay in order
+
+        print('Blend ranges: '+str(blendranges))  #show the blendranges being used for the current calculation
         blended=self.submodels_blend(predictions,blendranges,overwrite=False,noneg=False)
-        RMSE=np.sqrt(np.mean((blended-truevals)**2))  #calculate the RMSE
+        RMSE=np.sqrt(np.mean((blended-np.array(truevals))**2))  #calculate the RMSE
+        print('RMSE='+str(RMSE))
         return RMSE
         
     def submodels_blend(self,predictions,blendranges,overwrite=False,noneg=False):
