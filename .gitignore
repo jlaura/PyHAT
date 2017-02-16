@@ -82,3 +82,4 @@ src/Python PYSAT_GUI/plot.png
 !"src/res/Flowchart.png"
 !"src/res/splash.png"
 *.png
+*.wrf
