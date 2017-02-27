@@ -10,6 +10,9 @@ from sklearn.cross_decomposition.pls_ import PLSRegression
 from sklearn.decomposition import PCA, FastICA
 from sklearn.gaussian_process import GaussianProcess
 from sklearn.linear_model import RANSACRegressor as RANSAC
+import sklearn.linear_model as linear
+import sklearn.svm as svm
+import sklearn.kernel_ridge as kernel_ridge
 from pysat.spectral.meancenter import meancenter
 import scipy.optimize as opt
 from pysat.plotting import plots 
@@ -26,6 +29,98 @@ class regression:
         
         if self.method[i]=='PLS':
             self.model=PLSRegression(**params[i])
+        if self.method[i]=='OLS':
+            self.model=linear.LinearRegression(**params[i])
+        if self.method[i]=='OMP':
+            #check whether to do CV or not
+            self.do_cv=params[i]['CV']
+            # create a temporary set of parameters
+            params_temp = copy.copy(params[i])
+            # Remove CV parameter
+            params_temp.pop('CV')
+            if self.do_cv is False:
+                self.model=linear.OrthogonalMatchingPursuit(**params[i])
+            else:
+                self.model=linear.OrthogonalMatchingPursuitCV(**params[i])
+
+        if self.method[i]=='Lasso':
+            # check whether to do CV or not
+            self.do_cv = params[i]['CV']
+            # create a temporary set of parameters
+            params_temp = copy.copy(params[i])
+            # Remove CV parameter
+            params_temp.pop('CV')
+            if self.do_cv is False:
+                self.model = linear.Lasso(**params[i])
+            else:
+                self.model = linear.LassoCV(**params[i])
+
+
+        if self.method[i]=='ElasticNet':
+            # check whether to do CV or not
+            self.do_cv = params[i]['CV']
+            # create a temporary set of parameters
+            params_temp = copy.copy(params[i])
+            # Remove CV parameter
+            params_temp.pop('CV')
+            if self.do_cv is False:
+                self.model = linear.ElasticNet(**params[i])
+            else:
+                self.model = linear.ElasticNetCV(**params[i])
+
+        if self.method[i]=='Ridge':
+            # check whether to do CV or not
+            self.do_cv = params[i]['CV']
+            # create a temporary set of parameters
+            params_temp = copy.copy(params[i])
+            # Remove CV parameter
+            params_temp.pop('CV')
+            if self.do_cv is False:
+                self.model = linear.Ridge(**params[i])
+            else:
+                self.model = linear.RidgeCV(**params[i])
+
+        if self.method[i]=='Bayesian Ridge':
+            self.model=linear.BayesianRidge(**params[i])
+        if self.method[i]=='ARD':
+            self.model=linear.ARDRegression(**params[i])
+        if self.method[i]=='LARS':
+            # check whether to do CV or not
+            self.do_cv = params[i]['CV']
+            # create a temporary set of parameters
+            params_temp = copy.copy(params[i])
+            # Remove CV parameter
+            params_temp.pop('CV')
+            if self.do_cv is False:
+                self.model = linear.Lars(**params[i])
+            else:
+                self.model = linear.LarsCV(**params[i])
+
+        if self.method[i]=='Lasso LARS':
+            # check whether to do CV or not
+            self.do_cv = params[i]['CV']
+            # check whether to do IC or not
+            self.do_ic = params[i]['IC']
+            # create a temporary set of parameters
+            params_temp = copy.copy(params[i])
+            # Remove CV and IC parameter
+            params_temp.pop('CV')
+            params_temp.pop('IC')
+            if self.do_cv is False and self.do_ic is False:
+                self.model = linear.LassoLars(**params[i])
+            if self.do_cv is True and self.do_ic is False:
+                self.model = linear.LassoLarsCV(**params[i])
+            if self.do_cv is False and self.do_ic is True:
+                self.model = linear.LassoLarsIC(**params[i])
+            if self.do_cv is True and self.do_ic is True:
+                print("Can't use both cross validation AND information criterion to optimize!")
+
+
+        if self.method[i]=='SVR':
+            self.model=svm.SVR(**params[i])
+        if self.method[i]=='KRR':
+            self.model=kernel_ridge.KernelRidge(**params[i])
+
         if self.method[i]=='GP':
             #get the method for dimensionality reduction and the number of components
             self.reduce_dim=params[i]['reduce_dim']
