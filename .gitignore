@@ -69,6 +69,7 @@ target/
 *.swp
 
 #Data and output files
+.png
 .SAV
 *.user
 *.csv
@@ -77,9 +78,5 @@ target/
 *.iml
 src/PYSAT_Gui_UI_Forms/FINISHED/*.*
 src/PYSAT_Gui_UI_Forms/PythonUI/*.*
-src/Python PYSAT_GUI/plot.png
-!"src/res/Flowchart (Draw.io).xml"
-!"src/res/Flowchart.png"
-!"src/res/splash.png"
+!"src/installer/Flowchart (Draw.io).xml"
 *.png
-*.wrf
