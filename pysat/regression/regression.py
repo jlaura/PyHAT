@@ -56,7 +56,7 @@ class regression:
                 self.model = linear.LassoCV(**params[i])
 
 
-        if self.method[i]=='ElasticNet':
+        if self.method[i]=='Elastic Net':
             # check whether to do CV or not
             self.do_cv = params[i]['CV']
             # create a temporary set of parameters
