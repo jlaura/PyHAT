@@ -39,9 +39,10 @@ class regression:
             # Remove CV parameter
             params_temp.pop('CV')
             if self.do_cv is False:
-                self.model=linear.OrthogonalMatchingPursuit(**params[i])
+                self.model=linear.OrthogonalMatchingPursuit(**params_temp)
             else:
-                self.model=linear.OrthogonalMatchingPursuitCV(**params[i])
+                params_temp.pop('n_nonzero_coefs')
+                self.model=linear.OrthogonalMatchingPursuitCV(**params_temp)
 
         if self.method[i]=='Lasso':
             # check whether to do CV or not
@@ -51,9 +52,10 @@ class regression:
             # Remove CV parameter
             params_temp.pop('CV')
             if self.do_cv is False:
-                self.model = linear.Lasso(**params[i])
+                self.model = linear.Lasso(**params_temp)
             else:
-                self.model = linear.LassoCV(**params[i])
+                params_temp.pop('alpha')
+                self.model = linear.LassoCV(**params_temp)
 
 
         if self.method[i]=='Elastic Net':
@@ -64,9 +66,10 @@ class regression:
             # Remove CV parameter
             params_temp.pop('CV')
             if self.do_cv is False:
-                self.model = linear.ElasticNet(**params[i])
+                self.model = linear.ElasticNet(**params_temp)
             else:
-                self.model = linear.ElasticNetCV(**params[i])
+                params_temp.pop('alpha')
+                self.model = linear.ElasticNetCV(**params_temp)
 
         if self.method[i]=='Ridge':
             # check whether to do CV or not
@@ -76,9 +79,10 @@ class regression:
             # Remove CV parameter
             params_temp.pop('CV')
             if self.do_cv is False:
-                self.model = linear.Ridge(**params[i])
+                self.model = linear.Ridge(**params_temp)
             else:
-                self.model = linear.RidgeCV(**params[i])
+                #Ridge requires a specific set of alphas to be provided... this needs more work to be implemented correctly
+                self.model = linear.RidgeCV(**params_temp)
 
         if self.method[i]=='Bayesian Ridge':
             self.model=linear.BayesianRidge(**params[i])
@@ -92,9 +96,9 @@ class regression:
             # Remove CV parameter
             params_temp.pop('CV')
             if self.do_cv is False:
-                self.model = linear.Lars(**params[i])
+                self.model = linear.Lars(**params_temp)
             else:
-                self.model = linear.LarsCV(**params[i])
+                self.model = linear.LarsCV(**params_temp)
 
         if self.method[i]=='Lasso LARS':
             # check whether to do CV or not
@@ -114,7 +118,6 @@ class regression:
                 self.model = linear.LassoLarsIC(**params[i])
             if self.do_cv is True and self.do_ic is True:
                 print("Can't use both cross validation AND information criterion to optimize!")
-
 
         if self.method[i]=='SVR':
             self.model=svm.SVR(**params[i])
