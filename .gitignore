@@ -69,6 +69,7 @@ target/
 *.swp
 
 #Data and output files
+.png
 .SAV
 *.user
 *.csv

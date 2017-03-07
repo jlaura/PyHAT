@@ -9,8 +9,8 @@ import scipy.optimize as opt
 from pysat.regression.regression import regression 
 from pysat.spectral.within_range import within_range
 class sm:
-    def __init__(self,ranges,submodels):
-        self.ranges=ranges
+    def __init__(self,blendranges,submodels):
+        self.blendranges=blendranges
         self.submodels=submodels
 
     def do_blend(self,predictions,truevals=None):
@@ -31,7 +31,7 @@ class sm:
             
         #If the true compositions are provided, then optimize the ranges over which the results are blended to minimize the RMSEC
         # get the ranges that are not the reference model (assumed to be the last model)
-        ranges_sub = self.ranges[:-1]
+        ranges_sub = self.blendranges[:-1]
         blendranges = np.array(ranges_sub).flatten()  # squash them to be a 1d array
         blendranges.sort()  # sort the entries. These will be used by submodels_blend to decide how to combine the predictions
 
@@ -42,10 +42,7 @@ class sm:
 
             result=opt.minimize(self.get_rmse,blendranges,(predictions,truevals))
             self.blendranges=result.x
-        else:
-            self.blendranges=blendranges
 
-            
         #calculate the blended results
         blended=self.submodels_blend(predictions,self.blendranges,overwrite=False,noneg=False)
         return blended
