@@ -17,7 +17,7 @@ def cmaps():
     
 
 def make_plot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Reference (wt.%)',ytitle='Prediction (wt.%)',title=None,
-                lbl='',one_to_one=False,dpi=1000,
+                lbl='',one_to_one=False,rmse=True,dpi=1000,
                 color=None,annot_mask=None,cmap=None,colortitle='',loadfig=None,masklabel='',marker='o',linestyle='None'):
     if loadfig is not None:
         fig=loadfig
@@ -39,6 +39,10 @@ def make_plot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Reference
     
     if one_to_one:
         axes.plot([0, 100], [0, 100],color='k')
+        if rmse:
+            rmse_val=np.sqrt(np.mean((y-x)**2))
+            lbl=lbl+' (RMSE='+str(round(rmse_val,2)+')')
+
     
     if cmap is not None:
         axes.plot(x,y,c=color,cmap=cmap,marker=marker)  

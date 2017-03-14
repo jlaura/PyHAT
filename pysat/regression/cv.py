@@ -26,7 +26,7 @@ class cv:
         print(params)
         self.paramgrid=list(ParameterGrid(params))  #create a grid of parameter permutations
 
-    def do_cv(self,Train,xcols='wvl',ycol=('comp','SiO2'),method='PLS'): #TODO: get RANSAC working with CV
+    def do_cv(self,Train,xcols='wvl',ycol=('comp','SiO2'),method='PLS',yrange=[0,100]): #TODO: get RANSAC working with CV
     
         
         cv_iterator=LeaveOneLabelOut(Train[('meta','Folds')])  #create an iterator for cross validation based on the predefined folds
@@ -41,7 +41,7 @@ class cv:
             #self.modelkey=method+' '+str(self.paramgrid[i])
             #create the estimator object with the current parameters
             
-            model=regression([method],[self.paramgrid[i]])
+            model=regression([method],[yrange],[self.paramgrid[i]])
           
             rmsecv_folds_tmp=[]  #Create empty list to hold RMSECV for each fold
             for train,holdout in cv_iterator:  #Iterate through each of the folds in the training set
@@ -64,7 +64,7 @@ class cv:
             model.fit(Train[xcols],Train[ycol])
             if model.goodfit:
                 ypred_train=model.predict(Train[xcols])
-                pass
+
             else:
                 ypred_train=Train[ycol]*np.nan
             calcol=('meta',method+'-Cal-'+str(self.paramgrid[i]))    
