@@ -255,7 +255,22 @@ class spectral_data(object):
         
     def standard_scale(self,col):
         self.df[col]=StandardScaler().fit_transform(self.df[col])
-	
+
+    #create an all-purpose dimensionality reduction option to replace the individual PCA, ICA, etc. functions
+    def dim_red(self,col,method,params,kws,load_fit=None):
+        if method=='PCA':
+            self.do_dim_red=PCA(*params,**kws)
+        if method=='ICA':
+            self.do_dim_red=FastICA(*params,**kws)
+        if load_fit:
+            self.do_dim_red=load_fit
+        else:
+            self.do_dim_red.fit(self.df[col])
+        dim_red_result=self.do_dim_red.transform(self.df[col])
+        return self.do_dim_red
+
+
+
     def pca(self,col,nc=None,load_fit=None):
         if nc:        
             self.do_pca=PCA(n_components=nc)
