@@ -66,11 +66,11 @@ def pca_ica_plot(data,x_component,y_component,colorvar=None,cmap='viridis',metho
     x=[data.df[(method,x_component)]]
     y=[data.df[(method,y_component)]]
     if method=='PCA':
-        x_loading=data.do_pca.components_[x_component,:]
-        y_loading=data.do_pca.components_[y_component,:]
+        x_loading=data.do_dim_red.components_[x_component,:]
+        y_loading=data.do_dim_red.components_[y_component,:]
         
-        x_variance=data.do_pca.explained_variance_ratio_[x_component]*100
-        y_variance=data.do_pca.explained_variance_ratio_[y_component]*100
+        x_variance=data.do_dim_red.explained_variance_ratio_[x_component]*100
+        y_variance=data.do_dim_red.explained_variance_ratio_[y_component]*100
         x_label='PC '+str(x_component)+' ('+str(round(x_variance,1))+r'%)'       
         y_label='PC '+str(y_component)+' ('+str(round(y_variance,1))+r'%)'       
         

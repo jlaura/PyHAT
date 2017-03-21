@@ -268,7 +268,7 @@ class spectral_data(object):
             self.do_dim_red.fit(self.df[col])
         dim_red_result=self.do_dim_red.transform(self.df[col])
         for i in list(range(1, dim_red_result[0].shape[0]+1)): #will need to revisit this for other methods that don't use n_components to make sure column names still mamke sense
-            self.df[(method, 'nc='+str(i))] = dim_red_result[:, i - 1]
+            self.df[(method, str(i))] = dim_red_result[:, i - 1]
 
         return self.do_dim_red
 
