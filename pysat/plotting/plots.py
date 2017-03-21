@@ -36,12 +36,12 @@ def make_plot(x,y,figpath,figfile=None,xrange=None,yrange=None,xtitle='Reference
             axes.set_xlim(xrange)
         if yrange:
             axes.set_ylim(yrange)
-    
+   #don't know why this suddenly is causing problems, but remove it until I can fix it later
     if one_to_one:
         axes.plot([0, 100], [0, 100],color='k')
-        if rmse:
-            rmse_val=np.sqrt(np.mean((y-x)**2))
-            lbl=lbl+' (RMSE='+str(round(rmse_val,2)+')')
+   #     if rmse:
+   #         rmse_val=np.sqrt(np.mean((y-x)**2))
+   #         lbl=lbl+' (RMSE='+str(round(rmse_val,2)+')')
 
     
     if cmap is not None:
