@@ -5,10 +5,12 @@ import os
 import numpy as np
 import pandas as pd
 import scipy
+import scipy.io as io
 from pysat.fileio.utils import file_search
 from pysat.fileio.lookup import lookup
 from pysat.spectral.spectral_data import spectral_data
 import time
+from PyQt4 import QtCore, QtGui
 
 def CCS(input_data):
     t=time.time()
@@ -55,7 +57,8 @@ def CCS(input_data):
 def CCS_SAV(input_data,ave=True):
         
     #read the IDL .SAV file
-    data=scipy.io.readsav(input_data,python_dict=True)
+
+    data=io.readsav(input_data,python_dict=True)
     
     #put the spectra into data frames and combine them
     df_UV=pd.DataFrame(data['uv'],index=data['defuv'])
@@ -133,7 +136,7 @@ def CCS_SAV(input_data,ave=True):
                   
     return df    
 
-def ccs_batch(directory,searchstring='*CCS*.csv',is_sav=False,to_csv=None,lookupfile=None,ave=True):
+def ccs_batch(directory,searchstring='*CCS*.csv',to_csv=None,lookupfile=None,ave=True):
     #Determine if the file is a .csv or .SAV
     if 'SAV' in searchstring:
         is_sav=True
@@ -150,6 +153,7 @@ def ccs_batch(directory,searchstring='*CCS*.csv',is_sav=False,to_csv=None,lookup
         basenames[i]=os.path.basename(name)
         sclocks[i]=basenames[i][4:13] #extract the sclock
         P_version[i]=basenames[i][-5:-4] #extract the version
+
     sclocks_unique=np.unique(sclocks) #find unique sclocks
     filelist_new=np.array([],dtype='str')
     for i in sclocks_unique:
@@ -160,28 +164,40 @@ def ccs_batch(directory,searchstring='*CCS*.csv',is_sav=False,to_csv=None,lookup
     filelist=filelist_new
     #Should add a progress bar for importing large numbers of files    
     dt=[]
+    progressbar=QtGui.QProgressDialog("Loading "+str(filelist.size)+' files',"Cancel",0,filelist.size)
+    progressbar.setWindowTitle('ChemCam data progress')
+    progressbar.setRange(0,filelist.size)
+    progressbar.show()
+    filecount=0
     for i in filelist:
+        filecount=filecount+1
         print(i)
-        if is_sav:
-            t=time.time()
-            tmp=CCS_SAV(i,ave=ave)
-            dt.append(time.time()-t)
-        else:
-            t=time.time()
-            tmp=CCS(i)
-            
-            dt.append(time.time()-t)
-        if i==filelist[0]:
-            combined=tmp
-            
-        else:
-            #This ensures that rounding errors are not causing mismatches in columns            
-            cols1=list(combined['wvl'].columns)
-            cols2=list(tmp['wvl'].columns)
-            if set(cols1)==set(cols2):
-                combined=pd.concat([combined,tmp])
+        try:
+            if is_sav:
+                t=time.time()
+                tmp=CCS_SAV(i,ave=ave)
+                dt.append(time.time()-t)
             else:
-                print("Wavelengths don't match!")
+                t=time.time()
+                tmp=CCS(i)
+
+                dt.append(time.time()-t)
+            if i==filelist[0]:
+                combined=tmp
+
+            else:
+                #This ensures that rounding errors are not causing mismatches in columns
+                cols1=list(combined['wvl'].columns)
+                cols2=list(tmp['wvl'].columns)
+                if set(cols1)==set(cols2):
+                    combined=pd.concat([combined,tmp])
+                else:
+                    print("Wavelengths don't match!")
+        except:
+            pass
+        progressbar.setValue(filecount)
+        QtCore.QCoreApplication.processEvents()
+        pass
 
     combined.loc[:,('meta','sclock')]=pd.to_numeric(combined.loc[:,('meta','sclock')])
         
@@ -190,5 +206,4 @@ def ccs_batch(directory,searchstring='*CCS*.csv',is_sav=False,to_csv=None,lookup
     if to_csv is not None:
         combined.to_csv(to_csv)
     return spectral_data(combined)
-    
-        
+
