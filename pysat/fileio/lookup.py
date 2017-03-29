@@ -21,7 +21,7 @@ def lookup(df,lookupfile=None,lookupdf=None,sep=',',skiprows=1,left_on='sclock',
                 lookupdf=pd.read_csv(x, sep=sep,skiprows=skiprows,error_bad_lines=False)
     metadata=df['meta']
     
-    metadata=metadata.merge(lookupdf,left_on=left_on,right_on=right_on,how='inner')
+    metadata=metadata.merge(lookupdf,left_on=left_on,right_on=right_on,how='left')
     
     #remove metadata columns that already exist in the data frame to avoid non-unique columns
     meta_cols=set(metadata.columns.values)
