@@ -18,7 +18,7 @@
   - Launch (click) the `Kaguya_Spectral_Profiler.ipynb` notebook.
 
 # PYSAT UI
-![PYSAT splash](./src/installer/splash.png)  
+![PYSAT splash](./images/splash.png)  
 
 - The UI's backend is designed and created in Python with the QT framework
 - The UI is being built to work as close to the original libraries as physically possible
@@ -37,7 +37,7 @@ Current Road Ahead
 
 ## Control Flow
 
-![FlowChart](./src/installer/Flowchart.png)
+![FlowChart](./images/Flowchart.png)
 
 - The user begins by starting PYSAT_MAIN.
 - PYSAT_MAIN will begin by loading the splash screen and all necessary UI pieces

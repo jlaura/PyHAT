@@ -76,11 +76,11 @@ target/
 *.dll
 *.xml
 *.iml
-src/PYSAT_Gui_UI_Forms/FINISHED/*.*
-src/PYSAT_Gui_UI_Forms/PythonUI/*.*
-src/Python PYSAT_GUI/plot.png
-!"src/res/Flowchart (Draw.io).xml"
-!"src/res/Flowchart.png"
-!"src/res/splash.png"
+point_spectra_gui/PYSAT_Gui_UI_Forms/FINISHED/*.*
+point_spectra_gui/PYSAT_Gui_UI_Forms/PythonUI/*.*
+point_spectra_gui/Python PYSAT_GUI/plot.png
+!"images/Flowchart (Draw.io).xml"
+!"images/Flowchart.png"
+!"images/splash.png"
 *.png
 *.wrf

@@ -125,6 +125,7 @@ class regression_train_:
         ransacparams = self.arg_list[6]
         self.regression_choosedata.currentIndex(self.regression_choosedata.findText(str(datakey)))
 
+
     def make_ransac_widget(self, isChecked):
         if not isChecked:
             self.ransac_widget.deleteLater()

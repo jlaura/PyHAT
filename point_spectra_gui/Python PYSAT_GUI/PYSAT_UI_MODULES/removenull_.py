@@ -53,9 +53,6 @@ class removenull_:
             datakey = self.arg_list[0]
             colname = self.arg_list[1]
 
-
-        pass
-
     def removenull_ui(self):
         self.removenull = QtGui.QGroupBox()
         font = QtGui.QFont()
