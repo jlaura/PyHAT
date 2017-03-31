@@ -363,6 +363,8 @@ class pysat_ui(object):
         self.actionCross_Validation.setDisabled(bool)
         self.actionSubmodelPredict.setDisabled(bool)
         self.actionSave_Current_Data.setDisabled(bool)
+        self.actionDimRed.setDisabled(bool)
+        self.actionPlotDimRed.setDisabled(bool)
 
 #    def set_visible_items(self):
 #    def set_visible_items(self):
