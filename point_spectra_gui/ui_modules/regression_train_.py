@@ -1,5 +1,5 @@
-from PYSAT_UI_MODULES import make_combobox, make_listwidget
-from PYSAT_UI_MODULES.Error_ import error_print
+from ui_modules import make_combobox, make_listwidget
+from ui_modules.Error_ import error_print
 from PyQt4 import QtCore, QtGui
 
 try:

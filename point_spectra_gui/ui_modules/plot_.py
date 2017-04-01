@@ -1,4 +1,4 @@
-from PYSAT_UI_MODULES.Error_ import error_print
+from ui_modules.Error_ import error_print
 from PyQt4 import QtCore, QtGui
 import numpy as np
 import inspect

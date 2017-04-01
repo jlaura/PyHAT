@@ -5,8 +5,8 @@ from pysat.plotting.plots import make_plot, pca_ica_plot
 from pysat.regression import sm
 from pysat.fileio import io_ccs
 import pandas as pd
-from PYSAT_UI_MODULES.Error_ import error_print
-from PYSAT_UI_MODULES.del_layout_ import *
+from ui_modules.Error_ import error_print
+from ui_modules.del_layout_ import *
 from PyQt4.QtCore import QThread
 from PyQt4 import QtCore
 import numpy as np
@@ -23,7 +23,6 @@ class Module:
         self.next = None
         self.UI_ID = Module.nodeCount
         Module.nodeCount += 1
-
     def setData(self, ui_list, fun_list, arg_list, kw_list):
         self.ui_list = ui_list
         self.fun_list = fun_list

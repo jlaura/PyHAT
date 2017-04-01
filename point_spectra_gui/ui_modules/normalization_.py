@@ -1,7 +1,7 @@
 from PyQt4 import QtCore, QtGui
-from PYSAT_UI_MODULES import make_combobox
-from PYSAT_UI_MODULES.Error_ import error_print
-from PYSAT_UI_MODULES.del_layout_ import del_layout_
+from ui_modules import make_combobox
+from ui_modules.Error_ import error_print
+from ui_modules.del_layout_ import del_layout_
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8

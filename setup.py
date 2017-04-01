@@ -1,6 +1,12 @@
-import os
-from setuptools import setup
-import 
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from setuptools import setup, find_packages
+import point_spectra_gui
+
+with open('README.md', 'r') as f:
+    long_description = f.read()
+
+VERSION = point_spectra_gui.__version__
 
 setup(
 
@@ -15,3 +21,4 @@ setup(name="PySAT_Point_Spectra_GUI",
       license='MIT',
       packages=['PYSAT'],
       zip_safe=False)
+
