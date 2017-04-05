@@ -1,6 +1,7 @@
 from PyQt4 import QtCore, QtGui
-from pysat_func import pysat_func
-import ui_modules
+
+from point_spectra_gui import ui_modules
+from point_spectra_gui.pysat_func import pysat_func
 import pickle
 
 try:
@@ -255,55 +256,55 @@ class pysat_ui(object):
         self.delButton.clicked.connect(lambda: self.pysat_fun.del_layout())
 
     def get_known_data(self, arg_list=None, kw_list=None):
-        self.flag = pysat_ui_modules.get_data_k_(self.pysat_fun, self.module_layout, arg_list, kw_list)
+        self.flag = ui_modules.get_data_k_(self.pysat_fun, self.module_layout, arg_list, kw_list)
 
     def get_unknown_data(self, arg_list=None, kw_list=None):
-        self.flag = pysat_ui_modules.get_data_u_(self.pysat_fun, self.module_layout, arg_list, kw_list)
+        self.flag = ui_modules.get_data_u_(self.pysat_fun, self.module_layout, arg_list, kw_list)
 
     def do_read_ccam(self,arg_list=None,kw_list=None):
-        self.flag = pysat_ui_modules.read_ccam_(self.pysat_fun,self.module_layout,arg_list,kw_list)
+        self.flag = ui_modules.read_ccam_(self.pysat_fun,self.module_layout,arg_list,kw_list)
 
     def do_mask(self, arg_list=None, kw_list=None):
-        pysat_ui_modules.get_mask_(self.pysat_fun, self.module_layout, arg_list, kw_list)
+        ui_modules.get_mask_(self.pysat_fun, self.module_layout, arg_list, kw_list)
 
     def do_write_data(self):
-        self.flag = pysat_ui_modules.write_data_(self.pysat_fun,self.module_layout)
+        self.flag = ui_modules.write_data_(self.pysat_fun,self.module_layout)
 
     def file_outpath(self, arg_list=None, kw_list=None):
-        self.flag = pysat_ui_modules.file_outpath_(self.pysat_fun, self.module_layout, arg_list, kw_list)
+        self.flag = ui_modules.file_outpath_(self.pysat_fun, self.module_layout, arg_list, kw_list)
 
     def do_removenull(self, arg_list=None, kw_list=None):
-        pysat_ui_modules.removenull_(self.pysat_fun, self.module_layout, arg_list, kw_list)
+        ui_modules.removenull_(self.pysat_fun, self.module_layout, arg_list, kw_list)
 
     def normalization(self, arg_list=None, kw_list=None):
-        pysat_ui_modules.normalization_(self.pysat_fun, self.module_layout, arg_list, kw_list)
+        ui_modules.normalization_(self.pysat_fun, self.module_layout, arg_list, kw_list)
 
     def do_strat_folds(self, arg_list=None, kw_list=None):
-        pysat_ui_modules.strat_folds_(self.pysat_fun, self.module_layout, arg_list, kw_list)
+        ui_modules.strat_folds_(self.pysat_fun, self.module_layout, arg_list, kw_list)
 
     def do_dim_red(self, arg_list=None, kw_list=None):
-        pysat_ui_modules.dim_reduction_(self.pysat_fun, self.module_layout,arg_list,kw_list)
+        ui_modules.dim_reduction_(self.pysat_fun, self.module_layout,arg_list,kw_list)
 
     def do_regression_train(self, arg_list=None, kw_list=None):
-        pysat_ui_modules.regression_train_(self.pysat_fun, self.module_layout, arg_list, kw_list)
+        ui_modules.regression_train_(self.pysat_fun, self.module_layout, arg_list, kw_list)
 
     def do_regression_predict(self, arg_list=None, kw_list=None):
-        pysat_ui_modules.regression_predict_(self.pysat_fun, self.module_layout, arg_list, kw_list)
+        ui_modules.regression_predict_(self.pysat_fun, self.module_layout, arg_list, kw_list)
 
     def do_submodel_predict(self, arg_list=None, kw_list=None):
-        pysat_ui_modules.sm_(self.pysat_fun, self.module_layout, arg_list, kw_list)
+        ui_modules.sm_(self.pysat_fun, self.module_layout, arg_list, kw_list)
 
     def do_plot(self, arg_list=None, kw_list=None):
-        pysat_ui_modules.plot_(self.pysat_fun, self.module_layout, arg_list, kw_list)
+        ui_modules.plot_(self.pysat_fun, self.module_layout, arg_list, kw_list)
 
     def do_plot_dim_red(self, arg_list=None, kw_list=None):
-        pysat_ui_modules.dim_red_plot_(self.pysat_fun, self.module_layout,arg_list,kw_list)
+        ui_modules.dim_red_plot_(self.pysat_fun, self.module_layout,arg_list,kw_list)
 
     def do_cv(self, arg_list=None, kw_list=None):
-        pysat_ui_modules.cv_(self.pysat_fun, self.module_layout, arg_list, kw_list)
+        ui_modules.cv_(self.pysat_fun, self.module_layout, arg_list, kw_list)
 
     def do_interp(self, arg_list=None, kw_list=None):
-        pysat_ui_modules.interpolation_(self.pysat_fun, self.module_layout, arg_list, kw_list)
+        ui_modules.interpolation_(self.pysat_fun, self.module_layout, arg_list, kw_list)
 
     """ =============================================
     Please do not delete the functions below this line!
@@ -405,7 +406,7 @@ class pysat_ui(object):
             with open(filename, 'rb') as fp:
                 self.restore_list = pickle.load(fp)
         except:
-            pysat_ui_modules.error_print("File was not loaded")
+            ui_modules.error_print("File was not loaded")
         self.restore_first()
 
     def restore_first(self):

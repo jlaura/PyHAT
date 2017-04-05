@@ -5,8 +5,8 @@ from pysat.plotting.plots import make_plot, pca_ica_plot
 from pysat.regression import sm
 from pysat.fileio import io_ccs
 import pandas as pd
-from ui_modules.Error_ import error_print
-from ui_modules.del_layout_ import *
+from point_spectra_gui.ui_modules.Error_ import  error_print
+from point_spectra_gui.ui_modules.del_layout_ import *
 from PyQt4.QtCore import QThread
 from PyQt4 import QtCore
 import numpy as np
