@@ -31,11 +31,13 @@ class regression_train_:
     def main(self):
         self.ui_id = self.pysat_fun.set_list(None, None, None, None, self.ui_id)
         self.regression_ui()  # start the regression UI. create our submodule
-        self.pysat_fun.set_greyed_modules(self.regression_train)  # set the module grey after use.
-        self.regression_ransac_checkbox.toggled.connect(  #
-            lambda: self.make_ransac_widget(self.regression_ransac_checkbox.isChecked()))  #
+        self.set_regression_parameters()
+        # self.regression_ransac_checkbox.toggled.connect(  #
+        #     lambda: self.make_ransac_widget(self.regression_ransac_checkbox.isChecked()))  #
         self.regression_choosealg.currentIndexChanged.connect(  #
             lambda: self.make_regression_widget(self.regression_choosealg.currentText()))  #
+        self.get_regression_parameters()
+        self.pysat_fun.set_greyed_modules(self.regression_train)
 
     def get_regression_parameters(self):
         method = self.regression_choosealg.currentText()
@@ -101,14 +103,14 @@ class regression_train_:
         except:
             pass
         kws = {'modelkey': modelkey}
-        if self.regression_ransac_checkbox.isChecked():
-            lossval = self.ransac_widget.ransac_lossfunc_combobox.currentText()
-            if lossval == 'Squared Error':
-                loss = 'squared_loss'
-            if lossval == 'Absolute Error':
-                loss = 'absolute_loss'
-            ransacparams = {'residual_threshold': self.ransac_widget.ransac_thresh_spin.value(),
-                            'loss': loss}
+        # if self.regression_ransac_checkbox.isChecked():
+        #     lossval = self.ransac_widget.ransac_lossfunc_combobox.currentText()
+        #     if lossval == 'Squared Error':
+        #         loss = 'squared_loss'
+        #     if lossval == 'Absolute Error':
+        #         loss = 'absolute_loss'
+        #     ransacparams = {'residual_threshold': self.ransac_widget.ransac_thresh_spin.value(),
+        #                     'loss': loss}
         ui_list = "do_regression_train"
         fun_list = "do_regression_train"
 
@@ -116,15 +118,22 @@ class regression_train_:
         self.ui_id = self.pysat_fun.set_list(ui_list, fun_list, args, kws, self.ui_id)
 
     def set_regression_parameters(self):
-        datakey = self.arg_list[0]
-        xvars = self.arg_list[1]
-        yvars = self.arg_list[2]
-        yrange = self.arg_list[3]
-        method = self.arg_list[4]
-        params = self.arg_list[5]
-        ransacparams = self.arg_list[6]
-        self.regression_choosedata.currentIndex(self.regression_choosedata.findText(str(datakey)))
-
+        if self.arg_list is not None:
+            datakey = self.arg_list[0]
+            xvars = self.arg_list[1]
+            yvars = self.arg_list[2]
+            yrange = self.arg_list[3]
+            method = self.arg_list[4]
+            params = self.arg_list[5]
+            ransacparams = self.arg_list[6]
+            self.regression_choosedata.setCurrentIndex(self.regression_choosedata.findText(str(datakey)))
+            #TODO: figure out how to handle multiple selections
+            self.regression_train_choosex.setCurrentItem(self.regression_train_choosex.findItems(xvars[0],QtCore.Qt.MatchExactly)[0])
+            self.regression_train_choosey.setCurrentItem(self.regression_train_choosey.findItems(yvars[0][1],QtCore.Qt.MatchExactly)[0])
+            self.yvarmin_spin.setValue(yrange[0])
+            self.yvarmax_spin.setValue(yrange[1])
+            self.regression_choosealg.setCurrentIndex(self.regression_choosealg.findText(str(method)))
+            self.make_regression_widget(self.regression_choosealg.currentText(),params=params)
 
     def make_ransac_widget(self, isChecked):
         if not isChecked:
@@ -160,7 +169,7 @@ class regression_train_:
                 lambda: self.get_regression_parameters())
             self.ransac_widget.ransac_thresh_spin.valueChanged.connect(lambda: self.get_regression_parameters())
 
-    def make_regression_widget(self, alg):
+    def make_regression_widget(self, alg,params=None):
         print(alg)
         try:
             self.reg_widget.deleteLater()
@@ -178,7 +187,8 @@ class regression_train_:
                                                            QtGui.QSizePolicy.Minimum)
             self.reg_widget.pls_hlayout.addItem(self.reg_widget.pls_spacer)
             self.reg_widget.pls_nc_spinbox.valueChanged.connect(lambda: self.get_regression_parameters())
-
+            if params is not None:
+                self.reg_widget.pls_nc_spinbox.setValue(params['n_components'])
         elif alg == 'GP':
             self.reg_widget = QtGui.QWidget()
             self.reg_widget.gp_vlayout = QtGui.QVBoxLayout(self.reg_widget)
@@ -239,6 +249,14 @@ class regression_train_:
             self.reg_widget.gp_theta0_spin.valueChanged.connect(lambda: self.get_regression_parameters())
             self.reg_widget.gp_thetaL_spin.valueChanged.connect(lambda: self.get_regression_parameters())
             self.reg_widget.gp_thetaU_spin.valueChanged.connect(lambda: self.get_regression_parameters())
+            if params is not None:
+                self.reg_widget.gp_dim_red_combobox.setCurrentIndex(self.reg_widget.gp_dim_red_combobox.findText(params['reduce_dim']))
+                self.reg_widget.gp_dim_red_nc_spinbox.setValue(params['n_components'])
+                self.reg_widget.gp_rand_starts_spin.setValue(params['random_start'])
+                self.reg_widget.gp_theta0_spin.setValue(params['theta0'])
+                self.reg_widget.gp_thetaL_spin.setValue(params['thetaL'])
+                self.reg_widget.gp_thetaU_spin.setValue(params['thetaU'])
+
         elif alg == 'OLS':
             self.reg_widget.ols_hlayout = QtGui.QHBoxLayout(self.reg_widget)
             self.reg_widget.ols_intercept_checkbox = QtGui.QCheckBox(self.reg_widget)
@@ -246,6 +264,8 @@ class regression_train_:
             self.reg_widget.ols_intercept_checkbox.setChecked(True)
             self.reg_widget.ols_hlayout.addWidget(self.reg_widget.ols_intercept_checkbox)
             self.reg_widget.ols_intercept_checkbox.stateChanged.connect(lambda: self.get_regression_parameters())
+            if params is not None:
+                self.reg_widget.ols_intercept_checkbox.setChecked(params['fit_intercept'])
 
         elif alg == 'OMP':
             self.reg_widget.omp_hlayout = QtGui.QHBoxLayout(self.reg_widget)
@@ -275,6 +295,11 @@ class regression_train_:
             self.reg_widget.omp_intercept_checkbox.stateChanged.connect(lambda: self.get_regression_parameters())
             self.reg_widget.omp_cv_checkbox.stateChanged.connect(lambda: self.get_regression_parameters())
             self.reg_widget.omp_nfeatures.valueChanged.connect(lambda: self.get_regression_parameters())
+
+            if params is not None:
+                self.reg_widget.omp_intercept_checkbox.setChecked(params['fit_intercept'])
+                self.reg_widget.omp_cv_checkbox.setChecked(params['CV'])
+                self.reg_widget.omp_nfeatures.setValue(params['n_nonzero_coefs'])
 
         elif alg == 'Lasso':
             self.reg_widget.lasso_vlayout = QtGui.QVBoxLayout(self.reg_widget)
@@ -349,6 +374,14 @@ class regression_train_:
             self.reg_widget.lasso_intercept_checkbox.stateChanged.connect(lambda: self.get_regression_parameters())
             self.reg_widget.lasso_positive_checkbox.stateChanged.connect(lambda: self.get_regression_parameters())
             self.reg_widget.lasso_cv_checkbox.stateChanged.connect(lambda: self.get_regression_parameters())
+
+            if params is not None:
+                self.reg_widget.lasso_alpha.setValue(params['alpha'])
+                self.reg_widget.lasso_intercept_checkbox.setChecked(params['fit_intercept'])
+                self.reg_widget.lasso_tol.setValue(params['tol'])
+                self.reg_widget.lasso_max.setValue(params['max_iter'])
+                self.reg_widget.lasso_positive_checkbox.setChecked(params['positive'])
+                self.reg_widget.lasso_cv_checkbox.setChecked(params['CV'])
 
         if alg == 'Elastic Net':
             pass
@@ -457,12 +490,12 @@ class regression_train_:
         self.regression_vlayout.addLayout(self.regression_choosevars_hlayout)
 
         # ransac options
-        self.ransac_hlayout = QtGui.QHBoxLayout()
-        self.regression_ransac_checkbox = QtGui.QCheckBox(self.regression_train)
-        self.regression_ransac_checkbox.setObjectName(_fromUtf8("regression_ransac_checkbox"))
-        self.regression_ransac_checkbox.setText('RANSAC')
-        self.ransac_hlayout.addWidget(self.regression_ransac_checkbox)
-        self.regression_vlayout.addLayout(self.ransac_hlayout)
+        # self.ransac_hlayout = QtGui.QHBoxLayout()
+        # self.regression_ransac_checkbox = QtGui.QCheckBox(self.regression_train)
+        # self.regression_ransac_checkbox.setObjectName(_fromUtf8("regression_ransac_checkbox"))
+        # self.regression_ransac_checkbox.setText('RANSAC')
+        # self.ransac_hlayout.addWidget(self.regression_ransac_checkbox)
+        # self.regression_vlayout.addLayout(self.ransac_hlayout)
 
         # choose regression algorithm
         self.regression_choosealg_hlayout = QtGui.QHBoxLayout()

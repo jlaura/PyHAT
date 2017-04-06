@@ -114,18 +114,25 @@ class normalization_:
         self.module_layout.addWidget(self.normalization)
 
         self.normalization.setTitle(_translate("MainWindow", "Normalization", None))
-        self.normalization_choosedata_label.setText(_translate("MainWindow", "Choose data: ", None))
-        self.add_ranges_button.setText(_translate("MainWindow", "Add Ranges", None))
-        self.del_button.setText(_translate("MainWindow", "Delete Ranges", None))
+        self.normalization_choosedata_label.setText(_translate("MainWindow", "Choose data to normalize: ", None))
+        self.add_ranges_button.setText(_translate("MainWindow", "Add Range", None))
+        self.del_button.setText(_translate("MainWindow", "Delete Range", None))
 
     def add_ranges(self):
+
         self.ranges_layout = QtGui.QHBoxLayout()  # setup the ranges_layout, it will be a child of all_ranges_layout
+        font = QtGui.QFont()
+        font.setPointSize(10)
         self.min_label = QtGui.QLabel()  # setup the min label
         self.max_label = QtGui.QLabel()  # setup the max label
+        self.min_label.setFont(font)
+        self.max_label.setFont(font)
         self.min_spinbox = QtGui.QSpinBox()  # setup the min lineEdit
         self.max_spinbox = QtGui.QSpinBox()  # setup the max lineEdit
         self.max_spinbox.setMaximum(9999)
         self.min_spinbox.setMaximum(9999)
+        self.min_spinbox.setFont(font)
+        self.max_spinbox.setFont(font)
         try:
             minimum = int(self.box_list[-1].text())  # go to the last item in the list
             self.max_spinbox.setMinimum(minimum)  # set this as the minimum value
@@ -136,8 +143,8 @@ class normalization_:
         self.ranges_layout.addWidget(self.min_spinbox)  # apply the min lineEdit to the widget
         self.ranges_layout.addWidget(self.max_label)  # apply the max label
         self.ranges_layout.addWidget(self.max_spinbox)  # apply the max lineEdit
-        self.min_label.setText(_translate("MainWindow", "Min", None))  # set the text of the min label
-        self.max_label.setText(_translate("MainWindow", "Max", None))  # set the text of the max label
+        self.min_label.setText(_translate("MainWindow", "Minimum wavelength", None))  # set the text of the min label
+        self.max_label.setText(_translate("MainWindow", "Maximum wavelength", None))  # set the text of the max label
         self.box_list.append(self.min_spinbox)  # set up an array of lineEdits
         self.box_list.append(self.max_spinbox)
         self.all_ranges_layout.addLayout(self.ranges_layout)
