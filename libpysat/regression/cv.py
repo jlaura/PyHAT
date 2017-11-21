@@ -15,7 +15,6 @@ import pandas as pd
 from libpysat.regression.regression import regression
 from sklearn.cross_validation import LeaveOneLabelOut
 from sklearn.grid_search import ParameterGrid
-
 warnings.filterwarnings('ignore')
 
 
@@ -30,22 +29,26 @@ class cv:
         self.paramgrid = list(ParameterGrid(params))  # create a grid of parameter permutations
 
     def do_cv(self, Train, xcols='wvl', ycol=('comp', 'SiO2'), method='PLS',
-              yrange=[0, 100]):  # TODO: get RANSAC working with CV
+              yrange=[0, 100]):
 
 
-        cv_iterator = LeaveOneLabelOut(
+        try:
+            cv_iterator = LeaveOneLabelOut(
             Train[('meta', 'Folds')])  # create an iterator for cross validation based on the predefined folds
+        except:
+            print('***No folds found! Did you remember to define folds before running cross validation?***')
+
         rmsecv_folds = []
         rmsec = []
         rmsecv = []
-
+        models = []
+        modelkeys = []
         # loop through the grid of parameters, do cross validation for each permutation
         for i in list(range(len(self.paramgrid))):
             print(self.paramgrid[i])
-            # self.modelkey=method+' '+str(self.paramgrid[i])
-            # create the estimator object with the current parameters
 
             model = regression([method], [yrange], [self.paramgrid[i]])
+            modelkey = "{} - {} - ({}, {}) {}".format(method, ycol[0][-1], yrange[0], yrange[1], self.paramgrid[i])
 
             rmsecv_folds_tmp = []  # Create empty list to hold RMSECV for each fold
             for train, holdout in cv_iterator:  # Iterate through each of the folds in the training set
@@ -68,6 +71,8 @@ class cv:
 
             model.fit(Train[xcols], Train[ycol])
             if model.goodfit:
+                models.append(model)
+                modelkeys.append(modelkey)
                 ypred_train = model.predict(Train[xcols])
 
             else:
@@ -86,4 +91,4 @@ class cv:
         cols = output.columns.values
         cols = [('cv', i) for i in cols]
         output.columns = pd.MultiIndex.from_tuples(cols)
-        return Train, output
+        return Train, output, models, modelkeys
