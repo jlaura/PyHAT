@@ -69,6 +69,18 @@ target/
 *.swp
 
 #Data and output files
-.csv
 .png
 .SAV
+*.user
+*.csv
+*.dll
+*.xml
+*.iml
+point_spectra_gui/PYSAT_Gui_UI_Forms/FINISHED/*.*
+point_spectra_gui/PYSAT_Gui_UI_Forms/PythonUI/*.*
+point_spectra_gui/Python PYSAT_GUI/plot.png
+!"./images/Flowchart (Draw.io).xml"
+!"./images/Flowchart.png"
+!"./images/splash.png"
+*.png
+*.wrf
