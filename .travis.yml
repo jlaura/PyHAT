@@ -1,42 +1,52 @@
-language: python
-sudo: false
+language: generic
+
+env:
+  - PYTHON_VERSION=3.5
+  - PYTHON_VERISON=3.6
+os:
+  - linux
+  - osx
 
 branches:
 only:
   - master
 
-python:
-  - "3.5"
-
 before_install:
-
-install:
-  # We do this conditionally because it saves us some downloading if the
-  # version is the same.
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
-    else
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
       wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+      curl -o miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh;
     fi
+
+  # More conda setup to get miniconda in and a virtual env. setup
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
-  # Useful for debugging any issues with conda
-  - conda info -a
+  - conda info -a   # Useful for debugging any issues with conda
+  # Create the env
+  - conda create -q -n test python=$PYTHON_VERSION
+  - source activate test
 
-  # Create a virtual env and install dependencies
-  - conda env create
-  # Activate the env
-  - source activate pysat
+install:
+  # Install dependencies
+  - conda config --add channels usgs-astrogeology
+  - conda config --add channels conda-forge
+  - conda install -c conda-forge numpy scipy pandas gdal
+  - conda install -c usgs-astrogeology plio
 
-  # Dev packages
-  - pip install coverage
+  # Development installation
+  - conda install pytest pytest-cov
   - pip install coveralls
 
 script:
-  - nosetests --with-coverage --cover-package=pysat
+  - python setup.py install
+  - pytest --cov=pysat
 
 after_success:
   - coveralls
+  - source deactivate
+  - conda install conda-build anaconda-client
+  - conda config --set anaconda_upload yes
+  - conda build --token $CONDA_UPLOAD_TOKEN --python $PYTHON_VERSION .

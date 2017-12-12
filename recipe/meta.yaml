@@ -1,0 +1,36 @@
+{% set version = "0.1.0" %}
+
+package:
+  name: pysat
+  version: {{ version }}
+
+source:
+  git_url: https://github.com/USGS-Astrogeology/PySAT
+  git_rev: master
+
+build:
+  number: 1
+  skip: True  # [not py3k]
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - numpy >=1.10
+    - scipy
+    - plio
+    - pandas
+  run:
+    - python
+    - numpy >=1.10
+    - scipy
+    - plio
+    - pandas
+
+test:
+  imports:
+    - pysat
+
+about:
+  home: https://github.com/USGS-Astrogeology/PySAT
+  license: Unlicense
