@@ -23,11 +23,12 @@ def RMSE(ypred, y):
 
 
 class cv:
-    def __init__(self, params):
-
+    def __init__(self, params,progressbar = None):
+        if progressbar is not None:
+            self.progress = progressbar
         print(params)
         self.paramgrid = list(ParameterGrid(params))  # create a grid of parameter permutations
-
+        #self.paramgrid = ParameterGrid(params).param_grid
     def do_cv(self, Train, xcols='wvl', ycol=('comp', 'SiO2'), method='PLS',
               yrange=[0, 100]):
 
@@ -43,18 +44,26 @@ class cv:
         rmsecv = []
         models = []
         modelkeys = []
+
         # loop through the grid of parameters, do cross validation for each permutation
+        # try:
+        #     self.progress.setMaximum(len(self.paramgrid))
+        #     self.progress.setValue(0)
+        #     self.progress.show()
+        # except:
+        #     pass
+
         for i in list(range(len(self.paramgrid))):
             print(self.paramgrid[i])
-
+#            self.progress.setValue(i)
             model = regression([method], [yrange], [self.paramgrid[i]])
             modelkey = "{} - {} - ({}, {}) {}".format(method, ycol[0][-1], yrange[0], yrange[1], self.paramgrid[i])
 
             rmsecv_folds_tmp = []  # Create empty list to hold RMSECV for each fold
             for train, holdout in cv_iterator:  # Iterate through each of the folds in the training set
 
-                cvcol = ('meta', method + '-CV-' + str(self.paramgrid[
-                                                           i]))  # ycol[-1]+'_cv_'+method+'_param'+str(i))  #create the name of the column in which results will be stored
+                cvcol = ('predict', '"'+method + '-CV-' + str(self.paramgrid[
+                                                           i])+'"')  # ycol[-1]+'_cv_'+method+'_param'+str(i))  #create the name of the column in which results will be stored
 
                 cv_train = Train.iloc[train]  # extract the data to be used to create the model
                 cv_holdout = Train.iloc[holdout]  # extract the data that will be held out of the model
@@ -77,7 +86,7 @@ class cv:
 
             else:
                 ypred_train = Train[ycol] * np.nan
-            calcol = ('meta', method + '-Cal-' + str(self.paramgrid[i]))
+            calcol = ('predict', '"'+method + '-Cal-' + str(self.paramgrid[i])+'"')
             Train[calcol] = ypred_train
             rmsec.append(RMSE(ypred_train, Train[ycol]))
 
