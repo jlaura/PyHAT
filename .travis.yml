@@ -2,7 +2,7 @@ language: generic
 
 env:
   - PYTHON_VERSION=3.5
-  - PYTHON_VERISON=3.6
+  - PYTHON_VERSION=3.6
 os:
   - linux
   - osx
