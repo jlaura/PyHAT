@@ -1,4 +1,4 @@
-import pysat
+import libpysat
 from setuptools import setup, find_packages
 
 from os import path
@@ -10,12 +10,12 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='pysat',
+    name='libpysat',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version=pysat.__version__,
+    version=libpysat.__version__,
 
     description='The Python Spectral Analysis Toolkit (PySAT) for planetary spectral data.',
     long_description=long_description,
