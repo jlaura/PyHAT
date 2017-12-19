@@ -9,7 +9,7 @@ os:
 
 branches:
 only:
-  - master
+  - dev
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
