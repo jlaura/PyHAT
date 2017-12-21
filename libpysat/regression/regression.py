@@ -52,7 +52,8 @@ class regression:
             if self.do_cv is False:
                 self.model = linear.OrthogonalMatchingPursuit(**params_temp)
             else:
-                params_temp.pop('precompute')
+                if 'precompute' in params[i]:
+                    params_temp.pop('precompute')
                 self.model = linear.OrthogonalMatchingPursuitCV(**params_temp)
 
         if self.method[i] == 'LASSO':
