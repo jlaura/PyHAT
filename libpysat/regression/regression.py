@@ -16,7 +16,7 @@ from sklearn.gaussian_process import GaussianProcess
 
 
 class regression:
-    def __init__(self, method, yrange, params, i=0):
+    def __init__(self, method, yrange, params, i=0):  #TODO: yrange doesn't currently do anything. Remove or do something with it!
         self.algorithm_list = ['PLS',
                                'GP',
                                'OLS',
@@ -27,7 +27,7 @@ class regression:
                                'Bayesian Ridge',
                                'ARD',
                                'LARS',
-                               'Lasso LARS',
+                               'LASSO LARS',
                                'SVR',
                                'KRR',
                                ]
@@ -52,7 +52,8 @@ class regression:
             if self.do_cv is False:
                 self.model = linear.OrthogonalMatchingPursuit(**params_temp)
             else:
-                params_temp.pop('precompute')
+                if 'precompute' in params[i]:
+                    params_temp.pop('precompute')
                 self.model = linear.OrthogonalMatchingPursuitCV(**params_temp)
 
         if self.method[i] == 'LASSO':
@@ -105,7 +106,7 @@ class regression:
             else:
                 self.model = linear.Ridge(**params_temp)
 
-        if self.method[i] == 'Bayesian Ridge':
+        if self.method[i] == 'BRR':
             self.model = linear.BayesianRidge(**params[i])
 
         if self.method[i] == 'ARD':
@@ -128,7 +129,7 @@ class regression:
             else:
                 self.model = linear.LarsCV(**params_temp)
 
-        if self.method[i] == 'Lasso LARS':
+        if self.method[i] == 'LASSO LARS':
             model = params[i]['model']
             params_temp = copy.copy(params[i])
             params_temp.pop('model')
@@ -140,7 +141,7 @@ class regression:
             elif model == 2:
                 self.model = linear.LassoLarsIC(**params_temp)
             else:
-                print("Something went wrong, \'model\' should output a number")
+                print("Something went wrong, \'model\' should be 0, 1, or 2")
 
         if self.method[i] == 'SVR':
             self.model = svm.SVR(**params[i])
@@ -163,7 +164,7 @@ class regression:
     def fit(self, x, y, i=0):
         # if gaussian processes are being used, data dimensionality needs to be reduced before fitting
         if self.method[i] == 'GP':
-            if self.reduce_dim == 'ICA':
+            if self.reduce_dim == 'FastICA':
                 print('Reducing dimensionality with ICA')
                 do_ica = FastICA(n_components=self.n_components)
                 self.do_reduce_dim = do_ica.fit(x)
@@ -171,20 +172,23 @@ class regression:
                 print('Reducing dimensionality with PCA')
                 do_pca = PCA(n_components=self.n_components)
                 self.do_reduce_dim = do_pca.fit(x)
+
             x = self.do_reduce_dim.transform(x)
         #try:
             print('Training model...')
         try:
             self.model.fit(x, y)
             self.goodfit = True
+            print(self.model)
         except:
             self.goodfit = False
             if self.method[i] == 'GP':
+                print('Model failed to train! (For GP this does not always indicate a problem, especially for low numbers of components.)')
                 pass
             else:
                 print('Model failed to train!')
                 traceback.print_stack()
-        print(self.model)
+
         if self.ransac:
             self.outliers = np.logical_not(self.model.inlier_mask_)
             print(str(np.sum(self.outliers)) + ' outliers removed with RANSAC')

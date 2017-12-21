@@ -23,7 +23,8 @@ from libpysat.spectral.lra import low_rank_align as LRA
 from sklearn import cross_validation
 from sklearn.decomposition import PCA, FastICA
 from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import IsolationForest
+import sklearn.ensemble as ensemble
+
 from sklearn.manifold.t_sne import TSNE
 from sklearn.manifold.locally_linear import LocallyLinearEmbedding
 
@@ -36,8 +37,14 @@ def norm_total(df):
 class spectral_data(object):
     def __init__(self, df):
 
-        uppercols = df.columns.levels[0]
-        lowercols = list(df.columns.levels[1].values)
+        try:
+            uppercols = df.columns.levels[0]
+            lowercols = list(df.columns.levels[1].values)
+        except:
+            df.columns = pd.MultiIndex.from_tuples(list(df.columns))
+            uppercols = df.columns.levels[0]
+            lowercols = list(df.columns.levels[1].values)
+
         for i, val in enumerate(lowercols):
             try:
                 lowercols[i] = float(val)
@@ -213,7 +220,8 @@ class spectral_data(object):
 
         # sort by index to return the df to its original order
         self.df.sort_index(inplace=True)
-        # self.folds_hist(sortby,50)
+        self.folds_hist(sortby,50)
+
 
     def folds_hist(self, col_to_plot, nbins, xlabel='wt.%', ylabel='# of spectra'):
         folds_uniq = np.unique(self.df[('meta', 'Folds')])
