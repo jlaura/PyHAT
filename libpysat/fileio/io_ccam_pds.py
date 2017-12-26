@@ -9,7 +9,6 @@ import scipy.io as io
 
 from plio.utils.utils import lookup
 from plio.utils.utils import file_search
-from libpysat.spectral.spectral_data import spectral_data
 
 
 def CCAM_CSV(input_data, ave=True):
@@ -174,14 +173,8 @@ def ccam_batch(directory, searchstring='*.csv', to_csv=None, lookupfile=None, av
     filelist = filelist_new
     # Should add a progress bar for importing large numbers of files
     dt = []
-    if progressbar:
-        from PyQt5 import QtCore  # only rely on PyQt5 if a progressbar object has been passed
-        progressbar.setWindowTitle('ChemCam data progress')
-        progressbar.setRange(0, filelist.size)
-        progressbar.show()
-    filecount = 0
+
     for i, file in enumerate(filelist):
-        filecount = filecount + 1
         print(file)
         if is_sav:
             tmp = CCAM_SAV(file, ave=ave)
@@ -197,10 +190,6 @@ def ccam_batch(directory, searchstring='*.csv', to_csv=None, lookupfile=None, av
                 combined = pd.concat([combined, tmp])
             else:
                 print("Wavelengths don't match!")
-        if progressbar:
-            progressbar.setValue(filecount)
-            QtCore.QCoreApplication.processEvents()
-        pass
 
     combined.loc[:, ('meta', 'sclock')] = pd.to_numeric(combined.loc[:, ('meta', 'sclock')])
 
@@ -209,4 +198,4 @@ def ccam_batch(directory, searchstring='*.csv', to_csv=None, lookupfile=None, av
         combined = lookup(combined, lookupfile=lookupfile.replace('[','').replace(']','').replace("'",'').replace(' ','').split(','))
     if to_csv is not None:
         combined.to_csv(to_csv)
-    return spectral_data(combined)
+    return combined

@@ -177,7 +177,7 @@ def jsc_batch(directory, LUT_files, searchstring='*.txt', to_csv=None):
     if to_csv is not None:
         print('Writing combined data to: ' + to_csv)
         combined.to_csv(to_csv)
-    return spectral_data(combined)
+    return combined
 
 
 # got this function from stack overflow: http://stackoverflow.com/questions/14984119/python-pandas-remove-duplicate-columns
