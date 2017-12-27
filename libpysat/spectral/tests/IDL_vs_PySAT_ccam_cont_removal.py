@@ -10,8 +10,6 @@ import pandas as pd
 
 from libpysat.spectral.spectral_data import spectral_data
 
-# import mlpy.wavelet
-
 filename = r"C:\Users\rbanderson\Documents\Projects\LIBS PDART\Sample_Data\JSC_data_combined_20170307.csv"
 data = spectral_data(pd.read_csv(filename, header=[0, 1]))
 data = data.df.ix[0:5]
