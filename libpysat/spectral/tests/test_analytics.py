@@ -33,7 +33,3 @@ class Test_Analytics(unittest.TestCase):
 
     def test_band_center(self):
         pass
-
-
-if __name__ == '__main__':
-    unittest.main()

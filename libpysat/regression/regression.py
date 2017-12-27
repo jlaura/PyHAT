@@ -67,8 +67,6 @@ class regression:
             except:
                 self.do_cv = False
 
-
-
             if self.do_cv is False:
                 self.model = linear.Lasso(**params_temp)
             else:
@@ -195,7 +193,6 @@ class regression:
     def predict(self, x, i=0):
         if self.method[i] == 'GP':
             x = self.do_reduce_dim.transform(x)
-        print(len(x))
         return self.model.predict(x)
 
     def calc_Qres_Lev(self, x):
