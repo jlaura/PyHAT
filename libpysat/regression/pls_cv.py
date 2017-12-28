@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue May 10 16:16:11 2016
-This function is used to run cross validation using PLS 
-to help choose the optimal number of components. Folds are stratified 
+This function is used to run cross validation using PLS
+to help choose the optimal number of components. Folds are stratified
 according to a user-specified column
 
 @author: rbanderson
 """
-import matplotlib.pyplot as plot
 import numpy as np
 from libpysat.spectral.meancenter import meancenter
 from sklearn.cross_decomposition.pls_ import PLSRegression

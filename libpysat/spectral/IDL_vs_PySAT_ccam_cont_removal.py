@@ -7,7 +7,6 @@ Created on Fri Nov 07 12:29:20 2014
 
 import glob
 
-import matplotlib.pyplot as plot
 import numpy
 import pandas as pd
 from scipy.io.idl import readsav

@@ -8,7 +8,6 @@ Created on Fri Nov 07 12:29:20 2014
 import glob
 
 from libpysat.spectral.baseline_code import ccam_remove_continuum
-import matplotlib.pyplot as plot
 import numpy
 from scipy.io.idl import readsav
 
