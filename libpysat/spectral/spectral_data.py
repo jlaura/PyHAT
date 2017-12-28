@@ -7,7 +7,6 @@ Created on Fri Dec  4 14:53:23 2015
 import numpy as np
 import pandas as pd
 import scipy as sp
-from matplotlib import pyplot as plot
 from libpysat.spectral.baseline_code.airpls import AirPLS
 from libpysat.spectral.baseline_code.als import ALS
 from libpysat.spectral.baseline_code.ccam_remove_continuum import ccam_br

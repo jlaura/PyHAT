@@ -5,7 +5,6 @@ Created on Fri Nov 07 12:29:20 2014
 @author: rbanderson
 """
 
-import matplotlib.pyplot as plot
 import pandas as pd
 
 from libpysat.spectral.spectral_data import spectral_data
