@@ -213,29 +213,13 @@ class spectral_data(object):
         for i in uniqvals:
             ind = self.df[sortby] == i  # find where the data frame matches the unique value
             self.df.set_value(self.df.index[ind], ('meta', 'Folds'), fold_num)
-            # Inrement the fold number, reset to 1 if it is greater than the desired number of folds
+            # Increment the fold number, reset to 1 if it is greater than the desired number of folds
             fold_num = fold_num + 1
             if fold_num > nfolds:
                 fold_num = 1
 
         # sort by index to return the df to its original order
         self.df.sort_index(inplace=True)
-        self.folds_hist(sortby,50)
-
-
-    def folds_hist(self, col_to_plot, nbins, xlabel='wt.%', ylabel='# of spectra'):
-        folds_uniq = np.unique(self.df[('meta', 'Folds')])
-        for f in folds_uniq:
-            temp = self.rows_match(('meta', 'Folds'), [f])
-            vals = np.array(temp.df[col_to_plot])
-            bins = np.linspace(0, np.max(vals), nbins)
-            plot.hist(vals, linewidth=0.5, edgecolor='k')
-            plot.xlabel(xlabel)
-            plot.ylabel(ylabel)
-            plot.title(str(col_to_plot[1]) + '- Fold ' + str(f))
-            fig = plot.gcf()
-            fig.savefig('hist_fold_' + str(f) + '_' + col_to_plot[1] + '.png')
-            plot.close()
 
     # This function normalizes specified ranges of the data by their respective sums
     def norm(self, ranges, col_var='wvl'):
