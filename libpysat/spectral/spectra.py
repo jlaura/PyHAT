@@ -136,6 +136,7 @@ class Spectra(object):
         self._xs = self._data._xs
         self._ixs = self._data._ixs
         self._data._constructor_sliced = Spectrum
+        self._take = self._data._take
 
 
     def __repr__(self):
