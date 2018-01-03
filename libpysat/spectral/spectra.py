@@ -1,84 +1,203 @@
-from pandas import Series
+import pandas as pd
+import random as rand
 
-import libpysat.spectral.analytics as analytics
-from libpysat.spectral.continuum import continuum_correct
-from libpysat.spectral.smoothing import boxcar, gaussian
+import numpy as np
 
+from numbers import Real
+from numbers import Number
 
-def tospectra(func):  # pragma: no cover
-    def wrapper(*args, **kwargs):
-        result = func(*args, **kwargs)
-        return Spectra(result)
+from functools import reduce
 
-    return wrapper
+from _subindices import _get_subindices
 
 
-def tospectrum(func):  # pragma: no cover
-    def wrapper(*args, **kwargs):
-        result = func(*args, **kwargs)
-        return Spectrum(result)
+class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
+    """
+    """
 
-    return wrapper
+    @property
+    def tolerance(self):
+        if not hasattr(self, '_tolerance'):
+            self._tolerance = .5
+        return self._tolerance
 
 
-class Spectrum(object):
-    def __init__(self, series):
-        self.series = series
+    @tolerance.setter
+    def tolerance(self, val):
+        self._tolerance = val
 
-    def __repr__(self):
-        return self.series.__repr__()
-
-    def __getattr__(self, attr):
-        result = getattr(self.series, attr)
-        if callable(result):
-            result = tospectrum(result)
-        return result
 
     def __getitem__(self, key):
         try:
-            result = self.series.loc[key]
-        except:
-            result = self.series.iloc[key]
-        return result
+            x,y,columns = None, None, self.obj.wavelengths
 
-    def boxcar_smooth(self, *args, **kwargs):
-        return Spectrum(boxcar(self.series, *args, **kwargs))
+            if isinstance(self.obj.index, pd.MultiIndex):
+                x,y = self.obj.index.levels
+                indexes = x,y, self.obj.wavelengths
+                subindices = _get_subindices(key, indexes, tolerance=self._tolerance)
 
-    def gaussian_smooth(self, *args, **kwargs):
-        return Spectrum(gaussian(self.series, *args, **kwargs))
+                x = subindices[0:1] if subindices[0:1] else slice(None, None)
+                y = subindices[1:2] if subindices[1:2] else slice(None, None)
+                columns = subindices[2:3] if subindices[2:3] else slice(None, None)
+                subindices = tuple([[x[0], y[0]], columns[0]])
 
-    def continuum_correct(self, *args, **kwargs):
-        corrected, continuum = continuum_correct(self.series, *args, **kwargs)
-        return Spectrum(corrected), Spectrum(continuum)
+            else:
+                x = self.obj.index
+                indexes = x,columns
+                subindices = _get_subindices(key, indexes, tolerance=self._tolerance)
 
-    def band_minima(self, *args, **kwargs):
-        minidx, minvalue = analytics.band_minima(self, *args, **kwargs)
-        return minidx, minvalue
+                x = subindices[0:1] if subindices[0:1] else tuple([slice(None, None)])
+                columns = subindices[1:2] if subindices[1:2] else tuple([slice(None, None)])
+                print(x, columns)
+                subindices = tuple([x[0], columns[0]])
 
-    def band_center(self, *args, **kwargs):
-        return analytics.band_center(self, *args, **kwargs)
 
-    def band_area(self, *args, **kwargs):
-        return analytics.band_area(self, *args, **kwargs)
+            subframe = super(SpectrumLocIndexer, self).__getitem__(subindices)
+
+        except Exception as e:
+            print(e)
+            subframe = super(SpectrumLocIndexer, self).__getitem__(key)
+
+        if isinstance(subframe, Spectrum):
+            subframe.wavelengths = self.obj.wavelengths
+            subframe.metadata = self.obj.metadata
+
+        return subframe
+
+
+class SpectrumiLocIndexer(pd.core.indexing._iLocIndexer):
+    """
+    """
+
+    def __getitem__(self, key):
+        subframe = super(SpectrumiLocIndexer, self).__getitem__(key)
+
+        if isinstance(subframe, Spectrum):
+            subframe.wavelengths = self.obj.wavelengths
+            subframe.metadata = self.obj.metadata
+
+        return subframe
+
+
+class Spectrum(pd.Series):
+
+    _metadata = ['_loc', 'wavelengths', 'metadata']
+
+    def __init__(self, *args, **kwargs):
+        wavelengths = kwargs.pop('wavelengths', None)
+        metadata = kwargs.pop('metadata', None)
+        _loc = kwargs.pop('loc', None)
+        super(Spectrum, self).__init__(*args, **kwargs)
+
+    @property
+    def _constructor(self):
+        return Spectrum
+
+    @property
+    def _constructor_expanddim(self):
+        return pd.DataFrame
 
 
 class Spectra(object):
-    def __init__(self, df=None):
-        self.df = df
+    """
+    """
 
-    def __getitem__(self, key):
-        result = self.df[key]
-        if isinstance(result, type(self.df)):
-            result = Spectra(result)
-        elif isinstance(result, Series):
-            return Spectrum(result)
-        return result
+    def __init__(self, df = None, wavelengths={}, metadata={}, tolerance=.5):
+        if df is not None:
+            self._data = df
+        else:
+            self._data = pd.DataFrame()
 
-    def __getattr__(self, attr):
-        result = getattr(self.df, attr)
-        if callable(result):
-            result = tospectra(result)
-        return result
+        self.wavelengths = pd.Float64Index(wavelengths)
+        self.metadata = metadata
+
+        if isinstance(df, pd.DataFrame):
+            self.spectra_meta = pd.Index(df.columns) - self.wavelengths
+        else:
+            self.spectra_meta = pd.Index(df.index) - self.wavelengths
+
+        loc_name = self._data.loc.name
+        iloc_name = self._data.iloc.name
+        self._iloc = SpectrumiLocIndexer(name=iloc_name, obj=self)
+        self._loc = SpectrumLocIndexer(name=loc_name, obj=self)
+        self._loc.tolerance = tolerance
+
+        self._get_axis = self._data._get_axis
+        self._get_axis_name = self._data._get_axis_name
+        self._slice = self._data._slice
+        self._xs = self._data._xs
+        self._ixs = self._data._ixs
+        self._data._constructor_sliced = Spectrum
+
 
     def __repr__(self):
-        return repr(self.df)
+        return self._data.__repr__()
+
+
+    @property
+    def loc(self):
+        return self._loc
+
+
+    @property
+    def iloc(self):
+        return self._iloc
+
+    @property
+    def take(self):
+        return self._data.take
+
+
+    def head(self, n=5):
+        return self._data.head()
+
+
+    @property
+    def index(self):
+        return self._data.index
+
+    @property
+    def columns(self):
+        return self._data.columns
+
+    @property
+    def ndim(self):
+        return self._data.ndim
+
+    @property
+    def sort_index(self):
+        return self._data.sort_index
+
+    @property
+    def reindex(self):
+        return self._data.reindex
+
+
+    @property
+    def axes(self):
+        return self._data.axes
+
+
+    @property
+    def iterrows(self):
+        return self._data.iterrows
+
+
+    def apply(self, func, *args, **kwargs):
+        return self._data.apply(func, *args, **kwargs)
+
+
+    def apply_spectra(self, func, *args, **kwargs):
+        self._data = self.apply(func, args, axis=1, **kwargs)
+
+
+    @property
+    def tolerance(self):
+        if not hasattr(self._loc, '_tolerance'):
+            self._loc._tolerance = .5
+        return self._loc._tolerance
+
+
+    @tolerance.setter
+    def tolerance(self, val):
+        self._loc._tolerance = val
