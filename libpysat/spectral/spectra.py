@@ -36,10 +36,15 @@ class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
                 indexes = x,y, self.obj.wavelengths
                 subindices = _get_subindices(key, indexes, tolerance=self._tolerance)
 
-                x = subindices[0:1] if subindices[0:1] else slice(None, None)
-                y = subindices[1:2] if subindices[1:2] else slice(None, None)
-                columns = subindices[2:3] if subindices[2:3] else slice(None, None)
-                subindices = tuple([[x[0], y[0]], columns[0]])
+                x = subindices[0:1] if subindices[0:1] else tuple([slice(None, None)])
+                y = subindices[1:2] if subindices[1:2] else tuple([slice(None, None)])
+                columns = subindices[2:3] if subindices[2:3] else tuple([slice(None, None)])
+
+                columns = columns[0]
+                if isinstance(columns, pd.Index):
+                    columns = columns.union(self.obj.metadata)
+
+                subindices = tuple([[x[0], y[0]], columns])
 
             else:
                 x = self.obj.index
@@ -48,14 +53,17 @@ class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
 
                 x = subindices[0:1] if subindices[0:1] else tuple([slice(None, None)])
                 columns = subindices[1:2] if subindices[1:2] else tuple([slice(None, None)])
-                print(x, columns)
-                subindices = tuple([x[0], columns[0]])
+
+                columns = columns[0]
+                if isinstance(columns, pd.Index):
+                    columns = columns.union(self.obj.metadata)
+
+                subindices = tuple([x[0], columns])
 
 
             subframe = super(SpectrumLocIndexer, self).__getitem__(subindices)
 
         except Exception as e:
-            print(e)
             subframe = super(SpectrumLocIndexer, self).__getitem__(key)
 
         if isinstance(subframe, Spectrum):
@@ -112,9 +120,9 @@ class Spectra(object):
         self.metadata = metadata
 
         if isinstance(df, pd.DataFrame):
-            self.spectra_meta = pd.Index(df.columns) - self.wavelengths
+            self.metadata = df.columns.difference(self.wavelengths)
         else:
-            self.spectra_meta = pd.Index(df.index) - self.wavelengths
+            self.metadata = df.index.difference(self.wavelengths)
 
         loc_name = self._data.loc.name
         iloc_name = self._data.iloc.name
