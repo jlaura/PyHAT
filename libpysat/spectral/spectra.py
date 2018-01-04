@@ -12,7 +12,6 @@ from libpysat.spectral._subindices import _get_subindices
 from libpysat.utils.utils import linear_correction
 
 from plio.io import io_spectral_profiler
-from plio.io import io_moon_minerology_mapper
 
 class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
     """
@@ -42,8 +41,8 @@ class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
                 y = subindices[1:2] if subindices[1:2] else tuple([slice(None, None)])
                 columns = subindices[2:3] if subindices[2:3] else tuple([slice(None, None)])
                 columns = columns[0]
-                if isinstance(columns, pd.Index):
-                    columns = columns.union(self.obj.metadata)
+                # if isinstance(columns, pd.Index):
+                #     columns = columns.union(self.obj.metadata)
 
                 subindices = tuple([tuple([x[0], y[0]]), columns])
 
@@ -56,8 +55,8 @@ class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
                 columns = subindices[1:2] if subindices[1:2] else tuple([slice(None, None)])
 
                 columns = columns[0]
-                if isinstance(columns, pd.Index):
-                    columns = columns.union(self.obj.metadata)
+                # if isinstance(columns, pd.Index):
+                #     columns = columns.union(self.obj.metadata)
 
                 subindices = tuple([x[0], columns])
 
@@ -70,7 +69,6 @@ class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
         if isinstance(subframe, Spectrum):
             subframe.wavelengths = self.obj.wavelengths
             subframe.metadata = self.obj.metadata
-
         else:
             subframe = Spectra(subframe, self.obj.wavelengths, self.tolerance)
 
@@ -132,7 +130,7 @@ class Spectra(object):
         iloc_name = self._data.iloc.name
         self._iloc = SpectrumiLocIndexer(name=iloc_name, obj=self)
         self._loc = SpectrumLocIndexer(name=loc_name, obj=self)
-        self._loc.tolerance = tolerance
+        self._loc._tolerance = tolerance
 
         self._get_axis = self._data._get_axis
         self._get_axis_name = self._data._get_axis_name
@@ -144,7 +142,7 @@ class Spectra(object):
 
 
     @classmethod
-    def from_spectral_profiler(cls, f, tolerance=.5):
+    def from_spectral_profiler(cls, f, tolerance=1):
         """
         """
         geo_data = io_spectral_profiler.Spectral_Profiler(f)
@@ -208,9 +206,8 @@ class Spectra(object):
         return Spectra(data, self.wavelengths, tolerance = self.tolerance)
 
 
-    def __getitem__(self, *args, **kwargs):
-        df = self._data.__getitem__(*args,**kwargs)
-        return Spectra(df, wavelengths=self.wavelengths, tolerance=self.tolerance)
+    def __getitem__(self, key):
+        return self.loc[:,:,key]
 
     @property
     def loc(self):
@@ -242,19 +239,21 @@ class Spectra(object):
     def ndim(self):
         return self._data.ndim
 
-    @property
-    def sort_index(self):
-        return self._data.sort_index
+    def sort_index(self, *args, **kwargs):
+        data =  self._data.sort_index(*args, **kwargs)
+        return Spectra(data, wavelengths=self.wavelengths, tolerance=self.tolerance)
 
     @property
     def reindex(self):
         return self._data.reindex
 
-
     @property
     def axes(self):
         return self._data.axes
 
+    @property
+    def sortlevel(self):
+        return self._data.sortlevel
 
     @property
     def iterrows(self):
