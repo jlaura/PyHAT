@@ -34,7 +34,7 @@ install:
   # Install dependencies
   - conda config --add channels usgs-astrogeology
   - conda config --add channels conda-forge
-  - conda install -c conda-forge numpy scipy pandas gdal scikit-learn
+  - conda install -c conda-forge numpy scipy pandas gdal scikit-learn multipledispatch
   - conda install -c usgs-astrogeology plio
 
   # Development installation
