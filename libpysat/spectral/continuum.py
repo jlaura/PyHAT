@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import scipy.stats as ss
 
+from libpysat.utils.utils import linear_correction
+from libpysat.spectral import spectra
 
 def continuum_correct(spectrum, nodes=None, method='linear'):
     """
@@ -18,14 +20,14 @@ def continuum_correct(spectrum, nodes=None, method='linear'):
 
     method : {'linear', 'regresison', 'cubic'}
              The type of regression to be fit, where 'linear' is a piecewise
-             linear fit, 'regression' is an Ordinary Least Squares fit, and 
+             linear fit, 'regression' is an Ordinary Least Squares fit, and
              'cubic' is a 2nd order polynomial fit.
 
     Returns
     =======
      : pd.Series
        The continuum corrected Spectrum
-     
+
      : pd.Series
        The continuum line
     """
@@ -110,6 +112,18 @@ def linear(nx, ny, ex=None):
 
 def cubic(spectrum, nodes):
     raise (NotImplemented)
+
+
+def lincorr(spectrum):
+    """
+    apply linear correction to all spectra
+    """
+    wavelengths = spectrum.wavelengths.__array__()
+    bands = tuple([0, len(wavelengths)-1])
+
+    corr, y = linear_correction(bands, spectrum[wavelengths].__array__(), wavelengths)
+    return spectra.Spectrum(corr, index=wavelengths, wavelengths=wavelengths)
+
 
 
 correction_methods = {'linear': linear,
