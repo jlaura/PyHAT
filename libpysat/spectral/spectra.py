@@ -86,7 +86,8 @@ class SpectrumiLocIndexer(pd.core.indexing._iLocIndexer):
         if isinstance(subframe, Spectrum):
             subframe.wavelengths = self.obj.wavelengths
             subframe.metadata = self.obj.metadata
-
+        else:
+            subframe = Spectra(subframe, self.obj.wavelengths, tolerance = self.obj._loc.tolerance)
         return subframe
 
 
@@ -284,6 +285,10 @@ class Spectra(object):
 
     def apply_spectra(self, func, *args, **kwargs):
         self._data = self.apply(func, args, axis=1, **kwargs)
+
+
+    def plot_spectra(self):
+        return self.spectra._data.T.plot()
 
 
     @property
