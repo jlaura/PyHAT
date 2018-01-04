@@ -264,16 +264,19 @@ def linear_correction(bands, ref_array, wv_array):
         y         : int
             Continuum slope  @@TODO Check with J to make sure this is the correct description
     """
-    y1 = ref_array[bands[0]]
-    y2 = ref_array[bands[1]]
-    wv1 = wv_array[bands[0]]
-    wv2 = wv_array[bands[1]]
+    try:
+        y1 = ref_array[bands[0]]
+        y2 = ref_array[bands[1]]
+        wv1 = wv_array[bands[0]]
+        wv2 = wv_array[bands[1]]
 
-    m = (y2-y1) / (wv2 - wv1)
-    b = y1 - (m * wv1)
-    y = (m * wv_array) + b
+        m = (y2-y1) / (wv2 - wv1)
+        b = y1 - (m * wv1)
+        y = (m * wv_array) + b
+        corrected = ref_array / y
+    except ZeroDivisionError:
+        return 0,0
 
-    corrected = ref_array / y
 
     return corrected, y
 
@@ -298,7 +301,7 @@ def horgan_correction(reflectance, wavelength, a, b, c, window):
         continuum_corrected = reflectance / continuum
         iterating = False
         if itercounter == 9:
-            print 'Unable to converge'
+            print('Unable to converge')
             break
         itercounter += 1
 

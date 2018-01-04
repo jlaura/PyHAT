@@ -8,8 +8,10 @@ from numbers import Number
 
 from functools import reduce
 
-from _subindices import _get_subindices
+from libpysat.spectral._subindices import _get_subindices
+from libpysat.utils.utils import linear_correction
 
+from plio.io import io_spectral_profiler
 
 class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
     """
@@ -35,16 +37,14 @@ class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
                 x,y = self.obj.index.levels
                 indexes = x,y, self.obj.wavelengths
                 subindices = _get_subindices(key, indexes, tolerance=self._tolerance)
-
                 x = subindices[0:1] if subindices[0:1] else tuple([slice(None, None)])
                 y = subindices[1:2] if subindices[1:2] else tuple([slice(None, None)])
                 columns = subindices[2:3] if subindices[2:3] else tuple([slice(None, None)])
-
                 columns = columns[0]
                 if isinstance(columns, pd.Index):
                     columns = columns.union(self.obj.metadata)
 
-                subindices = tuple([[x[0], y[0]], columns])
+                subindices = tuple([tuple([x[0], y[0]]), columns])
 
             else:
                 x = self.obj.index
@@ -69,6 +69,9 @@ class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
         if isinstance(subframe, Spectrum):
             subframe.wavelengths = self.obj.wavelengths
             subframe.metadata = self.obj.metadata
+
+        else:
+            subframe = Spectra(subframe, self.obj.wavelengths, self.tolerance)
 
         return subframe
 
@@ -139,9 +142,53 @@ class Spectra(object):
         self._take = self._data._take
 
 
+    @classmethod
+    def from_spectral_profiler(cls, f, tolerance=.5):
+        """
+        """
+        geo_data = io_spectral_profiler.Spectral_Profiler(f)
+        meta = geo_data.ancillary_data
+
+        df = geo_data.spectra.to_frame().unstack(level=1)
+        df = df.transpose()
+        df = df.swaplevel(0,1)
+
+        df.index.names = ['minor', 'id']
+        meta.index.name = 'id'
+
+        wavelengths = df.columns
+
+        df = df.reset_index().merge(meta.reset_index(), on='id')
+        df = df.set_index(['minor', 'id'], drop=True)
+
+        return cls(df, wavelengths, tolerance=tolerance)
+
+
     def __repr__(self):
         return self._data.__repr__()
 
+
+    def linear_correction(self):
+        """
+        apply linear correction to all spectra
+        """
+        wavelengths = self.wavelengths.__array__()
+        bands = tuple([0, len(wavelengths)-1])
+
+        def lincorr(row):
+            """
+            Should be rewritten to be more apply friendly
+            """
+            corr, y = linear_correction(bands, row[wavelengths].__array__(), wavelengths)
+            return Spectrum(corr, index=wavelengths)
+
+        data = self._data.apply(lincorr, axis=1)
+        return Spectra(data, self.wavelengths, tolerance = self.tolerance)
+
+
+    def __getitem__(self, *args, **kwargs):
+        df = self._data.__getitem__(*args,**kwargs)
+        return Spectra(df, wavelengths=self.wavelengths, tolerance=self.tolerance)
 
     @property
     def loc(self):
@@ -158,7 +205,7 @@ class Spectra(object):
 
 
     def head(self, n=5):
-        return self._data.head()
+        return self._data.head(n)
 
 
     @property
