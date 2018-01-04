@@ -72,14 +72,6 @@ class m3():
     def luceyc_amat(self):
         '''
 
-        Parameters
-        ----------
-        m : float
-            Value for the slope of a continuum
-
-        b : float
-            Value for the y-intercept of a continuum
-
         Returns
         ----------
         : Dataframe
@@ -95,14 +87,6 @@ class m3():
     # Add self to call
     def luceyc_omat(self):
         '''
-
-        Parameters
-        ----------
-        m : float
-            Value for the slope of a continuum
-
-        b : float
-            Value for the y-intercept of a continuum
 
         Returns
         ----------
