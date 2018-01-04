@@ -12,6 +12,7 @@ from libpysat.spectral._subindices import _get_subindices
 from libpysat.utils.utils import linear_correction
 
 from plio.io import io_spectral_profiler
+from plio.io import io_moon_minerology_mapper
 
 class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
     """
@@ -162,6 +163,27 @@ class Spectra(object):
         df = df.set_index(['minor', 'id'], drop=True)
 
         return cls(df, wavelengths, tolerance=tolerance)
+
+    @classmethod
+    def from_m3(cls, path_to_file):
+        """
+        """
+        wavelengths, _, ds = io_moon_minerology_mapper.openm3(path_to_file)
+
+        m3_array = ds.ReadAsArray().swapaxes(0, 2)
+        m3_array = np.reshape(m3_array, (-1, m3_array.shape[-1]), order = "A")
+
+        coords = [(i%ds.RasterXSize, i//ds.RasterXSize) for i in range(ds.RasterXSize * ds.RasterYSize)]
+        index = pd.MultiIndex.from_tuples(coords, names = ['x', 'y'])
+        m3_df = pd.DataFrame(data = m3_array, columns = wavelengths, index = index)
+
+        meta = ds.GetMetadata_Dict()
+        metadata = meta.keys()
+        meta_df = pd.DataFrame(meta, index = index)
+
+        spectra_df = m3_df.merge(meta_df, left_index = True, right_index = True)
+        spectra_df.sort_index(inplace = True)
+        return cls(spectra_df, wavelengths, metadata, 2)
 
 
     def __repr__(self):
