@@ -19,6 +19,7 @@ class m3():
         '''
         wavelengths = [730, 749, 909, 1109, 1129]
         subset = self.spectra.loc[:, :, wavelengths]
+        subset.wavelengths = subset.columns
         subset = subset.linear_correction()
 
         derived_data = (subset.iloc[:, 1] + subset.iloc[:, 2]) / (2 * subset.iloc[:, 3])
@@ -41,6 +42,7 @@ class m3():
         '''
         wavelengths = [730, 749, 949, 970]
         subset = self.spectra.loc[:, :, wavelengths]
+        subset.wavelengths = subset.columns
         subset = subset.linear_correction()
 
         y0 = 1.19
@@ -63,6 +65,7 @@ class m3():
         '''
         wavelengths = [730, 749, 949, 970]
         subset = self.spectra.loc[:, :, wavelengths]
+        subset.wavelengths = subset.columns
         subset = subset.linear_correction()
 
         derived_data = -137.97 * ((subset.iloc[:, 1] * 0.9834)+((subset.iloc[:, 2] / subset.iloc[:, 1])*0.1813)) + 57.46
@@ -79,6 +82,7 @@ class m3():
         '''
         wavelengths = [730, 749, 949, 970]
         subset = self.spectra.loc[:, :, wavelengths]
+        subset.wavelengths = subset.columns
         subset = subset.linear_correction()
 
         derived_data = (((subset.iloc[:, 1]-0.01)**2)+((subset.iloc[:, 2]/subset.iloc[:, 1])-1.26)**2)**(1/2)
@@ -95,6 +99,7 @@ class m3():
         '''
         wavelengths = [730, 749, 949, 970]
         subset = self.spectra.loc[:, :, wavelengths]
+        subset.wavelengths = subset.columns
         subset = subset.linear_correction()
 
         derived_data = (((subset.iloc[:, 1]-0.08)**2)+((subset.iloc[:, 2]/subset.iloc[:, 1])-1.19)**2)**(1/2)
@@ -111,6 +116,7 @@ class m3():
         '''
         wavelengths = [730, 749, 949, 970]
         subset = self.spectra.loc[:, :, wavelengths]
+        subset.wavelengths = subset.columns
         subset = subset.linear_correction()
 
         derived_data = (subset.iloc[:, 1] * 0.1813) - ((subset.iloc[:, 2]/subset.iloc[:, 1])*0.9834)
@@ -127,6 +133,7 @@ class m3():
         '''
         wavelengths = [890, 909, 1009, 1029]
         subset = self.spectra.loc[:, :, wavelengths]
+        subset.wavelengths = subset.columns
         subset = subset.linear_correction()
 
         derived_data = subset.iloc[:, 1] - subset.iloc[:, 2]
