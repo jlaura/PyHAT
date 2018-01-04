@@ -148,7 +148,6 @@ def _get_subindices(o, indices, tolerance=0):
       just returns o
 
     """
-    print('trivial')
     return o
 
 
@@ -212,6 +211,5 @@ def _get_subindices(keys, indexes, tolerance=0):
     indexes = indexes[:dim]
 
     subindexes = tuple([_get_subindices(key, index, tolerance=tolerance) for key, index in zip(keys, indexes)])
-    print(subindexes)
 
     return subindexes
