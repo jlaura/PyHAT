@@ -287,8 +287,8 @@ class Spectra(object):
         self._data = self.apply(func, args, axis=1, **kwargs)
 
 
-    def plot_spectra(self):
-        return self.spectra._data.T.plot()
+    def plot_spectra(self, *args, **kwargs):
+        return self.spectra._data.T.plot(*args, **kwargs)
 
 
     @property
