@@ -9,6 +9,7 @@ from numbers import Number
 from functools import reduce
 
 from libpysat.spectral._subindices import _get_subindices
+from libpysat.spectral.continuum import lincorr
 from libpysat.utils.utils import linear_correction
 
 from plio.io import io_spectral_profiler
@@ -96,8 +97,12 @@ class Spectrum(pd.Series):
     def __init__(self, *args, **kwargs):
         wavelengths = kwargs.pop('wavelengths', None)
         metadata = kwargs.pop('metadata', None)
+        tolerance = kwargs.pop('tolerance', None)
         _loc = kwargs.pop('loc', None)
         super(Spectrum, self).__init__(*args, **kwargs)
+
+        self.wavelengths = wavelengths
+        self.metadata = metadata
 
     @property
     def _constructor(self):
@@ -106,6 +111,12 @@ class Spectrum(pd.Series):
     @property
     def _constructor_expanddim(self):
         return pd.DataFrame
+
+    def linear_correction(self):
+        """
+        apply linear correction to all spectra
+        """
+        return lincorr(self)
 
 
 class Spectra(object):
@@ -259,6 +270,13 @@ class Spectra(object):
     def iterrows(self):
         return self._data.iterrows
 
+    @property
+    def meta(self):
+        return self[self.metadata]
+
+    @property
+    def spectra(self):
+        return self[self.wavelengths]
 
     def apply(self, func, *args, **kwargs):
         return self._data.apply(func, *args, **kwargs)
