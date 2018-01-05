@@ -71,7 +71,7 @@ class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
             subframe.wavelengths = self.obj.wavelengths
             subframe.metadata = self.obj.metadata
         else:
-            subframe = Spectra(subframe, self.obj.wavelengths, self.tolerance)
+            subframe = Spectra(subframe, wavelengths=self.obj.wavelengths, tolerance=self.tolerance)
 
         return subframe
 
@@ -87,7 +87,7 @@ class SpectrumiLocIndexer(pd.core.indexing._iLocIndexer):
             subframe.wavelengths = self.obj.wavelengths
             subframe.metadata = self.obj.metadata
         else:
-            subframe = Spectra(subframe, self.obj.wavelengths, tolerance = self.obj._loc.tolerance)
+            subframe = Spectra(subframe, wavelengths=self.obj.wavelengths, tolerance = self.obj._get.tolerance)
         return subframe
 
 
@@ -121,27 +121,30 @@ class Spectrum(pd.Series):
         return lincorr(self)
 
 
-class Spectra(object):
+class Spectra(pd.DataFrame):
     """
     """
 
     # attributes that carry over on operations
-    _metadata = ['_loc', 'wavelengths', 'metadata']
+    _metadata = ['_get', '_iget', 'wavelengths', 'metadata']
 
-    def __init__(self, *args, wavelengths={}, metadata={}, tolerance=.5, **kwargs):
+    def __init__(self, *args, wavelengths = [], metadata = [], tolerance=0, **kwargs):
         """
         """
-        self.wavelengths = pd.Float64Index(wavelengths)
-        self.metadata = metadata
-
-        loc_name = self._data.loc.name
-        iloc_name = self._data.iloc.name
-        self._iloc = SpectrumiLocIndexer(name=iloc_name, obj=self)
-        self._loc = SpectrumLocIndexer(name=loc_name, obj=self)
-        self._loc._tolerance = tolerance
-
         super(Spectra, self).__init__(*args, **kwargs)
 
+        get_name = self.loc.name
+        iget_name = self.iloc.name
+        self._iget = SpectrumiLocIndexer(name=iget_name, obj=self)
+        self._get = SpectrumLocIndexer(name=get_name, obj=self)
+
+        self._get._tolerance = tolerance
+        self.wavelengths = pd.Float64Index(wavelengths)
+
+        if metadata:
+            self.metadata = pd.Index(metadata)
+        else:
+            self.metadata = self.columns.difference(self.wavelengths)
 
     @property
     def _constructor_sliced(self):
@@ -172,7 +175,7 @@ class Spectra(object):
         df = df.reset_index().merge(meta.reset_index(), on='id')
         df = df.set_index(['minor', 'id'], drop=True)
 
-        return cls(df, wavelengths, tolerance=tolerance)
+        return cls(df, wavelengths=wavelengths, tolerance=tolerance)
 
 
     @classmethod
@@ -211,17 +214,23 @@ class Spectra(object):
             corr, y = linear_correction(bands, row[wavelengths].__array__(), wavelengths)
             return Spectrum(corr, index=wavelengths)
 
-        data = self._data.apply(lincorr, axis=1)
-        return Spectra(data, self.wavelengths, tolerance = self.tolerance)
+        data = self.apply(lincorr, axis=1)
+        return Spectra(data, wavelengths=self.wavelengths, tolerance = self.tolerance)
 
 
     def __getitem__(self, key):
-        return self.loc[:,:,key]
+        return self.get[:,:,key]
 
 
-    def sort_index(self, *args, **kwargs):
-        data =  self._data.sort_index(*args, **kwargs)
-        return Spectra(data, wavelengths=self.wavelengths, tolerance=self.tolerance)
+    @property
+    def get(self):
+        return self._get
+
+
+    @property
+    def iget(self):
+        return self._iget
+
 
     @property
     def meta(self):
