@@ -219,7 +219,10 @@ class Spectra(pd.DataFrame):
 
 
     def __getitem__(self, key):
-        return self.get[:,:,key]
+        if isinstance(self.index, pd.MultiIndex):
+            return self.get[:,:,key]
+        else:
+             return self.get[:,key]
 
 
     @property
