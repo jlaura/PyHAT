@@ -2,11 +2,11 @@ name: libpysat
 dependencies:
   - python=3
   - jupyter
-  - matplotlib
   - numpy
   - pandas
   - scipy
   - scikit-learn
+  - multipledispatch
   - yaml
   - pip
   - pip:

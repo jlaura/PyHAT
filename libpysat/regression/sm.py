@@ -9,12 +9,11 @@ import scipy.optimize as opt
 
 
 class sm:
-    def __init__(self, blendranges, submodels):
+    def __init__(self, blendranges):
         self.blendranges = blendranges
-        self.submodels = submodels
+
 
     def do_blend(self, predictions, truevals=None):
-
         # create the array indicating which models to blend for each blend range
         # For three models, this creates an array like: [[0,0],[0,1],[1,1],[1,2],[2,2]]
         # Which indicates that in the first range, just use model 0
@@ -48,9 +47,9 @@ class sm:
         blended = self.submodels_blend(predictions, self.blendranges, overwrite=False)
         return blended
 
-    def get_rmse(self, blendranges, predictions, truevals):
-        blendranges[1:-1][blendranges[1:-1] < 0] = 0.0  # ensure range boundaries don't drift below zero
-        blendranges[1:-1][blendranges[1:-1] > 100] = 100  # ensure range boundaries don't drift above 100
+    def get_rmse(self, blendranges, predictions, truevals, rangemin = 0.0, rangemax = 100):
+        blendranges[1:-1][blendranges[1:-1] < rangemin] = rangemin  # ensure range boundaries don't drift below min
+        blendranges[1:-1][blendranges[1:-1] > rangemax] = rangemax  # ensure range boundaries don't drift above max
         blendranges.sort()  # ensure range boundaries stay in order
 
         print('Blend ranges: ' + str(blendranges))  # show the blendranges being used for the current calculation
@@ -59,13 +58,13 @@ class sm:
         print('RMSE=' + str(RMSE))
         return RMSE
         
-    def submodels_blend(self,predictions,blendranges,overwrite=False):
+    def submodels_blend(self,predictions,blendranges, overwrite=False):
         blended=np.squeeze(np.zeros_like(predictions[0]))
         
-        #format the blending ranges
-        blendranges=np.hstack((blendranges,blendranges[1:-1])) #duplicate the middle entries
+        #format the blending ranges (note, initial formatting is done in do_blend)
+        blendranges = np.hstack((blendranges, blendranges[1:-1]))  # duplicate the middle entries
         blendranges.sort() #re-sort them
-        blendranges=np.reshape(blendranges,(int(len(blendranges)/2),int(2)))  #turn the vector into a 2d array (one pair of values for each submodel)
+        blendranges=np.reshape(blendranges,(int(len(blendranges)/2),int(2)))  #turn the vector back into a 2d array (one pair of values for each submodel)
         self.toblend.append([len(predictions)-1,len(predictions)-1])
         blendranges=np.vstack((blendranges,[-9999999,999999]))
 
@@ -96,14 +95,4 @@ class sm:
 
         return blended
 
-    def predict(self, x):
-        # x is a list of data frames to feed into each submodel.
-        # This allows different normalizations to be used with each submodel
-        predictions = []
-        for i, k in enumerate(self.submodels):
-            try:
-                xtemp = x[i]
-            except:
-                pass
-            predictions.append(k.predict(xtemp))
-        return predictions
+
