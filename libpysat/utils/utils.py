@@ -409,6 +409,25 @@ def regression_correct_all(self):
 
 def generic(data, wv_array, wavelengths, func = None):
     """
+    Using some form of data and a wavelength array. Get the bands associated
+    wtih each wavelength in wavelengths, create a subset of bands based off
+    of those wavelengths then hand the subset to the function.
+
+    Parameters
+    ----------
+    data : ndarray
+           (x, y, z) 3 dimensional numpy array of a spectra image
+
+    wv_array : iterable
+               A list of all possible wavelengths for a given spectral image
+
+    wavelengths : iterable
+                  List of wavelengths to use for the function
+
+    Returns
+    ----------
+    : func
+      Returns the result from the given function
     """
     bands = getbandnumbers(wv_array, wavelengths)
     subset = [data[:, :, i] for i in bands]
