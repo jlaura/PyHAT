@@ -202,7 +202,6 @@ def _get_subindices(keys, indexes, tolerance=0):
 
     num_keys = len(keys)
     num_indexes = len(indexes)
-
     if num_keys > num_indexes:
         raise KeyError('{} keys for {}-dimensional keyspace'.format(num_keys, num_indexes))
 
