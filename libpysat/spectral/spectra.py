@@ -7,112 +7,43 @@ from numbers import Real
 from numbers import Number
 
 from functools import reduce
-
-from libpysat.spectral._subindices import _get_subindices
-from libpysat.spectral.continuum import lincorr
-from libpysat.utils.utils import linear_correction
+from functools import singledispatch
 
 from plio.io import io_spectral_profiler
 
-class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
-    """
-    """
 
-    @property
-    def tolerance(self):
-        if not hasattr(self, '_tolerance'):
-            self._tolerance = .5
-        return self._tolerance
+from . import _index as _idx
 
+from .continuum import lincorr
 
-    @tolerance.setter
-    def tolerance(self, val):
-        self._tolerance = val
+from libpysat.utils.utils import linear_correction
+from libpysat.utils.utils import method_singledispatch
 
-
-    def __getitem__(self, key):
-        try:
-            x,y,columns = None, None, self.obj.wavelengths
-
-            if isinstance(self.obj.index, pd.MultiIndex):
-                x,y = self.obj.index.levels
-                indexes = x,y, self.obj.wavelengths
-                subindices = _get_subindices(key, indexes, tolerance=self._tolerance)
-                x = subindices[0:1] if subindices[0:1] else tuple([slice(None, None)])
-                y = subindices[1:2] if subindices[1:2] else tuple([slice(None, None)])
-                columns = subindices[2:3] if subindices[2:3] else tuple([slice(None, None)])
-                columns = columns[0]
-                # if isinstance(columns, pd.Index):
-                #     columns = columns.union(self.obj.metadata)
-
-                subindices = tuple([tuple([x[0], y[0]]), columns])
-
-            else:
-                x = self.obj.index
-                indexes = x,columns
-                subindices = _get_subindices(key, indexes, tolerance=self._tolerance)
-
-                x = subindices[0:1] if subindices[0:1] else tuple([slice(None, None)])
-                columns = subindices[1:2] if subindices[1:2] else tuple([slice(None, None)])
-
-                columns = columns[0]
-                # if isinstance(columns, pd.Index):
-                #     columns = columns.union(self.obj.metadata)
-
-                subindices = tuple([x[0], columns])
-
-
-            subframe = super(SpectrumLocIndexer, self).__getitem__(subindices)
-
-        except Exception as e:
-            subframe = super(SpectrumLocIndexer, self).__getitem__(key)
-
-        if isinstance(subframe, Spectrum):
-            subframe.wavelengths = self.obj.wavelengths
-            subframe.metadata = self.obj.metadata
-        else:
-            subframe = Spectra(subframe, wavelengths=self.obj.wavelengths, tolerance=self.tolerance)
-
-        return subframe
-
-
-class SpectrumiLocIndexer(pd.core.indexing._iLocIndexer):
-    """
-    """
-
-    def __getitem__(self, key):
-        subframe = super(SpectrumiLocIndexer, self).__getitem__(key)
-
-        if isinstance(subframe, Spectrum):
-            subframe.wavelengths = self.obj.wavelengths
-            subframe.metadata = self.obj.metadata
-        else:
-            subframe = Spectra(subframe, wavelengths=self.obj.wavelengths, tolerance = self.obj._get.tolerance)
-        return subframe
 
 
 class Spectrum(pd.Series):
 
     _metadata = ['_loc', 'wavelengths', 'metadata', 'tolerance']
 
-    def __init__(self, *args, **kwargs):
-        wavelengths = kwargs.pop('wavelengths', None)
-        metadata = kwargs.pop('metadata', None)
-        tolerance = kwargs.pop('tolerance', None)
-
-        _loc = kwargs.pop('loc', None)
+    def __init__(self, *args, wavelengths=[], metadata=[], tolerance=.5, **kwargs):
         super(Spectrum, self).__init__(*args, **kwargs)
+
+        self._get = _idx.SpectrumLocIndexer(name='loc', obj=self)
+        self._get._tolerance = tolerance
 
         self.wavelengths = wavelengths
         self.metadata = metadata
+
 
     @property
     def _constructor(self):
         return Spectrum
 
+
     @property
     def _constructor_expanddim(self):
         return pd.DataFrame
+
 
     def linear_correction(self):
         """
@@ -121,39 +52,43 @@ class Spectrum(pd.Series):
         return lincorr(self)
 
 
-class Spectra(pd.DataFrame):
-    """
-    """
-
-    # attributes that carry over on operations
-    _metadata = ['_get', '_iget', 'wavelengths', 'metadata']
-
-    def __init__(self, *args, wavelengths = [], metadata = [], tolerance=0, **kwargs):
-        """
-        """
-        super(Spectra, self).__init__(*args, **kwargs)
-
-        get_name = self.loc.name
-        iget_name = self.iloc.name
-        self._iget = SpectrumiLocIndexer(name=iget_name, obj=self)
-        self._get = SpectrumLocIndexer(name=get_name, obj=self)
-
-        self._get._tolerance = tolerance
-        self.wavelengths = pd.Float64Index(wavelengths)
-
-        if metadata:
-            self.metadata = pd.Index(metadata)
-        else:
-            self.metadata = self.columns.difference(self.wavelengths)
-
     @property
-    def _constructor_sliced(self):
-        return Spectrum
+    def tolerance(self):
+        if not hasattr(self._get, '_tolerance'):
+            self._get._tolerance = .5
+        return self._get._tolerance
+
+
+    @tolerance.setter
+    def tolerance(self, val):
+        self._get._tolerance = val
 
 
     @property
-    def _constructor(self):
-        return Spectra
+    def get(self):
+        return self._get
+
+
+class Spectra(object):
+
+    @method_singledispatch
+    def __new__(self, data, *args, **kwargs):
+        raise NotImplementedError('Not a supported datatype {}'.format(type(data)))
+
+
+    @__new__.register(pd.DataFrame)
+    def _(self, data, *args, **kwargs):
+        return _Spectra_DataFrame(data, *args, **kwargs)
+
+
+    @__new__.register(np.ndarray)
+    def _(self, data, *args, **kwargs):
+        return _Spectra_Array(data, *args, **kwargs)
+
+
+    @__new__.register(np.dtype)
+    def _(self, data, *args, **kwargs):
+        return _Spectra_Array(data, *args, **kwargs)
 
 
     @classmethod
@@ -198,6 +133,44 @@ class Spectra(pd.DataFrame):
         spectra_df = m3_df.merge(meta_df, left_index = True, right_index = True)
         spectra_df.sort_index(inplace = True)
         return cls(spectra_df, wavelengths, metadata, 2)
+
+
+
+class _Spectra_DataFrame(pd.DataFrame):
+    """
+    """
+
+    # attributes that carry over on operations
+    _metadata = ['_get', '_iget', 'wavelengths', 'metadata']
+
+
+    def __init__(self, *args, wavelengths = [], metadata = [], tolerance=0, **kwargs):
+        """
+        """
+        super(_Spectra_DataFrame, self).__init__(*args, **kwargs)
+
+        get_name = self.loc.name
+        iget_name = self.iloc.name
+        self._iget = _idx.SpectrumiLocIndexer(name=iget_name, obj=self)
+        self._get = _idx.SpectrumLocIndexer(name=get_name, obj=self)
+
+        self._get._tolerance = tolerance
+        self.wavelengths = pd.Float64Index(wavelengths)
+
+        if metadata:
+            self.metadata = pd.Index(metadata)
+        else:
+            self.metadata = self.columns.difference(self.wavelengths)
+
+
+    @property
+    def _constructor_sliced(self):
+        return Spectrum
+
+
+    @property
+    def _constructor(self):
+        return _Spectra_DataFrame
 
 
     def linear_correction(self):
@@ -251,11 +224,26 @@ class Spectra(pd.DataFrame):
 
     @property
     def tolerance(self):
-        if not hasattr(self._loc, '_tolerance'):
-            self._loc._tolerance = .5
-        return self._loc._tolerance
+        if not hasattr(self._get, '_tolerance'):
+            self._get._tolerance = .5
+        return self._get._tolerance
 
 
     @tolerance.setter
     def tolerance(self, val):
-        self._loc._tolerance = val
+        self._get._tolerance = val
+
+
+class _SpectraArray(np.ndarray):
+
+    def __new__(cls, ndarray, wavelengths=[], tolerance=.5):
+
+        obj = np.asarray(ndarray).view(cls)
+        obj.wavelengths = pd.Float64Index(wavelengths)
+        obj.index = Spectrum(range(obj.shape[-1]-1), index=obj.wavelengths, wavelengths=obj.wavelengths, tolerance=tolerance)
+
+        return obj
+
+    @property
+    def get(self):
+        return self.index._get

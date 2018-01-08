@@ -5,6 +5,8 @@ import scipy.stats as ss
 from libpysat.utils.utils import linear_correction
 from libpysat.spectral import spectra
 
+
+
 def continuum_correct(spectrum, nodes=None, method='linear'):
     """
     Apply a continuum correction to a given spectrum
