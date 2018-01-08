@@ -407,7 +407,7 @@ def regression_correct_all(self):
                                                              self.wavelengths)
     return self.data, y
 
-def generic(data, wv_array, wavelengths, func = None):
+def generic_func(data, wv_array, wavelengths, func = None):
     """
     Using some form of data and a wavelength array. Get the bands associated
     wtih each wavelength in wavelengths, create a subset of bands based off
@@ -431,7 +431,7 @@ def generic(data, wv_array, wavelengths, func = None):
     """
     bands = getbandnumbers(wv_array, wavelengths)
     subset = [data[:, :, i] for i in bands]
-    return func(subset)
+    return func(subset[1:-1])
 
 def getbandnumbers(wavelengths, wave_values):
     '''

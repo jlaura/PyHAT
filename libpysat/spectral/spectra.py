@@ -12,7 +12,7 @@ from libpysat.spectral._subindices import _get_subindices
 from libpysat.spectral.continuum import lincorr
 from libpysat.utils.utils import linear_correction
 
-from plio.io import io_spectral_profiler
+from plio.io import io_spectral_profiler, io_moon_minerology_mapper
 
 class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
     """
