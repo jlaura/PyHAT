@@ -71,7 +71,7 @@ class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
             subframe.wavelengths = self.obj.wavelengths
             subframe.metadata = self.obj.metadata
         else:
-            subframe = Spectra(subframe, self.obj.wavelengths, self.tolerance)
+            subframe = Spectra(subframe, wavelengths=self.obj.wavelengths, tolerance=self.tolerance)
 
         return subframe
 
@@ -87,18 +87,19 @@ class SpectrumiLocIndexer(pd.core.indexing._iLocIndexer):
             subframe.wavelengths = self.obj.wavelengths
             subframe.metadata = self.obj.metadata
         else:
-            subframe = Spectra(subframe, self.obj.wavelengths, tolerance = self.obj._loc.tolerance)
+            subframe = Spectra(subframe, wavelengths=self.obj.wavelengths, tolerance = self.obj._get.tolerance)
         return subframe
 
 
 class Spectrum(pd.Series):
 
-    _metadata = ['_loc', 'wavelengths', 'metadata']
+    _metadata = ['_loc', 'wavelengths', 'metadata', 'tolerance']
 
     def __init__(self, *args, **kwargs):
         wavelengths = kwargs.pop('wavelengths', None)
         metadata = kwargs.pop('metadata', None)
         tolerance = kwargs.pop('tolerance', None)
+
         _loc = kwargs.pop('loc', None)
         super(Spectrum, self).__init__(*args, **kwargs)
 
@@ -120,37 +121,39 @@ class Spectrum(pd.Series):
         return lincorr(self)
 
 
-class Spectra(object):
+class Spectra(pd.DataFrame):
     """
     """
 
-    def __init__(self, df = None, wavelengths={}, metadata={}, tolerance=.5):
-        if df is not None:
-            self._data = df
-        else:
-            self._data = pd.DataFrame()
+    # attributes that carry over on operations
+    _metadata = ['_get', '_iget', 'wavelengths', 'metadata']
 
+    def __init__(self, *args, wavelengths = [], metadata = [], tolerance=0, **kwargs):
+        """
+        """
+        super(Spectra, self).__init__(*args, **kwargs)
+
+        get_name = self.loc.name
+        iget_name = self.iloc.name
+        self._iget = SpectrumiLocIndexer(name=iget_name, obj=self)
+        self._get = SpectrumLocIndexer(name=get_name, obj=self)
+
+        self._get._tolerance = tolerance
         self.wavelengths = pd.Float64Index(wavelengths)
-        self.metadata = metadata
 
-        if isinstance(df, pd.DataFrame):
-            self.metadata = df.columns.difference(self.wavelengths)
+        if metadata:
+            self.metadata = pd.Index(metadata)
         else:
-            self.metadata = df.index.difference(self.wavelengths)
+            self.metadata = self.columns.difference(self.wavelengths)
 
-        loc_name = self._data.loc.name
-        iloc_name = self._data.iloc.name
-        self._iloc = SpectrumiLocIndexer(name=iloc_name, obj=self)
-        self._loc = SpectrumLocIndexer(name=loc_name, obj=self)
-        self._loc._tolerance = tolerance
+    @property
+    def _constructor_sliced(self):
+        return Spectrum
 
-        self._get_axis = self._data._get_axis
-        self._get_axis_name = self._data._get_axis_name
-        self._slice = self._data._slice
-        self._xs = self._data._xs
-        self._ixs = self._data._ixs
-        self._data._constructor_sliced = Spectrum
-        self._take = self._data._take
+
+    @property
+    def _constructor(self):
+        return Spectra
 
 
     @classmethod
@@ -172,7 +175,8 @@ class Spectra(object):
         df = df.reset_index().merge(meta.reset_index(), on='id')
         df = df.set_index(['minor', 'id'], drop=True)
 
-        return cls(df, wavelengths, tolerance=tolerance)
+        return cls(df, wavelengths=wavelengths, tolerance=tolerance)
+
 
     @classmethod
     def from_m3(cls, path_to_file):
@@ -196,10 +200,6 @@ class Spectra(object):
         return cls(spectra_df, wavelengths, metadata, 2)
 
 
-    def __repr__(self):
-        return self._data.__repr__()
-
-
     def linear_correction(self):
         """
         apply linear correction to all spectra
@@ -214,81 +214,39 @@ class Spectra(object):
             corr, y = linear_correction(bands, row[wavelengths].__array__(), wavelengths)
             return Spectrum(corr, index=wavelengths)
 
-        data = self._data.apply(lincorr, axis=1)
-        return Spectra(data, self.wavelengths, tolerance = self.tolerance)
+        data = self.apply(lincorr, axis=1)
+        return Spectra(data, wavelengths=self.wavelengths, tolerance = self.tolerance)
 
 
     def __getitem__(self, key):
-        return self.loc[:,:,key]
-
-    @property
-    def loc(self):
-        return self._loc
-
-
-    @property
-    def iloc(self):
-        return self._iloc
-
-    @property
-    def take(self):
-        return self._data.take
-
-
-    def head(self, n=5):
-        return self._data.head(n)
+        if isinstance(self.index, pd.MultiIndex):
+            return self.get[:,:,key]
+        else:
+             return self.get[:,key]
 
 
     @property
-    def index(self):
-        return self._data.index
+    def get(self):
+        return self._get
+
 
     @property
-    def columns(self):
-        return self._data.columns
+    def iget(self):
+        return self._iget
 
-    @property
-    def ndim(self):
-        return self._data.ndim
-
-    def sort_index(self, *args, **kwargs):
-        data =  self._data.sort_index(*args, **kwargs)
-        return Spectra(data, wavelengths=self.wavelengths, tolerance=self.tolerance)
-
-    @property
-    def reindex(self):
-        return self._data.reindex
-
-    @property
-    def axes(self):
-        return self._data.axes
-
-    @property
-    def sortlevel(self):
-        return self._data.sortlevel
-
-    @property
-    def iterrows(self):
-        return self._data.iterrows
 
     @property
     def meta(self):
         return self[self.metadata]
 
+
     @property
     def spectra(self):
         return self[self.wavelengths]
 
-    def apply(self, func, *args, **kwargs):
-        return self._data.apply(func, *args, **kwargs)
-
-
-    def apply_spectra(self, func, *args, **kwargs):
-        self._data = self.apply(func, args, axis=1, **kwargs)
-
 
     def plot_spectra(self, *args, **kwargs):
-        return self.spectra._data.T.plot(*args, **kwargs)
+        return self.T.plot(*args, **kwargs)
 
 
     @property
