@@ -236,14 +236,14 @@ class _SpectraDataFrame(pd.DataFrame):
 
 class _SpectraArray(np.ndarray):
 
-    def __new__(cls, ndarray, wavelengths=[], tolerance=.5):
+    def __new__(cls, ndarray, wavelengths=[], waxis=None, tolerance=.5):
 
         obj = np.asarray(ndarray).view(cls)
         obj.wavelengths = pd.Float64Index(wavelengths)
-        obj.index = Spectrum(range(obj.shape[-1]-1), index=obj.wavelengths, wavelengths=obj.wavelengths, tolerance=tolerance)
+        obj._get = _idx.ArrayLocIndexer(obj=obj, waxis=waxis, tolerance=tolerance)
 
         return obj
 
     @property
     def get(self):
-        return self.index._get
+        return self._get
