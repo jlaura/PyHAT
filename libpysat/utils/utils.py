@@ -1,8 +1,33 @@
 from functools import reduce
+from functools import singledispatch
+from functools import update_wrapper
 
 import numpy as np
 import pandas as pd
 import scipy.stats as ss
+
+
+def method_singledispatch(func):
+    """
+    New dispatch decorator that looks at the second argument to
+    avoid self
+    Parameters
+    ----------
+    func : Object
+        Function object to be dispatched
+    Returns
+    wrapper : Object
+        Wrapped function call chosen by the dispatcher
+    ----------
+    """
+    dispatcher = singledispatch(func)
+
+    def wrapper(*args, **kw):
+        return dispatcher.dispatch(args[1].__class__)(*args, **kw)
+
+    wrapper.register = dispatcher.register
+    update_wrapper(wrapper, dispatcher)
+    return wrapper
 
 
 def crossform(a):
@@ -406,3 +431,51 @@ def regression_correct_all(self):
         self.data[obs_id], y[obs_id] = regression_correction(self.data[obs_id],
                                                              self.wavelengths)
     return self.data, y
+
+def generic(data, wv_array, wavelengths, func = None):
+    """
+    Using some form of data and a wavelength array. Get the bands associated
+    wtih each wavelength in wavelengths, create a subset of bands based off
+    of those wavelengths then hand the subset to the function.
+
+    Parameters
+    ----------
+    data : ndarray
+           (x, y, z) 3 dimensional numpy array of a spectra image
+
+    wv_array : iterable
+               A list of all possible wavelengths for a given spectral image
+
+    wavelengths : iterable
+                  List of wavelengths to use for the function
+
+    Returns
+    ----------
+    : func
+      Returns the result from the given function
+    """
+    bands = getbandnumbers(wv_array, wavelengths)
+    subset = [data[:, :, i] for i in bands]
+    return func(subset)
+
+def getbandnumbers(wavelengths, wave_values):
+    '''
+    This parses the wavelenth list,finds the mean wavelength closest to the
+    provided wavelength, and returns the index of that value.  One (1) is added
+    to the index to grab the correct band.
+
+    Parameters
+    ----------
+    wavelengths: A list of wavelengths, 0 based indexing
+    *args: A variable number of input wavelengths to map to bands
+
+    Returns
+    -------
+    bands: A variable length list of bands.  These are in the same order they are
+    provided in.  Beware that altering the order will cause unexpected results.
+
+    '''
+    bands = []
+    for x in wave_values:
+        bands.append(min(range(len(wavelengths)), key=lambda i: abs(wavelengths[i]-x)))
+    return bands

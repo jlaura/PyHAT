@@ -10,6 +10,8 @@ from numbers import Number
 
 from functools import reduce
 
+from . import spectra as sp
+
 
 @dispatch(Real, pd.Float64Index)
 def _get_subindices(scalar, indices, tolerance=0):
@@ -212,3 +214,82 @@ def _get_subindices(keys, indexes, tolerance=0):
     subindexes = tuple([_get_subindices(key, index, tolerance=tolerance) for key, index in zip(keys, indexes)])
 
     return subindexes
+
+
+class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
+    """
+    """
+
+    @property
+    def tolerance(self):
+        if not hasattr(self, '_tolerance'):
+            self._tolerance = .5
+        return self._tolerance
+
+
+    @tolerance.setter
+    def tolerance(self, val):
+        self._tolerance = val
+
+
+    def __getitem__(self, key):
+        try:
+            x,y,columns = None, None, self.obj.wavelengths
+
+            if isinstance(self.obj.index, pd.MultiIndex):
+                x,y = self.obj.index.levels
+                indexes = x,y, self.obj.wavelengths
+                subindices = _get_subindices(key, indexes, tolerance=self._tolerance)
+                x = subindices[0:1] if subindices[0:1] else tuple([slice(None, None)])
+                y = subindices[1:2] if subindices[1:2] else tuple([slice(None, None)])
+                columns = subindices[2:3] if subindices[2:3] else tuple([slice(None, None)])
+                columns = columns[0]
+
+                subindices = tuple([tuple([x[0], y[0]]), columns])
+
+            else:
+                x = self.obj.index
+                indexes = x,columns
+                subindices = _get_subindices(key, indexes, tolerance=self._tolerance)
+
+                x = subindices[0:1] if subindices[0:1] else tuple([slice(None, None)])
+                columns = subindices[1:2] if subindices[1:2] else tuple([slice(None, None)])
+
+                columns = columns[0]
+                print(x, columns)
+                subindices = tuple([x[0], columns])
+
+
+            subframe = super(SpectrumLocIndexer, self).__getitem__(subindices)
+            print(subframe)
+
+        except Exception as e:
+            subframe = super(SpectrumLocIndexer, self).__getitem__(key)
+
+        if isinstance(subframe, sp.Spectrum):
+            subframe.wavelengths = self.obj.wavelengths
+            subframe.metadata = self.obj.metadata
+        elif isinstance(subframe, sp._SpectraDataFrame):
+            print(subframe)
+            subframe = sp.Spectra(subframe, wavelengths=self.obj.wavelengths, tolerance=self.tolerance)
+        else :  # most likely a scalar
+            print(subframe)
+            subframe = sp.Spectrum(subframe, index=key, wavelengths=self.obj.wavelengths, tolerance=self.tolerance)
+
+
+        return subframe
+
+
+class SpectrumiLocIndexer(pd.core.indexing._iLocIndexer):
+    """
+    """
+
+    def __getitem__(self, key):
+        subframe = super(SpectrumiLocIndexer, self).__getitem__(key)
+
+        if isinstance(subframe, sp.Spectrum):
+            subframe.wavelengths = self.obj.wavelengths
+            subframe.metadata = self.obj.metadata
+        else:
+            subframe = sp.Spectra(subframe, wavelengths=self.obj.wavelengths, tolerance = self.obj._get.tolerance)
+        return subframe
