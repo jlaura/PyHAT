@@ -430,7 +430,7 @@ def generic_func(data, wv_array, wavelengths, func = None):
       Returns the result from the given function
     """
     bands = getbandnumbers(wv_array, wavelengths)
-    subset = [data[:, :, i] for i in bands]
+    subset = data.take(bands, axis = 0)
     return func(subset[1:-1])
 
 def getbandnumbers(wavelengths, wave_values):
