@@ -297,10 +297,9 @@ class ArrayLocIndexer(object):
     def __init__(self, name='loc', obj=None, waxis=None, tolerance=.5):
         """
         """
+        self.waxis = waxis
         if waxis is None:
             self.waxis = obj.ndim-1
-        else:
-            self.waxis = waxis
 
         self.name = name
         self.obj = obj
@@ -310,10 +309,11 @@ class ArrayLocIndexer(object):
         for i in self.obj.shape:
             index.append(list(range(i)))
 
-        index[self.waxis] = self.obj.wavelengths
-        self.index = pd.MultiIndex.from_product(index)
-        wavesidx = list(range(self.obj.shape[self.waxis]))
-        self.wave_table = dict(zip(self.obj.wavelengths, wavesidx))
+        if self.waxis < self.obj.ndim:
+            index[self.waxis] = self.obj.wavelengths
+            self.index = pd.MultiIndex.from_product(index)
+            wavesidx = list(range(self.obj.shape[self.waxis]))
+            self.wave_table = dict(zip(self.obj.wavelengths, wavesidx))
 
 
     def __getitem__(self, keys):
