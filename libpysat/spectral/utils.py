@@ -4,7 +4,14 @@ Created on Tue May 10 16:11:37 2016
 
 @author: rbanderson
 """
+import numpy as np
+from pandas import Series
+from scipy import signal
 
+
+import baseline_code.watrous as watrous
+import numpy
+import scipy.signal
 
 # def within_range(x,y,rangevals):
 # mask=(y>rangevals[0])&(y<rangevals[1])
@@ -13,10 +20,6 @@ Created on Tue May 10 16:11:37 2016
 def within_range(data, rangevals, col):
     mask = (data[('meta', col)] > rangevals[0]) & (data[('meta', col)] < rangevals[1])
     return data.loc[mask]
-
-import numpy as np
-from pandas import Series
-from scipy import signal
 
 
 def boxcar(y, window_size=3):
@@ -168,10 +171,6 @@ def band_asymmetry(spectrum, low_endmember=None, high_endmember=None):
 
 
 
-
-import baseline_code.watrous as watrous
-import numpy
-import scipy.signal
 
 
 def get_noise(Data, niter=3):
@@ -325,7 +324,6 @@ Created on Sun Mar 27 13:07:07 2016
 @author: rbanderson
 """
 
-import numpy as np
 
 
 def meancenter(df, col, previous_mean=None):

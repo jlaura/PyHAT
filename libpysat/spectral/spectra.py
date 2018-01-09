@@ -83,12 +83,12 @@ class Spectra(object):
 
     @__new__.register(np.ndarray)
     def _(self, data, *args, **kwargs):
-        return _Spectra_Array(data, *args, **kwargs)
+        return _SpectraArray(data, *args, **kwargs)
 
 
-    @__new__.register(np.dtype)
+    @__new__.register(Real)
     def _(self, data, *args, **kwargs):
-        return _Spectra_Array(data, *args, **kwargs)
+        return _SpectraArray([data], *args, **kwargs)
 
 
     @classmethod
@@ -136,7 +136,7 @@ class Spectra(object):
 
 
 
-class _Spectra_DataFrame(pd.DataFrame):
+class _SpectraDataFrame(pd.DataFrame):
     """
     """
 

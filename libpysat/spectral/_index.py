@@ -244,8 +244,6 @@ class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
                 y = subindices[1:2] if subindices[1:2] else tuple([slice(None, None)])
                 columns = subindices[2:3] if subindices[2:3] else tuple([slice(None, None)])
                 columns = columns[0]
-                # if isinstance(columns, pd.Index):
-                #     columns = columns.union(self.obj.metadata)
 
                 subindices = tuple([tuple([x[0], y[0]]), columns])
 
@@ -258,13 +256,12 @@ class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
                 columns = subindices[1:2] if subindices[1:2] else tuple([slice(None, None)])
 
                 columns = columns[0]
-                # if isinstance(columns, pd.Index):
-                #     columns = columns.union(self.obj.metadata)
-
+                print(x, columns)
                 subindices = tuple([x[0], columns])
 
 
             subframe = super(SpectrumLocIndexer, self).__getitem__(subindices)
+            print(subframe)
 
         except Exception as e:
             subframe = super(SpectrumLocIndexer, self).__getitem__(key)
@@ -272,8 +269,13 @@ class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
         if isinstance(subframe, sp.Spectrum):
             subframe.wavelengths = self.obj.wavelengths
             subframe.metadata = self.obj.metadata
-        else:
+        elif isinstance(subframe, sp._SpectraDataFrame):
+            print(subframe)
             subframe = sp.Spectra(subframe, wavelengths=self.obj.wavelengths, tolerance=self.tolerance)
+        else :  # most likely a scalar
+            print(subframe)
+            subframe = sp.Spectrum(subframe, index=key, wavelengths=self.obj.wavelengths, tolerance=self.tolerance)
+
 
         return subframe
 
