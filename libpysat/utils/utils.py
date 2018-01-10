@@ -351,18 +351,3 @@ def getbandnumbers(wavelengths, wave_values):
     for x in wave_values:
         bands.append(min(range(len(wavelengths)), key=lambda i: abs(wavelengths[i]-x)))
     return bands
-
-if __name__ == "__main__":
-    wv = np.arange(500,750)
-    data = np.arange(1, 251)
-    cor, denom = continuum_correction(data, wv, [525, 735], None, regression)
-    print(cor)
-    cor, denom = continuum_correction(data, wv, [525, 735], None, horgan, points=[550,600,700], window=10)
-    print(cor)
-    cor, denom = continuum_correction(data, wv, [525, 725], correction_nodes=[500, 749])
-    print(cor)
-    cor, denom = continuum_correction(data, wv, [525, 600, 725])
-    print(cor)
-    cor, denom = continuum_correction(data, wv, [525, 600, 725], correction_nodes=[500, 605, 749])
-    print(cor)
-    cor, denom = continuum_correction(data, wv, [525, 725], correction_nodes=[500, 605, 749])
