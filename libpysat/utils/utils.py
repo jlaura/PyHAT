@@ -240,10 +240,10 @@ def remove_field_name(a, name):
     return b
 
 def linear(data, wv_array):
-    y1 = data.iloc[0]
-    y2 = data.iloc[-1]
-    wv1 = wv_array.iloc[0]
-    wv2 = wv_array.iloc[-1]
+    y1 = data[0]
+    y2 = data[-1]
+    wv1 = wv_array[0]
+    wv2 = wv_array[-1]
     m = (y2 - y1) / ( wv2 - wv1)
     b = y1 - (m * wv1)
     y = (m * wv_array + b)
@@ -252,27 +252,29 @@ def linear(data, wv_array):
 def regression(data, wv_array):
     m,b,_,_,_ =  ss.linregress(wv_array, data)
     regressed_continuum = m * wv_array + b
-    return reflectance / regressed_continuum, regressed_continuum
+    return  data / regressed_continuum
 
-#@@TODO Horgan correction should allow arbritrary number of data points, not just a,b,c
-def horgan(data, wv_array, a, b, c, window):
+def horgan(data, wv_array, points, window):
     #Define the search windows
-    lowerwindow = np.where((wavelength > a - window) & (wavelength < a + window))[0]
-    middlewindow = np.where((wavelength > b - window) & (wavelength < b + window))[0]
-    upperwindow = np.where((wavelength > c - window) & (wavelength < c + window))[0]
-    #Get the maximum within the window
-    maxa = reflectance[lowerwindow].argmax() + lowerwindow[0]
-    maxb = reflectance[middlewindow].argmax() + middlewindow[0]
-    maxc = reflectance[upperwindow].argmax() + upperwindow[0]
-    itercounter = 0
-    iterating = True
-    x = np.asarray([wavelength[maxa],wavelength[maxb], wavelength[maxc]])
-    y = np.asarray([reflectance[maxa],reflectance[maxb], reflectance[maxc]])
-    fit = np.polyfit(x,y,2)
-    continuum = np.polyval(fit, wavelength)
-    continuum_corrected = reflectance / continuum
+    windows = np.empty(len(points), dtype=list)
+    for i, point in enumerate(points):
+        windows[i] = ((np.where((wv_array > point - window) & (wv_array < point + window))[0]))
 
-    return continuum_corrected, continuum
+    #Get the maximum within the window
+    maxima = np.empty(len(points), dtype = int)
+    for i, t_window in enumerate(windows):
+        maxima[i] = data[t_window.argmax() + t_window[0]]
+
+    print(maxima)
+
+    x = np.asarray([wv_array[i-1] for i in maxima])
+    y = np.asarray([data[i-1] for i in maxima])
+
+    fit = np.polyfit(x,y,2)
+    continuum = np.polyval(fit,wv_array)
+    continuum_corrected =  data / continuum
+
+    return continuum_corrected
 
 def continuum_correction(data, wv, nodes, correction_nodes=[], correction=linear, **kwargs):
     if not correction_nodes:
@@ -295,11 +297,11 @@ def continuum_correction(data, wv, nodes, correction_nodes=[], correction=linear
         # Grab the correction indices.  These define the length of the line to be corrected
         cor_idx = correction_idx[i]
         # Compute an arbitrary correction
-        y = correction(data[start_idx:stop_idx], wv[cor_idx[0]:cor_idx[1]+1], kwargs)
+        y = correction(data[start_idx:stop_idx], wv[cor_idx[0]:cor_idx[1]], **kwargs)
 
         # Apply the correction to a copy of the input data and then step to the next subset
-        corrected[cor_idx[0]:cor_idx[1]+1] = data[cor_idx[0]:cor_idx[1]+1] / y
-        denom[cor_idx[0]:cor_idx[1]+1] = y
+        corrected[cor_idx[0]:cor_idx[1]] = data[cor_idx[0]:cor_idx[1]] / y
+        denom[cor_idx[0]:cor_idx[1]] = y
     return corrected, denom
 
 def generic(data, wv_array, wavelengths, func = None):
@@ -353,7 +355,9 @@ def getbandnumbers(wavelengths, wave_values):
 if __name__ == "__main__":
     wv = np.arange(500,750)
     data = np.arange(1, 251)
-    cor, denom = continuum_correction(data, wv, [525, 735])
+    cor, denom = continuum_correction(data, wv, [525, 735], None, regression)
+    print(cor)
+    cor, denom = continuum_correction(data, wv, [525, 735], None, horgan, points=[550,600,700], window=10)
     print(cor)
     cor, denom = continuum_correction(data, wv, [525, 725], correction_nodes=[500, 749])
     print(cor)
