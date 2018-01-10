@@ -239,62 +239,23 @@ def remove_field_name(a, name):
     b = a[names]
     return b
 
+def linear(data, wv_array):
+    y1 = data.iloc[0]
+    y2 = data.iloc[-1]
+    wv1 = wv_array.iloc[0]
+    wv2 = wv_array.iloc[-1]
+    m = (y2 - y1) / ( wv2 - wv1)
+    b = y1 - (m * wv1)
+    y = (m * wv_array + b)
+    return y
 
-def linear_correction(spectrum, nodes = None):
-    """
-    Perform a linear continuum correction.
+def regression(data, wv_array):
+    m,b,_,_,_ =  ss.linregress(wv_array, data)
+    regressed_continuum = m * wv_array + b
+    return reflectance / regressed_continuum, regressed_continuum
 
-    Parameters
-    ----------
-        nodes : array(float)
-            The wavelengths that specify subsets between which continuum are computed.
-
-    Returns
-    -------
-        corrected : array(float)
-            The continuum corrected ref array.
-
-        continuum : float
-            The continuum slope.
-    """
-
-    wv_array = spectrum.wavelengths.__array__()
-    
-    if nodes is None:
-        nodes = [wv_array[0], wv_array[-1]]
-
-    wv_idx = getbandnumbers(wv_array, nodes)
-    try:
-        size = wv_idx[-1] - wv_idx[0]
-    except:
-        return [0,0]
-    corrected = np.empty(size)
-    continuum = np.empty(size)
-
-    start = 0
-    node_pairs = list(zip(nodes, nodes[1:]))
-    for i,pair in enumerate(node_pairs):
-        stop = wv_idx[i+1]
-        try:
-            y1 = spectrum.loc[pair[0]]
-            y2 = spectrum.loc[pair[-1]]
-            wv1 = pair[0]
-            wv2 = pair[1]
-
-            m = (y2-y1) / (wv2 - wv1)
-            b = y1 - (m * wv1)
-            y = (m * wv_array[start:stop] + b)
-            corrected[start:stop] = (spectrum.iloc[start:stop] / y)
-            continuum[start:stop] = y
-        except ZeroDivisionError:
-            corrected[start:stop] = 0
-            continuum[start:stop] = 0
-        finally:
-            start = stop
-
-    return [corrected, continuum]
-
-def horgan_correction(reflectance, wavelength, a, b, c, window):
+#@@TODO Horgan correction should allow arbritrary number of data points, not just a,b,c
+def horgan(data, wv_array, a, b, c, window):
     #Define the search windows
     lowerwindow = np.where((wavelength > a - window) & (wavelength < a + window))[0]
     middlewindow = np.where((wavelength > b - window) & (wavelength < b + window))[0]
@@ -305,27 +266,41 @@ def horgan_correction(reflectance, wavelength, a, b, c, window):
     maxc = reflectance[upperwindow].argmax() + upperwindow[0]
     itercounter = 0
     iterating = True
-    # @@TODO ask about this code.  Why loop if there's an unconditional
-    #  flag that breaks the loop after the first iteration?
-    while iterating:
-        x = np.asarray([wavelength[maxa],wavelength[maxb], wavelength[maxc]])
-        y = np.asarray([reflectance[maxa],reflectance[maxb], reflectance[maxc]])
-        fit = np.polyfit(x,y,2)
-        continuum = np.polyval(fit, wavelength)
-        continuum_corrected = reflectance / continuum
-        iterating = False
-        if itercounter == 9:
-            print('Unable to converge')
-            break
-        itercounter += 1
+    x = np.asarray([wavelength[maxa],wavelength[maxb], wavelength[maxc]])
+    y = np.asarray([reflectance[maxa],reflectance[maxb], reflectance[maxc]])
+    fit = np.polyfit(x,y,2)
+    continuum = np.polyval(fit, wavelength)
+    continuum_corrected = reflectance / continuum
 
     return continuum_corrected, continuum
 
-def regression_correction(wavelengths,reflectance):
-    m,b,_,_,_ =  ss.linregress(wavelengths, reflectance)
-    regressed_continuum = m * wavelengths + b
-    return reflectance / regressed_continuum, regressed_continuum
+def continuum_correction(data, wv, nodes, correction_nodes=[], correction=linear, **kwargs):
+    if not correction_nodes:
+        correction_nodes = nodes
 
+    correction_idx = []
+    for start, stop in zip(correction_nodes, correction_nodes[1:]):
+        start = np.where(wv == start)[0][0]
+        stop = np.where(wv == stop)[0][0]
+        correction_idx.append((start, stop))
+    # Make a copy of the input data that will house the corrected spectra
+    corrected = np.copy(data)
+    denom = np.zeros(data.shape)
+
+    for i, (start, stop) in enumerate(zip(nodes, nodes[1:])):
+        # Get the start and stop indices into the wavelength array. These define the correction nodes
+        start_idx = np.where(wv == start)[0][0]
+        stop_idx = np.where(wv == stop)[0][0]
+
+        # Grab the correction indices.  These define the length of the line to be corrected
+        cor_idx = correction_idx[i]
+        # Compute an arbitrary correction
+        y = correction(data[start_idx:stop_idx], wv[cor_idx[0]:cor_idx[1]+1], kwargs)
+
+        # Apply the correction to a copy of the input data and then step to the next subset
+        corrected[cor_idx[0]:cor_idx[1]+1] = data[cor_idx[0]:cor_idx[1]+1] / y
+        denom[cor_idx[0]:cor_idx[1]+1] = y
+    return corrected, denom
 
 def generic(data, wv_array, wavelengths, func = None):
     """
@@ -374,3 +349,16 @@ def getbandnumbers(wavelengths, wave_values):
     for x in wave_values:
         bands.append(min(range(len(wavelengths)), key=lambda i: abs(wavelengths[i]-x)))
     return bands
+
+if __name__ == "__main__":
+    wv = np.arange(500,750)
+    data = np.arange(1, 251)
+    cor, denom = continuum_correction(data, wv, [525, 735])
+    print(cor)
+    cor, denom = continuum_correction(data, wv, [525, 725], correction_nodes=[500, 749])
+    print(cor)
+    cor, denom = continuum_correction(data, wv, [525, 600, 725])
+    print(cor)
+    cor, denom = continuum_correction(data, wv, [525, 600, 725], correction_nodes=[500, 605, 749])
+    print(cor)
+    cor, denom = continuum_correction(data, wv, [525, 725], correction_nodes=[500, 605, 749])

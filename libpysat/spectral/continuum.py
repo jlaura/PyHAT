@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import scipy.stats as ss
 
-from libpysat.utils.utils import linear_correction
+from libpysat.utils.utils import continuum_correction
 from libpysat.spectral import spectra
 
 def continuum_correct(spectrum, nodes=None, method='linear'):
