@@ -9,8 +9,7 @@ from numbers import Number
 from functools import reduce
 
 from libpysat.spectral._subindices import _get_subindices
-from libpysat.spectral.continuum import lincorr
-from libpysat.utils.utils import linear_correction
+from libpysat.utils.utils import continuum_correction, linear, horgan, regression
 
 from plio.io import io_spectral_profiler, io_moon_minerology_mapper
 
@@ -114,11 +113,12 @@ class Spectrum(pd.Series):
     def _constructor_expanddim(self):
         return pd.DataFrame
 
-    def linear_correction(self):
+    def continuum_correction(self, nodes = None, correction_nodes = [], method = linear, **kwargs):
         """
         apply linear correction to all spectra
         """
-        return lincorr(self)
+
+        return Spectrum(continuum_correction(self.loc[self.wavelengths].__array__(), self.wavelengths, nodes, correction_nodes, method, **kwargs)[0])
 
 
 class Spectra(pd.DataFrame):
@@ -200,21 +200,25 @@ class Spectra(pd.DataFrame):
         return cls(spectra_df, wavelengths, metadata, 2)
 
 
-    def linear_correction(self):
+    def continuum_correction(self, nodes = None, correction_nodes=[], correction = linear, **kwargs):
         """
         apply linear correction to all spectra
         """
         wavelengths = self.wavelengths.__array__()
         bands = tuple([0, len(wavelengths)-1])
 
-        def lincorr(row):
-            """
-            Should be rewritten to be more apply friendly
-            """
-            corr, y = linear_correction(bands, row[wavelengths].__array__(), wavelengths)
-            return Spectrum(corr, index=wavelengths)
+        def lincorr(row, nodes = None, correction_nodes=[], correction = linear, **kwargs):
+            data = row[wavelengths].__array__()
+            if nodes == None:
+                nodes = [wavelengths[0], wavelengths[1]]
+            return continuum_correction(data, wavelengths, nodes,
+                                        correction_nodes, correction, **kwargs)
 
-        data = self.apply(lincorr, axis=1)
+        data = self.apply(lincorr, axis=1, nodes=nodes,
+                          correction_nodes = correction_nodes,
+                          correction = correction, **kwargs)[0]
+        print(data)
+
         return Spectra(data, wavelengths=self.wavelengths, tolerance = self.tolerance)
 
 

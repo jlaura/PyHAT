@@ -239,173 +239,70 @@ def remove_field_name(a, name):
     b = a[names]
     return b
 
+def linear(data, wv_array):
+    y1 = data[0]
+    y2 = data[-1]
+    wv1 = wv_array[0]
+    wv2 = wv_array[-1]
+    m = (y2 - y1) / ( wv2 - wv1)
+    b = y1 - (m * wv1)
+    y = (m * wv_array + b)
+    return y
 
-def linear_correction(bands, ref_array, wv_array):
-    """
-    Perform a linear continuum correction.
+def regression(data, wv_array):
+    m,b,_,_,_ =  ss.linregress(wv_array, data)
+    regressed_continuum = m * wv_array + b
+    return  data / regressed_continuum
 
-    Parameters
-    ----------
-        bands     : tuple(int)
-            Index of bands used to perform the continuum correction.
-
-        ref_array : array(float)
-            The reference array on which we will perform the continuum
-            correction.
-
-        wv_array  : array(float):
-            The array of wavelengths used to calculate the continuum correction.
-
-    Returns
-    -------
-        corrected : array(float)
-            The continuum corrected ref array.
-
-        y         : int
-            Continuum slope  @@TODO Check with J to make sure this is the correct description
-    """
-    try:
-        y1 = ref_array[bands[0]]
-        y2 = ref_array[bands[1]]
-        wv1 = wv_array[bands[0]]
-        wv2 = wv_array[bands[1]]
-
-        m = (y2-y1) / (wv2 - wv1)
-        b = y1 - (m * wv1)
-        y = (m * wv_array) + b
-        corrected = ref_array / y
-    except ZeroDivisionError:
-        return 0,0
-
-
-    return corrected, y
-
-def horgan_correction(reflectance, wavelength, a, b, c, window):
+def horgan(data, wv_array, points, window):
     #Define the search windows
-    lowerwindow = np.where((wavelength > a - window) & (wavelength < a + window))[0]
-    middlewindow = np.where((wavelength > b - window) & (wavelength < b + window))[0]
-    upperwindow = np.where((wavelength > c - window) & (wavelength < c + window))[0]
+    windows = np.empty(len(points), dtype=list)
+    for i, point in enumerate(points):
+        windows[i] = ((np.where((wv_array > point - window) & (wv_array < point + window))[0]))
+
     #Get the maximum within the window
-    maxa = reflectance[lowerwindow].argmax() + lowerwindow[0]
-    maxb = reflectance[middlewindow].argmax() + middlewindow[0]
-    maxc = reflectance[upperwindow].argmax() + upperwindow[0]
-    itercounter = 0
-    iterating = True
-    # @@TODO ask about this code.  Why loop if there's an unconditional
-    #  flag that breaks the loop after the first iteration?
-    while iterating:
-        x = np.asarray([wavelength[maxa],wavelength[maxb], wavelength[maxc]])
-        y = np.asarray([reflectance[maxa],reflectance[maxb], reflectance[maxc]])
-        fit = np.polyfit(x,y,2)
-        continuum = np.polyval(fit, wavelength)
-        continuum_corrected = reflectance / continuum
-        iterating = False
-        if itercounter == 9:
-            print('Unable to converge')
-            break
-        itercounter += 1
+    maxima = np.empty(len(points), dtype = int)
+    for i, t_window in enumerate(windows):
+        maxima[i] = data[t_window.argmax() + t_window[0]]
 
-    return continuum_corrected, continuum
+    print(maxima)
 
-def regression_correction(wavelengths,reflectance):
-    m,b,_,_,_ =  ss.linregress(wavelengths, reflectance)
-    regressed_continuum = m * wavelengths + b
-    return reflectance / regressed_continuum, regressed_continuum
+    x = np.asarray([wv_array[i-1] for i in maxima])
+    y = np.asarray([data[i-1] for i in maxima])
 
+    fit = np.polyfit(x,y,2)
+    continuum = np.polyval(fit,wv_array)
+    continuum_corrected =  data / continuum
 
-def linear_correct_all(self, bands):
-    """
-    Convenience function used to perform continuum correction on all
-    observations in Spectrum or HCube objects.
+    return continuum_corrected
 
-    Parameters
-    ----------
-        bands : tuple(int)
-            Index of bands used to perform the continuum correction.
+def continuum_correction(data, wv, nodes, correction_nodes=[], correction=linear, **kwargs):
+    if not correction_nodes:
+        correction_nodes = nodes
 
-    Returns
-    -------
-        self.data : numpy array(float)
-            A numpy array containing continuum corrected values.
+    correction_idx = []
+    for start, stop in zip(correction_nodes, correction_nodes[1:]):
+        start = np.where(wv == start)[0][0]
+        stop = np.where(wv == stop)[0][0]
+        correction_idx.append((start, stop))
+    # Make a copy of the input data that will house the corrected spectra
+    corrected = np.copy(data)
+    denom = np.zeros(data.shape)
 
-        y : array(int)
-            An array containing continuum slopes.
+    for i, (start, stop) in enumerate(zip(nodes, nodes[1:])):
+        # Get the start and stop indices into the wavelength array. These define the correction nodes
+        start_idx = np.where(wv == start)[0][0]
+        stop_idx = np.where(wv == stop)[0][0]
 
-    Note
-    ----
-        Use with caution - this function mutates the object's "data" field.
+        # Grab the correction indices.  These define the length of the line to be corrected
+        cor_idx = correction_idx[i]
+        # Compute an arbitrary correction
+        y = correction(data[start_idx:stop_idx], wv[cor_idx[0]:cor_idx[1]], **kwargs)
 
-    """
-    y = np.empty(self.data.shape)
-    for obs_id in range(len(self.data)):
-        self.data[obs_id], y[obs_id] = linear_correction(bands,
-                                                         self.data[obs_id],
-                                                         self.wavelengths)
-    return self.data, y
-
-
-def horgan_correct_all(self, a,b,c, window):
-    """
-    Convenience function used to perform continuum correction on all
-    observations in Spectrum or HCube objects.
-
-    Parameters
-    ----------
-        bands : tuple(int)
-            Index of bands used to perform the continuum correction.
-
-    Returns
-    -------
-        self.data : numpy array(float)
-            A numpy array containing continuum corrected values.
-
-        y : array(int)
-            An array containing continuum slopes.
-
-    Note
-    ----
-        Use with caution - this function mutates the object's "data" field.
-
-    """
-    y = np.empty(self.data.shape)
-    for obs_id in range(len(self.data)):
-        self.data[obs_id], y[obs_id] = horgan_correction(self.data[obs_id],
-                                                         self.wavelengths,
-                                                         a,
-                                                         b,
-                                                         c,
-                                                         window)
-    return self.data, y
-
-
-def regression_correct_all(self):
-    """
-    Convenience function used to perform continuum correction on all
-    observations in Spectrum or HCube objects.
-
-    Parameters
-    ----------
-        bands : tuple(int)
-            Index of bands used to perform the continuum correction.
-
-    Returns
-    -------
-        self.data : numpy array(float)
-            A numpy array containing continuum corrected values.
-
-        y : array(int)
-            An array containing continuum slopes.
-
-    Note
-    ----
-        Use with caution - this function mutates the object's "data" field.
-
-    """
-    y = np.empty(self.data.shape)
-    for obs_id in range(len(self.data)):
-        self.data[obs_id], y[obs_id] = regression_correction(self.data[obs_id],
-                                                             self.wavelengths)
-    return self.data, y
+        # Apply the correction to a copy of the input data and then step to the next subset
+        corrected[cor_idx[0]:cor_idx[1]] = data[cor_idx[0]:cor_idx[1]] / y
+        denom[cor_idx[0]:cor_idx[1]] = y
+    return corrected, denom
 
 def generic_func(data, wv_array, wavelengths, func = None):
     """
