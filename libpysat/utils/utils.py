@@ -265,8 +265,6 @@ def horgan(data, wv_array, points, window):
     for i, t_window in enumerate(windows):
         maxima[i] = data[t_window.argmax() + t_window[0]]
 
-    print(maxima)
-
     x = np.asarray([wv_array[i-1] for i in maxima])
     y = np.asarray([data[i-1] for i in maxima])
 
@@ -282,8 +280,8 @@ def continuum_correction(data, wv, nodes, correction_nodes=[], correction=linear
 
     correction_idx = []
     for start, stop in zip(correction_nodes, correction_nodes[1:]):
-        start = np.where(wv == start)[0][0]
-        stop = np.where(wv == stop)[0][0]
+        start = get_band_numbers(wv, [start], tolerance = .01)
+        stop = get_band_numbers(wv, [stop], tolerance = .01)
         correction_idx.append((start, stop))
     # Make a copy of the input data that will house the corrected spectra
     corrected = np.copy(data)
@@ -291,13 +289,13 @@ def continuum_correction(data, wv, nodes, correction_nodes=[], correction=linear
 
     for i, (start, stop) in enumerate(zip(nodes, nodes[1:])):
         # Get the start and stop indices into the wavelength array. These define the correction nodes
-        start_idx = np.where(wv == start)[0][0]
-        stop_idx = np.where(wv == stop)[0][0]
+        start_idx = get_band_numbers(wv, [start], tolerance = .02)
+        stop_idx = get_band_numbers(wv, [stop], tolerance = .02)
 
         # Grab the correction indices.  These define the length of the line to be corrected
         cor_idx = correction_idx[i]
         # Compute an arbitrary correction
-        y = correction(data[start_idx:stop_idx], wv[cor_idx[0]:cor_idx[1]], **kwargs)
+        y = correction(data[start_idx:stop_idx + 1], wv[cor_idx[0]:cor_idx[1] + 1], **kwargs)
 
         # Apply the correction to a copy of the input data and then step to the next subset
         corrected[cor_idx[0]:cor_idx[1]] = data[cor_idx[0]:cor_idx[1]] / y
@@ -330,24 +328,30 @@ def generic_func(data, wv_array, wavelengths, func = None):
     subset = data.take(bands, axis = 0)
     return func(subset, wavelengths)
 
-def get_band_numbers(wavelengths, wave_values):
+def get_band_numbers(wavelengths, wave_values, tolerance = .01):
     '''
     This parses the wavelenth list,finds the mean wavelength closest to the
-    provided wavelength, and returns the index of that value.  One (1) is added
-    to the index to grab the correct band.
+    provided wavelength, and returns the index of that value.
 
     Parameters
     ----------
-    wavelengths: A list of wavelengths, 0 based indexing
-    *args: A variable number of input wavelengths to map to bands
+    wavelengths : list
+                  A list of wavelengths, 0 based indexing
+
+    wave_values : list
+                  A list of input wavelengths to map to bands
 
     Returns
     -------
-    bands: A variable length list of bands.  These are in the same order they are
-    provided in.  Beware that altering the order will cause unexpected results.
+    bands : list
+            A variable length list of bands.  These are in the same order they are
+            provided in.  Beware that altering the order will cause unexpected results.
 
     '''
     bands = []
     for x in wave_values:
-        bands.append(min(range(len(wavelengths)), key=lambda i: abs(wavelengths[i]-x)))
-    return bands
+        bands.append(np.where(np.isclose(wavelengths, x, tolerance))[0][0])
+    if len(bands) == 1:
+        return bands[0]
+    else:
+        return bands

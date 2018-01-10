@@ -1,9 +1,9 @@
-from libpysat.utils.utils import generic_func
+from libpysat.utils.utils import generic_func, continuum_correction, linear
 from libpysat.derived.m3 import supplemental_funcs as sp_funcs
 
 #TODO: The continuum in these funcs should default to Linear
 
-def curvature(data, wv_array, continuum = None, continuum_args = ()):
+def curvature(data, wv_array, correction = linear, continuum_args = ([750, 1550])):
     '''
     Name: Curvature
     Parameter:1 um Band Curvature
@@ -32,8 +32,8 @@ def curvature(data, wv_array, continuum = None, continuum_args = ()):
        the processed ndarray
     '''
     wavelengths = [749, 909, 1109]
-    if continuum:
-        continuum(data, wavelengths, continuum, continuum_args)
+    continuum_correction(data, wv_array, continuum_args,
+                         correction_nodes = (wavelengths[0], wavelengths[-1]), correction = correction)
     return generic_func(data, wv_array, wavelengths, func = sp_funcs.curv_func)
 
 def fe_est(data, wv_array, continuum = None, continuum_args = ()):
@@ -69,7 +69,7 @@ def fe_est(data, wv_array, continuum = None, continuum_args = ()):
     '''
     wavelengths = [749, 949]
     if continuum:
-        continuum(data, wavelengths, continuum, continuum_args)
+        continuum_correction(data, wv_array, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = sp_funcs.fe_est_func)
 
 def fe_mare_est(data, wv_array, continuum = None, continuum_args = ()):
