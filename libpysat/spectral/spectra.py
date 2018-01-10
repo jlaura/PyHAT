@@ -46,14 +46,10 @@ class Spectrum(pd.Series):
     def _constructor_expanddim(self):
         return pd.DataFrame
 
-<<<<<<< HEAD
-    def continuum_correction(self, nodes = None, correction_nodes = [], method = linear, **kwargs):
-=======
 
-    def linear_correction(self):
->>>>>>> 3555a849d361abdf008dcd7a4473c297cb3e11be
+    def continuum_correction(self, nodes = None, correction_nodes = [], method = linear, **kwargs):
         """
-        apply linear correction to all spectra
+        apply continuum correction to all spectra
         """
 
         return Spectrum(continuum_correction(self.loc[self.wavelengths].__array__(), self.wavelengths, nodes, correction_nodes, method, **kwargs)[0])
@@ -154,7 +150,7 @@ class Spectra(object):
         tolerance : Real
                     Tolerance for floating point index
         """
-        
+
         wavelengths, _, ds = io_moon_minerology_mapper.openm3(path_to_file)
 
         m3_array = ds.ReadAsArray().swapaxes(0, 2)
