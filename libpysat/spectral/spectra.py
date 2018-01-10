@@ -236,14 +236,34 @@ class _SpectraDataFrame(pd.DataFrame):
 
 class _SpectraArray(np.ndarray):
 
-    def __new__(cls, ndarray, wavelengths=[], tolerance=.5):
-
+    def __new__(cls, ndarray, wavelengths=[], waxis=None, tolerance=.5):
         obj = np.asarray(ndarray).view(cls)
         obj.wavelengths = pd.Float64Index(wavelengths)
-        obj.index = Spectrum(range(obj.shape[-1]-1), index=obj.wavelengths, wavelengths=obj.wavelengths, tolerance=tolerance)
-
+        obj._get = _idx.ArrayLocIndexer(obj=obj, waxis=waxis, tolerance=tolerance)
         return obj
+
+
+    def __getitem__(self, keys):
+        if hasattr(keys, '__iter__'):
+            if self._get.waxis <= len(keys):
+                # wavelength is being sliced
+                wavelengths=self.wavelengths[keys[self._get.waxis]]
+                newarr = super(_SpectraArray, self).__getitem__(keys)
+                return _SpectraArray(newarr, wavelengths, self._get.waxis, self._get.tolerance)
+            else:
+                newarr = super(_SpectraArray, self).__getitem__(keys)
+                return _SpectraArray(newarr, self.wavelengths, self._get.waxis, self._get.tolerance)
+        else:
+            if self._get.waxis == 0:
+                # wavelength is being sliced
+                wavelengths=wavelengths[keys[self._get.waxis]]
+                newarr = super(_SpectraArray, self).__getitem__(keys)
+                return _SpectraArray(newarr, wavelengths, self._get.waxis, self._get.tolerance)
+            else:
+                newarr = super(_SpectraArray, self).__getitem__(keys)
+                return _SpectraArray(newarr, self.wavelengths, self._get.waxis, self._get.tolerance)
+
 
     @property
     def get(self):
-        return self.index._get
+        return self._get

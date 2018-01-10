@@ -204,6 +204,7 @@ def _get_subindices(keys, indexes, tolerance=0):
 
     num_keys = len(keys)
     num_indexes = len(indexes)
+
     if num_keys > num_indexes:
         raise KeyError('{} keys for {}-dimensional keyspace'.format(num_keys, num_indexes))
 
@@ -256,12 +257,10 @@ class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
                 columns = subindices[1:2] if subindices[1:2] else tuple([slice(None, None)])
 
                 columns = columns[0]
-                print(x, columns)
                 subindices = tuple([x[0], columns])
 
 
             subframe = super(SpectrumLocIndexer, self).__getitem__(subindices)
-            print(subframe)
 
         except Exception as e:
             subframe = super(SpectrumLocIndexer, self).__getitem__(key)
@@ -270,10 +269,8 @@ class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
             subframe.wavelengths = self.obj.wavelengths
             subframe.metadata = self.obj.metadata
         elif isinstance(subframe, sp._SpectraDataFrame):
-            print(subframe)
             subframe = sp.Spectra(subframe, wavelengths=self.obj.wavelengths, tolerance=self.tolerance)
         else :  # most likely a scalar
-            print(subframe)
             subframe = sp.Spectrum(subframe, index=key, wavelengths=self.obj.wavelengths, tolerance=self.tolerance)
 
 
@@ -293,3 +290,45 @@ class SpectrumiLocIndexer(pd.core.indexing._iLocIndexer):
         else:
             subframe = sp.Spectra(subframe, wavelengths=self.obj.wavelengths, tolerance = self.obj._get.tolerance)
         return subframe
+
+
+class ArrayLocIndexer(object):
+
+    def __init__(self, name='loc', obj=None, waxis=None, tolerance=.5):
+        """
+        """
+        self.waxis = waxis
+        if waxis is None:
+            self.waxis = obj.ndim-1
+
+        self.name = name
+        self.obj = obj
+        self.tolerance = tolerance
+
+        index = []
+        for i in self.obj.shape:
+            index.append(list(range(i)))
+
+        if self.waxis < self.obj.ndim:
+            index[self.waxis] = self.obj.wavelengths
+            self.index = pd.MultiIndex.from_product(index)
+            wavesidx = list(range(self.obj.shape[self.waxis]))
+            self.wave_table = dict(zip(self.obj.wavelengths, wavesidx))
+
+
+    def __getitem__(self, keys):
+        """
+        """
+        try:
+            indexes = list(_get_subindices(keys, tuple(self.index.levels), tolerance=self.tolerance))
+        except TypeError as e:
+            indexes = [_get_subindices(keys, tuple(self.index.levels), tolerance=self.tolerance)]
+
+        try:
+            indexes[self.waxis] = [self.wave_table[x] for x in indexes[self.waxis]]
+            return self.obj[indexes]
+        except TypeError:  # only
+            idx = self.wave_table[indexes[self.waxis]]
+            return self.obj[idx]
+        except IndexError:
+            return self.obj[indexes]
