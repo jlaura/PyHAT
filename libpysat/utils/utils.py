@@ -1,8 +1,33 @@
 from functools import reduce
+from functools import singledispatch
+from functools import update_wrapper
 
 import numpy as np
 import pandas as pd
 import scipy.stats as ss
+
+
+def method_singledispatch(func):
+    """
+    New dispatch decorator that looks at the second argument to
+    avoid self
+    Parameters
+    ----------
+    func : Object
+        Function object to be dispatched
+    Returns
+    wrapper : Object
+        Wrapped function call chosen by the dispatcher
+    ----------
+    """
+    dispatcher = singledispatch(func)
+
+    def wrapper(*args, **kw):
+        return dispatcher.dispatch(args[1].__class__)(*args, **kw)
+
+    wrapper.register = dispatcher.register
+    update_wrapper(wrapper, dispatcher)
+    return wrapper
 
 
 def crossform(a):
