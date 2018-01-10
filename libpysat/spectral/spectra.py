@@ -7,18 +7,13 @@ from numbers import Real
 from numbers import Number
 
 from functools import reduce
-from libpysat.spectral._subindices import _get_subindices
-from libpysat.utils.utils import continuum_correction, linear, horgan, regression
 from functools import singledispatch
 
 from plio.io import io_spectral_profiler
 
-
 from . import _index as _idx
 
-from .continuum import lincorr
-
-from libpysat.utils.utils import linear_correction
+from libpysat.utils.utils import continuum_correction, linear, horgan, regression
 from libpysat.utils.utils import method_singledispatch
 
 
@@ -51,6 +46,9 @@ class Spectrum(pd.Series):
         """
         apply continuum correction to all spectra
         """
+
+        if nodes == None:
+            nodes = [self.iloc[0],self.iloc[-1]]
 
         return Spectrum(continuum_correction(self.loc[self.wavelengths].__array__(), self.wavelengths, nodes, correction_nodes, method, **kwargs)[0])
 
