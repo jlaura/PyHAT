@@ -46,12 +46,7 @@ class Spectrum(pd.Series):
     def _constructor_expanddim(self):
         return pd.DataFrame
 
-<<<<<<< HEAD
     def continuum_correction(self, nodes = None, correction_nodes = [], method = linear, **kwargs):
-=======
-
-    def linear_correction(self):
->>>>>>> 3555a849d361abdf008dcd7a4473c297cb3e11be
         """
         apply linear correction to all spectra
         """
