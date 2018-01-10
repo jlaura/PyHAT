@@ -1,7 +1,9 @@
 from libpysat.derived.m3 import development_funcs as dv_funcs
 from libpysat.utils.utils import generic_func
 
-def bd1umratio(data, wv_array, continuum = linear, continuum_args = ()):
+#TODO: The continuum in these funcs should default to Linear
+
+def bd1umratio(data, wv_array, continuum = None, continuum_args = ()):
     """
     Name: BD1um Ratio
     Parameter: BD930 / BD990
@@ -37,7 +39,7 @@ def bd1umratio(data, wv_array, continuum = linear, continuum_args = ()):
         continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = dv_funcs.bd1umratio_func)
 
-def h2o2(data, wv_array, continuum = linear, continuum_args = ()):
+def h2o2(data, wv_array, continuum = None, continuum_args = ()):
     """
     Name: NBD1400
     Parameter:1.4um OH Band
@@ -74,7 +76,7 @@ def h2o2(data, wv_array, continuum = linear, continuum_args = ()):
         continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = dv_funcs.h2o2_func)
 
-def h2o3(data, wv_array, continuum = linear, continuum_args = ()):
+def h2o3(data, wv_array, continuum = None, continuum_args = ()):
     """
     Name: NBD1480
     Parameter:1.48um OH Band
@@ -111,7 +113,7 @@ def h2o3(data, wv_array, continuum = linear, continuum_args = ()):
         continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = dv_funcs.h2o3_func)
 
-def h2o4(data, wv_array, continuum = linear, continuum_args = ()):
+def h2o4(data, wv_array, continuum = None, continuum_args = ()):
     """
     Name: NBD2300
     Parameter: 2.3um OH Band
@@ -148,7 +150,7 @@ def h2o4(data, wv_array, continuum = linear, continuum_args = ()):
         continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = dv_funcs.h2o4_func)
 
-def h2o5(data, wv_array, continuum = linear, continuum_args = ()):
+def h2o5(data, wv_array, continuum = None, continuum_args = ()):
     """
     Name: HBD2700
     Parameter:2.7um OH Band
@@ -184,7 +186,7 @@ def h2o5(data, wv_array, continuum = linear, continuum_args = ()):
         continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = dv_funcs.h2o5_func)
 
-def ice(data, wv_array, continuum = linear, continuum_args = ()):
+def ice(data, wv_array, continuum = None, continuum_args = ()):
     """
     Name: HBD2850
     Parameter:3um Ice Band
@@ -220,7 +222,7 @@ def ice(data, wv_array, continuum = linear, continuum_args = ()):
         continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = dv_funcs.ice_func)
 
-def bd2umratio(data, wv_array, continuum = linear, continuum_args = ()):
+def bd2umratio(data, wv_array, continuum = None, continuum_args = ()):
     """
     Name: BD2um Ratio
     Parameter:2um band depth ratio
