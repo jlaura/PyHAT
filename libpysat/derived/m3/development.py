@@ -32,7 +32,7 @@ def bd1umratio(data, wv_array, continuum = None, continuum_args = ()):
      : ndarray
        the processed ndarray
     """
-    wavelengths = [660 ,699, 929, 989, 1579, 1618]
+    wavelengths = [699, 929, 989, 1579]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = dv_funcs.bd1umratio_func)
@@ -69,7 +69,7 @@ def h2o2(data, wv_array, continuum = None, continuum_args = ()):
      : ndarray
        the processed ndarray
     """
-    wavelengths = [1329, 1348, 1408, 1428, 1448, 1578, 1618]
+    wavelengths = [1348, 1408, 1428, 1448, 1578]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = dv_funcs.h2o2_func)
@@ -106,7 +106,7 @@ def h2o3(data, wv_array, continuum = None, continuum_args = ()):
      : ndarray
        the processed ndarray
     """
-    wavelengths = [1408, 1428, 1448, 1488, 1508, 1528, 1548]
+    wavelengths = [1428, 1448, 1488, 1508, 1528]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = dv_funcs.h2o3_func)
@@ -143,7 +143,7 @@ def h2o4(data, wv_array, continuum = None, continuum_args = ()):
      : ndarray
        the processed ndarray
     """
-    wavelengths = [2177, 2218, 2258, 2378, 2418, 2298, 2338, 2377]
+    wavelengths = [2218, 2258, 2378, 2418, 2298, 2338]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = dv_funcs.h2o4_func)
@@ -179,7 +179,7 @@ def h2o5(data, wv_array, continuum = None, continuum_args = ()):
      : ndarray
        the processed ndarray
     """
-    wavelengths = [2537, 2578, 2618, 2658, 2698, 2738, 2776]
+    wavelengths = [2578, 2618, 2658, 2698, 2738]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = dv_funcs.h2o5_func)
@@ -215,7 +215,7 @@ def ice(data, wv_array, continuum = None, continuum_args = ()):
      : ndarray
        the processed ndarray
     """
-    wavelengths = [2497, 2538, 2578, 2618, 2817, 2857, 2897, 2936]
+    wavelengths = [2538, 2578, 2618, 2817, 2857, 2897]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = dv_funcs.ice_func)
@@ -251,7 +251,7 @@ def bd2umratio(data, wv_array, continuum = None, continuum_args = ()):
      : ndarray
        the processed ndarray
     """
-    wavelengths = [1548, 1578, 1898, 2298, 2578, 2616]
+    wavelengths = [1578, 1898, 2298, 2578]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = dv_funcs.bd2umratio_func)

@@ -431,7 +431,7 @@ def generic_func(data, wv_array, wavelengths, func = None):
     """
     bands = getbandnumbers(wv_array, wavelengths)
     subset = data.take(bands, axis = 0)
-    return func(subset[1:-1])
+    return func(subset, wavelengths)
 
 def getbandnumbers(wavelengths, wave_values):
     '''

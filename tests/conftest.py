@@ -23,5 +23,13 @@ def five_dim():
     return n_dim(5)
 
 @pytest.fixture
+def three_dim():
+    return n_dim(3)
+
+@pytest.fixture
 def four_dim():
     return n_dim(4)
+
+@pytest.fixture
+def two_dim():
+    return n_dim(2)
