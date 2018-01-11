@@ -12,7 +12,7 @@ def fe_est_func(bands, _):
     y0 = 1.19
     x0 = 0.08
 
-    return (17.427*(-1*(np.arctan(((R949/R749)-y0)/(R749 - x0))))) - 7.565
+    return (17.427 * ( -1 * (np.arctan(((R949 / R749) - y0) / (R749 - x0))))) - 7.565
 
 def fe_mare_est_func(bands, _):
     R749, R949 = bands

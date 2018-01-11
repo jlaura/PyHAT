@@ -1,22 +1,18 @@
-import pandas as pd
-import random as rand
-
-import numpy as np
 
 from numbers import Real
 from numbers import Number
-
 from functools import reduce
-from functools import singledispatch
 
+import pandas as pd
+import random as rand
+import numpy as np
 from plio.io import io_spectral_profiler, io_moon_minerology_mapper
 
 from . import _index as _idx
-
+from .continuum import lincorr
+from libpysat.spectral._index import _get_subindices
 from libpysat.utils.utils import continuum_correction, linear, horgan, regression
 from libpysat.utils.utils import method_singledispatch
-
-
 
 class Spectrum(pd.Series):
 
@@ -40,7 +36,6 @@ class Spectrum(pd.Series):
     @property
     def _constructor_expanddim(self):
         return pd.DataFrame
-
 
     def continuum_correction(self, nodes = None, correction_nodes = [], method = linear, **kwargs):
         """
@@ -136,7 +131,7 @@ class Spectra(object):
 
 
     @classmethod
-    def from_m3(cls, path_to_file, tolerance=2):
+    def from_m3(cls, path_to_file, tolerance = 2, waxis = 0):
         """
         Generate DataFrame from spectral profiler data.
 
@@ -150,21 +145,9 @@ class Spectra(object):
         """
 
         wavelengths, _, ds = io_moon_minerology_mapper.openm3(path_to_file)
+        m3_array = ds.ReadAsArray()
 
-        m3_array = ds.ReadAsArray().swapaxes(0, 2)
-        m3_array = np.reshape(m3_array, (-1, m3_array.shape[-1]), order = "A")
-
-        coords = [(i%ds.RasterXSize, i//ds.RasterXSize) for i in range(ds.RasterXSize * ds.RasterYSize)]
-        index = pd.MultiIndex.from_tuples(coords, names = ['x', 'y'])
-        m3_df = pd.DataFrame(data = m3_array, columns = wavelengths, index = index)
-
-        meta = ds.GetMetadata_Dict()
-        metadata = meta.keys()
-        meta_df = pd.DataFrame(meta, index = index)
-
-        spectra_df = m3_df.merge(meta_df, left_index = True, right_index = True)
-        spectra_df.sort_index(inplace = True)
-        return cls(spectra_df, wavelengths, metadata, tolerance=tolerance)
+        return _SpectraArray(m3_array, wavelengths, waxis = waxis, tolerance=tolerance)
 
 
 
@@ -317,7 +300,7 @@ class _SpectraArray(np.ndarray):
     def __new__(cls, ndarray, wavelengths=[], waxis=None, tolerance=.5):
         obj = np.asarray(ndarray).view(cls)
         obj.wavelengths = pd.Float64Index(wavelengths)
-        obj._get = _idx.ArrayLocIndexer(obj=obj, waxis=waxis, tolerance=tolerance)
+        obj._get = _idx._ArrayLocIndexer(obj=obj, waxis=waxis, tolerance=tolerance)
         return obj
 
 
@@ -337,24 +320,30 @@ class _SpectraArray(np.ndarray):
           copy of the subset of the array
 
         """
-        if hasattr(keys, '__iter__'):
-            if self._get.waxis <= len(keys):
-                # wavelength is being sliced
-                wavelengths=self.wavelengths[keys[self._get.waxis]]
-                newarr = super(_SpectraArray, self).__getitem__(keys)
-                return _SpectraArray(newarr, wavelengths, self._get.waxis, self._get.tolerance)
+        try:
+            if hasattr(keys, '__iter__'):
+                if self._get.waxis <= len(keys):
+                    # wavelength is being sliced
+                    wavelengths=self.wavelengths[keys[self._get.waxis]]
+                    newarr = super(_SpectraArray, self).__getitem__(keys)
+                    return _SpectraArray(newarr, wavelengths, self._get.waxis, self._get.tolerance)
+                else:
+                    newarr = super(_SpectraArray, self).__getitem__(keys)
+                    return _SpectraArray(newarr, self.wavelengths, self._get.waxis, self._get.tolerance)
             else:
-                newarr = super(_SpectraArray, self).__getitem__(keys)
-                return _SpectraArray(newarr, self.wavelengths, self._get.waxis, self._get.tolerance)
-        else:
-            if self._get.waxis == 0:
-                # wavelength is being sliced
-                wavelengths=wavelengths[keys[self._get.waxis]]
-                newarr = super(_SpectraArray, self).__getitem__(keys)
-                return _SpectraArray(newarr, wavelengths, self._get.waxis, self._get.tolerance)
-            else:
-                newarr = super(_SpectraArray, self).__getitem__(keys)
-                return _SpectraArray(newarr, self.wavelengths, self._get.waxis, self._get.tolerance)
+                if self._get.waxis == 0:
+                    # wavelength is being sliced
+                    wavelengths=self.wavelengths[keys]
+                    newarr = super(_SpectraArray, self).__getitem__(keys)
+                    if isinstance(keys, slice):
+                        return _SpectraArray(newarr, wavelengths, self._get.waxis, self._get.tolerance)
+                    else:
+                        return _SpectraArray(newarr, [wavelengths], self._get.waxis, self._get.tolerance)
+                else:
+                    newarr = super(_SpectraArray, self).__getitem__(keys)
+                    return _SpectraArray(newarr, self.wavelengths, self._get.waxis, self._get.tolerance)
+        except Exception:
+            return super(_SpectraArray, self).__getitem__(keys)
 
     @property
     def get(self):
