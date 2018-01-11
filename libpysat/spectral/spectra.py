@@ -12,7 +12,6 @@ from . import _index as _idx
 from .continuum import lincorr
 from libpysat.spectral._index import _get_subindices
 from libpysat.utils.utils import continuum_correction, linear, horgan, regression
-from libpysat.utils.utils import linear_correction
 from libpysat.utils.utils import method_singledispatch
 
 class Spectrum(pd.Series):
