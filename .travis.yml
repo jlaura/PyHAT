@@ -53,7 +53,7 @@ after_success:
   - conda build --token $CONDA_UPLOAD_TOKEN --python $PYTHON_VERSION .
 
 before_deploy:
-  - pip install travis-sphinx
+  - pip install travis-sphinx, nbshpinx
   - travis-sphinx build --source=docs --nowarn # The sphinx build script
 
 deploy:
