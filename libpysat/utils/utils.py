@@ -271,7 +271,8 @@ def linear(data, wv_array):
     wv2 = wv_array[-1]
     m = (y2 - y1) / ( wv2 - wv1)
     b = y1 - (m * wv1)
-    y = (m * wv_array + b)
+    mx = np.expand_dims(m, -1) * wv_array
+    y = (mx.swapaxes(0, -1).swapaxes(1, -1) + b)
     return y
 
 def regression(data, wv_array):
@@ -307,20 +308,20 @@ def continuum_correction(data, wv, nodes, correction_nodes=[], correction=linear
     for start, stop in zip(correction_nodes, correction_nodes[1:]):
         start = get_band_numbers(wv, [start], tolerance = .01)
         stop = get_band_numbers(wv, [stop], tolerance = .01)
-        correction_idx.append((start, stop))
+        correction_idx.append((start, stop + 1))
     # Make a copy of the input data that will house the corrected spectra
     corrected = np.copy(data)
     denom = np.zeros(data.shape)
 
     for i, (start, stop) in enumerate(zip(nodes, nodes[1:])):
         # Get the start and stop indices into the wavelength array. These define the correction nodes
-        start_idx = get_band_numbers(wv, [start], tolerance = .02)
-        stop_idx = get_band_numbers(wv, [stop], tolerance = .02)
+        start_idx = get_band_numbers(wv, [start], tolerance = .01)
+        stop_idx = get_band_numbers(wv, [stop], tolerance = .01)
 
         # Grab the correction indices.  These define the length of the line to be corrected
         cor_idx = correction_idx[i]
         # Compute an arbitrary correction
-        y = correction(data[start_idx:stop_idx + 1], wv[cor_idx[0]:cor_idx[1] + 1], **kwargs)
+        y = correction(data[start_idx:stop_idx + 1], wv[cor_idx[0]:cor_idx[1]], **kwargs)
 
         # Apply the correction to a copy of the input data and then step to the next subset
         corrected[cor_idx[0]:cor_idx[1]] = data[cor_idx[0]:cor_idx[1]] / y
@@ -349,8 +350,7 @@ def generic_func(data, wv_array, wavelengths, func = None):
     : func
       Returns the result from the given function
     """
-    bands = get_band_numbers(wv_array, wavelengths)
-    subset = data.take(bands, axis = 0)
+    subset = data.get[wavelengths, :, :]
     return func(subset, wavelengths)
 
 def get_band_numbers(wavelengths, wave_values, tolerance = .01):
@@ -380,3 +380,35 @@ def get_band_numbers(wavelengths, wave_values, tolerance = .01):
         return bands[0]
     else:
         return bands
+
+def linear_correction(bands, ref_array, wv_array):
+    """
+    Perform a linear continuum correction.
+    Parameters
+    ----------
+        bands     : tuple(int)
+            Index of bands used to perform the continuum correction.
+        ref_array : array(float)
+            The reference array on which we will perform the continuum
+            correction.
+        wv_array  : array(float):
+            The array of wavelengths used to calculate the continuum correction.
+    Returns
+    -------
+        corrected : array(float)
+            The continuum corrected ref array.
+        y         : int
+            Continuum slope  @@TODO Check with J to make sure this is the correct description
+    """
+    try:
+        y1 = ref_array[bands[0]]
+        y2 = ref_array[bands[1]]
+        wv1 = wv_array[bands[0]]
+        wv2 = wv_array[bands[1]]
+
+        m = (y2-y1) / (wv2 - wv1)
+        b = y1 - (m * wv1)
+        y = (m * wv_array) + b
+        corrected = ref_array / y
+    except ZeroDivisionError:
+        return 0,0

@@ -119,3 +119,10 @@ def cubic(spectrum, nodes):
 correction_methods = {'linear': linear,
                       'regression': regression,
                       'cubic': cubic}
+
+def lincorr(spectrum):
+    wavelengths = spectrum.wavelengths.__array__()
+    bands = tuple([0, len(wavelengths)-1])
+
+    corr, y = linear_correction(bands, spectrum[wavelengths].__array__(), wavelengths)
+    return spectra.Spectrum(corr, index=wavelengths, wavelengths=wavelengths)
