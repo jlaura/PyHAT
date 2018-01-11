@@ -27,8 +27,8 @@ before_install:
   - conda update -q conda
   - conda info -a   # Useful for debugging any issues with conda
   # Create the env
-  - conda create -q -n test python=$PYTHON_VERSION
-  - source activate test
+  - conda create -q -n test_env python=$PYTHON_VERSION
+  - source activate test_env
 
 install:
   # Install dependencies
@@ -53,6 +53,7 @@ after_success:
   - conda build --token $CONDA_UPLOAD_TOKEN --python $PYTHON_VERSION .
 
 before_deploy:
+  - source activate test_env  # Reactivate the env to have all deps installed.
   - pip install travis-sphinx nbsphinx
   - travis-sphinx build --source=docs --nowarn # The sphinx build script
 
