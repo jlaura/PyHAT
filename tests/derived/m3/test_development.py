@@ -4,7 +4,6 @@ import numpy as np
 from libpysat.derived.m3 import development as dev
 from libpysat.spectral.spectra import Spectra
 
-# TODO: Change the default of continuum to linear
 @pytest.fixture
 def test_params(wavelengths):
     return (np.array(wavelengths), 1)

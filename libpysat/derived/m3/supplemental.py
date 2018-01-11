@@ -19,12 +19,6 @@ def curvature(data, wv_array):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
-
     Returns
     -------
      : ndarray
@@ -53,11 +47,6 @@ def fe_est(data, wv_array):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
 
     Returns
     -------
@@ -84,12 +73,6 @@ def fe_mare_est(data, wv_array):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
-
     Returns
     -------
      : ndarray
@@ -114,12 +97,6 @@ def luceyc_amat(data, wv_array):
     wv_array : ndarray
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
-
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
 
     Returns
     -------
@@ -146,12 +123,6 @@ def luceyc_omat(data, wv_array):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
-
     Returns
     -------
      : ndarray
@@ -177,12 +148,6 @@ def mare_omat(data, wv_array):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
-
     Returns
     -------
      : ndarray
@@ -206,12 +171,6 @@ def tilt(data, wv_array):
     wv_array : ndarray
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
-
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
 
     Returns
     -------

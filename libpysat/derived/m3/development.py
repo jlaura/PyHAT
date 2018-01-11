@@ -23,12 +23,6 @@ def bd1umratio(data, wv_array):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
-
     Returns
     -------
      : ndarray
@@ -57,12 +51,6 @@ def h2o2(data, wv_array):
     wv_array : ndarray
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
-
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
 
     Returns
     -------
@@ -93,12 +81,6 @@ def h2o3(data, wv_array):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
-
     Returns
     -------
      : ndarray
@@ -128,12 +110,6 @@ def h2o4(data, wv_array):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
-
     Returns
     -------
      : ndarray
@@ -161,12 +137,6 @@ def h2o5(data, wv_array):
     wv_array : ndarray
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
-
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
 
     Returns
     -------
@@ -196,12 +166,6 @@ def ice(data, wv_array):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
-
     Returns
     -------
      : ndarray
@@ -229,12 +193,6 @@ def bd2umratio(data, wv_array):
     wv_array : ndarray
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
-
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
 
     Returns
     -------
