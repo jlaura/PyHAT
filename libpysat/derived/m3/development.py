@@ -6,9 +6,9 @@ def bd1umratio(data, wv_array, continuum = None, continuum_args = ()):
     Name: BD1um Ratio
     Parameter: BD930 / BD990
     Formulation:
-        BD930 = 1 - ((R929) / (((R1579 - R699)/(1579 - 699)) * (929-699) + R699))
-        BD990 = 1 - ((R989) / (((R1579 - R699)/(1579 - 699)) * (989-699) + R699))
-        BDRatio = BD930 / BD990
+    BD930 = 1 - ((R929) / (((R1579 - R699)/(1579 - 699)) * (929-699) + R699))
+    BD990 = 1 - ((R989) / (((R1579 - R699)/(1579 - 699)) * (989-699) + R699))
+    BDRatio = BD930 / BD990
     Rationale: Possible Ti or impact melt
     Bands: R699, R929, R989, R1579
 
@@ -42,9 +42,9 @@ def h2o2(data, wv_array, continuum = None, continuum_args = ()):
     Name: NBD1400
     Parameter:1.4um OH Band
     Formulation:
-        RC = (R1348 + R1578) / 2
-        LC = (R1428 + R1448) / 2
-        BB = R1408
+    RC = (R1348 + R1578) / 2
+    LC = (R1428 + R1448) / 2
+    BB = R1408
     NBD1400 = 1 - 2 * (BB / (RC + LC))
     Rationale: H2O
     Bands: R1348, R1428, R1448, R1578
@@ -79,9 +79,9 @@ def h2o3(data, wv_array, continuum = None, continuum_args = ()):
     Name: NBD1480
     Parameter:1.48um OH Band
     Formulation:
-        RC = (R1428 + R1448) / 2
-        LC = (R1508 + R1528) / 2
-        BB = R1488
+    RC = (R1428 + R1448) / 2
+    LC = (R1508 + R1528) / 2
+    BB = R1488
     NBD1400 = 1 - 2 * (BB / (RC + LC))
     Rationale: H2O
     Bands: R1428, R1448, R1488, R1508, R1528
@@ -116,10 +116,10 @@ def h2o4(data, wv_array, continuum = None, continuum_args = ()):
     Name: NBD2300
     Parameter: 2.3um OH Band
     Formulation:
-        RC = (R2218 + R2258) / 2
-        LC = (R2378 + R2418) / 2
-        BB = (R2298 + R2338) / 2
-        NBD2300 = 1 - 2 * (BB / (RC + LC))
+    RC = (R2218 + R2258) / 2
+    LC = (R2378 + R2418) / 2
+    BB = (R2298 + R2338) / 2
+    NBD2300 = 1 - 2 * (BB / (RC + LC))
     Rationale: H2O
     Bands: R2218, R2258, R2378, R2418, R2298, R2338
 
@@ -153,9 +153,9 @@ def h2o5(data, wv_array, continuum = None, continuum_args = ()):
     Name: HBD2700
     Parameter:2.7um OH Band
     Formulation:
-        RC = (R2578 + R2618 + R2658) / 3
-        BB = (R2698 + R2738) / 2
-        HBD2700 = 1 - (BB / RC)
+    RC = (R2578 + R2618 + R2658) / 3
+    BB = (R2698 + R2738) / 2
+    HBD2700 = 1 - (BB / RC)
     Rationale: H2O
     Bands: R2578, R2618, R2658, R2698, R2738
 
@@ -189,9 +189,9 @@ def ice(data, wv_array, continuum = None, continuum_args = ()):
     Name: HBD2850
     Parameter:3um Ice Band
     Formulation:
-        RC = (R2538 + R2578 + R2618) / 3
-        BB = (R2817 + R2857 + R2897) / 3
-        HBD2700 = 1 - (BB / RC)
+    RC = (R2538 + R2578 + R2618) / 3
+    BB = (R2817 + R2857 + R2897) / 3
+    HBD2700 = 1 - (BB / RC)
     Rationale: Ice
     Bands: R2538, R2578, R2618, R2817, R2857, R2897
 
@@ -225,9 +225,9 @@ def bd2umratio(data, wv_array, continuum = None, continuum_args = ()):
     Name: BD2um Ratio
     Parameter:2um band depth ratio
     Formulation:
-        a = 1 - ((R1898) / (((R2578 - R1578)/(2578 - 1578)) * (1898-1578) + R1578))
-        b = 1 - ((R2298) / (((R2578 - R1578)/(2578 - 1578)) * (2298-1578) + R1578))
-        BD2um_ratio = a/b
+    a = 1 - ((R1898) / (((R2578 - R1578)/(2578 - 1578)) * (1898-1578) + R1578))
+    b = 1 - ((R2298) / (((R2578 - R1578)/(2578 - 1578)) * (2298-1578) + R1578))
+    BD2um_ratio = a/b
     Rationale: Possible Ti or impact melt
     Bands: R1578, R1898,R2298, R2578
 
