@@ -54,7 +54,8 @@ after_success:
 
 before_deploy:
   - source activate test_env  # Reactivate the env to have all deps installed.
-  - pip install travis-sphinx nbsphinx
+  - conda install pip nbsphinx
+  - pip install travis-sphinx
   - travis-sphinx build --source=docs --nowarn # The sphinx build script
 
 deploy:
