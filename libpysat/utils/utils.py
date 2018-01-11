@@ -329,7 +329,7 @@ def continuum_correction(data, wv, nodes, correction_nodes=[], correction=linear
         denom[cor_idx[0]:cor_idx[1]] = y
     return corrected, denom
 
-def generic(data, wv_array, wavelengths, func = None):
+def generic_func(data, wv_array, wavelengths, func = None):
     """
     Using some form of data and a wavelength array. Get the bands associated
     wtih each wavelength in wavelengths, create a subset of bands based off
@@ -352,8 +352,8 @@ def generic(data, wv_array, wavelengths, func = None):
       Returns the result from the given function
     """
     bands = getbandnumbers(wv_array, wavelengths)
-    subset = [data[:, :, i] for i in bands]
-    return func(subset)
+    subset = data.take(bands, axis = 0)
+    return func(subset, wavelengths)
 
 def getbandnumbers(wavelengths, wave_values):
     '''

@@ -1,51 +1,16 @@
-from libpysat.utils.utils import generic_func, getbandnumbers
-from libpysat.derived.m3 import supplemental_funcs as sp_funcs
+from libpysat.derived.m3 import development_funcs as dv_funcs
+from libpysat.utils.utils import generic_func
 
-#TODO: The continuum in these funcs should default to linear
-
-def curvature(data, wv_array, continuum = None, continuum_args = ()):
-    '''
-    Name: Curvature
-    Parameter:1 um Band Curvature
-    Formulation: (R749 + R1109) / (2* R909)
-    Rationale: Tompkins and Pieters
-    Bands: 749, R909, R1109
-
-    Parameters
-    ----------
-    data : ndarray
-           (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
-
-    Returns
-    -------
-     : ndarray
-       the processed ndarray
-    '''
-    wavelengths = [749, 909, 1109]
-    if continuum:
-        continuum(data, wavelengths, continuum, continuum_args)
-    return generic_func(data, wv_array, wavelengths, func = sp_funcs.curv_func)
-
-def fe_est(data, wv_array, continuum = None, continuum_args = ()):
-    '''
-    Name: FE_est
-    Parameter:Iron Estimate
+def bd1umratio(data, wv_array, continuum = None, continuum_args = ()):
+    """
+    Name: BD1um Ratio
+    Parameter: BD930 / BD990
     Formulation:
-        y0 = 1.19
-        x0 = 0.08
-        FE_est = (17.427*(-1*(math.atan(((R949/R749)-y0)/(R749 - x0))))) - 7.565
-    Rationale: Iron estimate based on Lucey's Work
-    Bands: R749, R949
+        BD930 = 1 - ((R929) / (((R1579 - R699)/(1579 - 699)) * (929-699) + R699))
+        BD990 = 1 - ((R989) / (((R1579 - R699)/(1579 - 699)) * (989-699) + R699))
+        BDRatio = BD930 / BD990
+    Rationale: Possible Ti or impact melt
+    Bands: R699, R929, R989, R1579
 
     Parameters
     ----------
@@ -66,19 +31,23 @@ def fe_est(data, wv_array, continuum = None, continuum_args = ()):
     -------
      : ndarray
        the processed ndarray
-    '''
-    wavelengths = [749, 949]
+    """
+    wavelengths = [699, 929, 989, 1579]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
-    return generic_func(data, wv_array, wavelengths, func = sp_funcs.fe_est_func)
+    return generic_func(data, wv_array, wavelengths, func = dv_funcs.bd1umratio_func)
 
-def fe_mare_est(data, wv_array, continuum = None, continuum_args = ()):
-    '''
-    Name: FE_est_mare
-    Parameter:Iron Estimate Mare
-    Formulation: -137.97 * ((R749 * 0.9834)+((R949 / R749)*0.1813)) + 57.46
-    Rationale: Wilcox et al. JGR (2005), Clementine based
-    Bands: R749, R949
+def h2o2(data, wv_array, continuum = None, continuum_args = ()):
+    """
+    Name: NBD1400
+    Parameter:1.4um OH Band
+    Formulation:
+        RC = (R1348 + R1578) / 2
+        LC = (R1428 + R1448) / 2
+        BB = R1408
+    NBD1400 = 1 - 2 * (BB / (RC + LC))
+    Rationale: H2O
+    Bands: R1348, R1428, R1448, R1578
 
     Parameters
     ----------
@@ -99,19 +68,23 @@ def fe_mare_est(data, wv_array, continuum = None, continuum_args = ()):
     -------
      : ndarray
        the processed ndarray
-    '''
-    wavelengths = [749, 949]
+    """
+    wavelengths = [1348, 1408, 1428, 1448, 1578]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
-    return generic_func(data, wv_array, wavelengths, func = sp_funcs.fe_mare_est_func)
+    return generic_func(data, wv_array, wavelengths, func = dv_funcs.h2o2_func)
 
-def luceyc_amat(data, wv_array, continuum = None, continuum_args = ()):
-    '''
-    Name: Lucey_OMAT
-    Parameter:Optimal Maturity - clementine Legacy; Using Adams Constants
-    Formulation: (((R749-0.01)**2)+((R949/R749)-1.26)**2)**(1/2)
-    Rationale: Based on Lucey et al., JGR (2000)
-    Bands: R749, R949
+def h2o3(data, wv_array, continuum = None, continuum_args = ()):
+    """
+    Name: NBD1480
+    Parameter:1.48um OH Band
+    Formulation:
+        RC = (R1428 + R1448) / 2
+        LC = (R1508 + R1528) / 2
+        BB = R1488
+    NBD1400 = 1 - 2 * (BB / (RC + LC))
+    Rationale: H2O
+    Bands: R1428, R1448, R1488, R1508, R1528
 
     Parameters
     ----------
@@ -132,19 +105,23 @@ def luceyc_amat(data, wv_array, continuum = None, continuum_args = ()):
     -------
      : ndarray
        the processed ndarray
-    '''
-    wavelengths = [749, 949]
+    """
+    wavelengths = [1428, 1448, 1488, 1508, 1528]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
-    return generic_func(data, wv_array, wavelengths, func = sp_funcs.luceyc_amat_func)
+    return generic_func(data, wv_array, wavelengths, func = dv_funcs.h2o3_func)
 
-def luceyc_omat(data, wv_array, continuum = None, continuum_args = ()):
-    '''
-    Name: Lucey_OMAT
-    Parameter:Optimal Maturity - clementine Legacy; Using Clementine Constants
-    Formulation: (((R749-0.08)**2)+((R949/R749)-1.19)**2)**(1/2)
-    Rationale: Based on Lucey et al., JGR (2000)
-    Bands: R749, R949
+def h2o4(data, wv_array, continuum = None, continuum_args = ()):
+    """
+    Name: NBD2300
+    Parameter: 2.3um OH Band
+    Formulation:
+        RC = (R2218 + R2258) / 2
+        LC = (R2378 + R2418) / 2
+        BB = (R2298 + R2338) / 2
+        NBD2300 = 1 - 2 * (BB / (RC + LC))
+    Rationale: H2O
+    Bands: R2218, R2258, R2378, R2418, R2298, R2338
 
     Parameters
     ----------
@@ -165,19 +142,22 @@ def luceyc_omat(data, wv_array, continuum = None, continuum_args = ()):
     -------
      : ndarray
        the processed ndarray
-    '''
-    wavelengths = [749, 949]
+    """
+    wavelengths = [2218, 2258, 2378, 2418, 2298, 2338]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
-    return generic_func(data, wv_array, wavelengths, func = sp_funcs.luceyc_omat_func)
+    return generic_func(data, wv_array, wavelengths, func = dv_funcs.h2o4_func)
 
-def mare_omat(data, wv_array, continuum = None, continuum_args = ()):
-    '''
-    Name: Mare_OMAT
-    Parameter:Optical maturity Highlands
-    Formulation: (R749 * 0.1813) - ((R949/R749)*0.9834)
-    Rationale: Based on Wilcox et al. 2005 - untested
-    Bands: R749, R949
+def h2o5(data, wv_array, continuum = None, continuum_args = ()):
+    """
+    Name: HBD2700
+    Parameter:2.7um OH Band
+    Formulation:
+        RC = (R2578 + R2618 + R2658) / 3
+        BB = (R2698 + R2738) / 2
+        HBD2700 = 1 - (BB / RC)
+    Rationale: H2O
+    Bands: R2578, R2618, R2658, R2698, R2738
 
     Parameters
     ----------
@@ -198,18 +178,22 @@ def mare_omat(data, wv_array, continuum = None, continuum_args = ()):
     -------
      : ndarray
        the processed ndarray
-    '''
-    wavelengths = [749, 949]
+    """
+    wavelengths = [2578, 2618, 2658, 2698, 2738]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
-    return generic_func(data, wv_array, wavelengths, func = sp_funcs.mare_omat_func)
+    return generic_func(data, wv_array, wavelengths, func = dv_funcs.h2o5_func)
 
-def tilt(data, wv_array, continuum = None, continuum_args = ()):
-    '''
-    Name: Tilt
-    Parameter: 1um tilt
-    Formulation: R909 - R1009
-    Rationale: Tompkins and Pieters
+def ice(data, wv_array, continuum = None, continuum_args = ()):
+    """
+    Name: HBD2850
+    Parameter:3um Ice Band
+    Formulation:
+        RC = (R2538 + R2578 + R2618) / 3
+        BB = (R2817 + R2857 + R2897) / 3
+        HBD2700 = 1 - (BB / RC)
+    Rationale: Ice
+    Bands: R2538, R2578, R2618, R2817, R2857, R2897
 
     Parameters
     ----------
@@ -230,8 +214,44 @@ def tilt(data, wv_array, continuum = None, continuum_args = ()):
     -------
      : ndarray
        the processed ndarray
-    '''
-    wavelengths = [930, 1009]
+    """
+    wavelengths = [2538, 2578, 2618, 2817, 2857, 2897]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
-    return generic_func(data, wv_array, wavelengths, func = sp_funcs.tilt_func)
+    return generic_func(data, wv_array, wavelengths, func = dv_funcs.ice_func)
+
+def bd2umratio(data, wv_array, continuum = None, continuum_args = ()):
+    """
+    Name: BD2um Ratio
+    Parameter:2um band depth ratio
+    Formulation:
+        a = 1 - ((R1898) / (((R2578 - R1578)/(2578 - 1578)) * (1898-1578) + R1578))
+        b = 1 - ((R2298) / (((R2578 - R1578)/(2578 - 1578)) * (2298-1578) + R1578))
+        BD2um_ratio = a/b
+    Rationale: Possible Ti or impact melt
+    Bands: R1578, R1898,R2298, R2578
+
+    Parameters
+    ----------
+    data : ndarray
+           (n,m,p) array
+
+    wv_array : ndarray
+               (n,1) array of wavelengths that correspond to the p
+               dimension of the data array
+
+    continuum : callable
+                to perform a continuum correction
+
+    continuum_args : tuple
+                     of arguments to be passed to the continuum callable
+
+    Returns
+    -------
+     : ndarray
+       the processed ndarray
+    """
+    wavelengths = [1578, 1898, 2298, 2578]
+    if continuum:
+        continuum(data, wavelengths, continuum, continuum_args)
+    return generic_func(data, wv_array, wavelengths, func = dv_funcs.bd2umratio_func)

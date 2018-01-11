@@ -9,7 +9,7 @@ from numbers import Number
 from functools import reduce
 from functools import singledispatch
 
-from plio.io import io_spectral_profiler
+from plio.io import io_spectral_profiler, io_moon_minerology_mapper
 
 from . import _index as _idx
 
