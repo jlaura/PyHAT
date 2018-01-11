@@ -3,8 +3,7 @@ import pandas as pd
 import scipy.stats as ss
 
 from libpysat.utils.utils import linear_correction
-from libpysat.spectral import spectra
-
+from libpysat.data import spectra
 
 
 def continuum_correct(spectrum, nodes=None, method='linear'):

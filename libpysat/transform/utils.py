@@ -9,7 +9,7 @@ from pandas import Series
 from scipy import signal
 
 
-import libpysat.spectral.baseline_code.watrous as watrous
+import libpysat.transform.baseline_code.watrous as watrous
 import numpy
 import scipy.signal
 

@@ -293,29 +293,29 @@ class SpectrumiLocIndexer(pd.core.indexing._iLocIndexer):
 
 
 class _ArrayLocIndexer(object):
-"""
-Label-location based indexer for selecting by labels on numpy arrays. i.e. .loc
-style access for numpy arrays.
+    """
+    Label-location based indexer for selecting by labels on numpy arrays. i.e. .loc
+    style access for numpy arrays.
 
-attributes
-----------
+    attributes
+    ----------
 
-waxis : int
-        the axis containing wavelength labels
+    waxis : int
+            the axis containing wavelength labels
 
-name : pandas style indexer name
+    name : pandas style indexer name
 
-obj : ndarray, SpectraArray
-      reference to array tied to the indexer instance
+    obj : ndarray, SpectraArray
+          reference to array tied to the indexer instance
 
-tolerance : Real
-            tolerance for indexing baseon floating point labels. All labels within the  index +/- tolerance
-            will be considered valid indices
+    tolerance : Real
+                tolerance for indexing baseon floating point labels. All labels within the  index +/- tolerance
+                will be considered valid indices
 
-wave_table : dict
-             map between wavelength indices and positional indices
+    wave_table : dict
+                 map between wavelength indices and positional indices
 
-"""
+    """
     def __init__(self, name='loc', obj=None, waxis=None, tolerance=.5):
         self.waxis = waxis
         if waxis is None:
@@ -349,7 +349,7 @@ wave_table : dict
         returns
         -------
         : SpectrumArray
-          subset of the array from the keys 
+          subset of the array from the keys
 
         """
         try:
