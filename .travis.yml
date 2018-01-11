@@ -54,7 +54,7 @@ after_success:
 
 before_deploy:
   - pip install travis-sphinx
-  - travis-sphinx build # The sphinx build script
+  - travis-sphinx build --source=docs --branches=dev # The sphinx build script
 
 deploy:
   provider: pages
