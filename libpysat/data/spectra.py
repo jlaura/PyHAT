@@ -9,8 +9,7 @@ from numbers import Number
 from functools import reduce
 from functools import singledispatch
 
-from plio.io import io_spectral_profiler
-
+from plio.io import io_spectral_profiler, io_moon_minerology_mapper
 
 from . import _index as _idx
 
@@ -77,53 +76,25 @@ class Spectra(pd.DataFrame):
         return _Spectra_DataFrame
 
 
-    @classmethod
-    def from_m3(cls, path_to_file, tolerance=2):
-        """
-        Generate DataFrame from spectral profiler data.
-
-        parameters
-        ----------
-        f : str
-            file path to spectral profiler file
-
-        tolerance : Real
-                    Tolerance for floating point index
-        """
-
-        wavelengths, _, ds = io_moon_minerology_mapper.openm3(path_to_file)
-
-        m3_array = ds.ReadAsArray().swapaxes(0, 2)
-        m3_array = np.reshape(m3_array, (-1, m3_array.shape[-1]), order = "A")
-
-        coords = [(i%ds.RasterXSize, i//ds.RasterXSize) for i in range(ds.RasterXSize * ds.RasterYSize)]
-        index = pd.MultiIndex.from_tuples(coords, names = ['x', 'y'])
-        m3_df = pd.DataFrame(data = m3_array, columns = wavelengths, index = index)
-
-        meta = ds.GetMetadata_Dict()
-        metadata = meta.keys()
-        meta_df = pd.DataFrame(meta, index = index)
-
-        spectra_df = m3_df.merge(meta_df, left_index = True, right_index = True)
-        spectra_df.sort_index(inplace = True)
-        return cls(spectra_df, wavelengths, metadata, tolerance=tolerance)
-
-
-    def linear_correction(self):
+    def continuum_correction(self, nodes = None, correction_nodes=[], correction = linear, **kwargs):
         """
         apply linear correction to all spectra
         """
         wavelengths = self.wavelengths.__array__()
         bands = tuple([0, len(wavelengths)-1])
 
-        def lincorr(row):
-            """
-            Should be rewritten to be more apply friendly
-            """
-            corr, y = linear_correction(bands, row[wavelengths].__array__(), wavelengths)
-            return Spectrum(corr, index=wavelengths)
+        def lincorr(row, nodes = None, correction_nodes=[], correction = linear, **kwargs):
+            data = row[wavelengths].__array__()
+            if nodes == None:
+                nodes = [wavelengths[0], wavelengths[1]]
+            return continuum_correction(data, wavelengths, nodes,
+                                        correction_nodes, correction, **kwargs)
 
-        data = self.apply(lincorr, axis=1)
+        data = self.apply(lincorr, axis=1, nodes=nodes,
+                          correction_nodes = correction_nodes,
+                          correction = correction, **kwargs)[0]
+        print(data)
+
         return Spectra(data, wavelengths=self.wavelengths, tolerance = self.tolerance)
 
 

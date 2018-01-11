@@ -2,8 +2,9 @@ import numpy as np
 import pandas as pd
 import scipy.stats as ss
 
-from libpysat.utils.utils import linear_correction
-from libpysat.data import spectra
+from libpysat.utils.utils import continuum_correction
+from libpysat.spectral import spectra
+
 
 
 def continuum_correct(spectrum, nodes=None, method='linear'):
@@ -113,18 +114,6 @@ def linear(nx, ny, ex=None):
 
 def cubic(spectrum, nodes):
     raise (NotImplemented)
-
-
-def lincorr(spectrum):
-    """
-    apply linear correction to all spectra
-    """
-    wavelengths = spectrum.wavelengths.__array__()
-    bands = tuple([0, len(wavelengths)-1])
-
-    corr, y = linear_correction(bands, spectrum[wavelengths].__array__(), wavelengths)
-    return spectra.Spectrum(corr, index=wavelengths, wavelengths=wavelengths)
-
 
 
 correction_methods = {'linear': linear,

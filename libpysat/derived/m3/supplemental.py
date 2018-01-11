@@ -1,4 +1,4 @@
-from libpysat.utils.utils import generic, getbandnumbers
+from libpysat.utils.utils import generic_func, getbandnumbers
 from libpysat.derived.m3 import supplemental_funcs as sp_funcs
 
 #TODO: The continuum in these funcs should default to linear
@@ -31,19 +31,19 @@ def curvature(data, wv_array, continuum = None, continuum_args = ()):
      : ndarray
        the processed ndarray
     '''
-    wavelengths = [730, 749, 909, 1109, 1129]
+    wavelengths = [749, 909, 1109]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
-    return generic(data, wv_array, wavelengths, func = sp_funcs.curv_func)
+    return generic_func(data, wv_array, wavelengths, func = sp_funcs.curv_func)
 
 def fe_est(data, wv_array, continuum = None, continuum_args = ()):
     '''
     Name: FE_est
     Parameter:Iron Estimate
     Formulation:
-        y0 = 1.19
-        x0 = 0.08
-        FE_est = (17.427*(-1*(math.atan(((R949/R749)-y0)/(R749 - x0))))) - 7.565
+    y0 = 1.19
+    x0 = 0.08
+    FE_est = (17.427*(-1*(math.atan(((R949/R749)-y0)/(R749 - x0))))) - 7.565
     Rationale: Iron estimate based on Lucey's Work
     Bands: R749, R949
 
@@ -67,10 +67,10 @@ def fe_est(data, wv_array, continuum = None, continuum_args = ()):
      : ndarray
        the processed ndarray
     '''
-    wavelengths = [730, 749, 949, 970]
+    wavelengths = [749, 949]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
-    return generic(data, wv_array, wavelengths, func = sp_funcs.fe_est_func)
+    return generic_func(data, wv_array, wavelengths, func = sp_funcs.fe_est_func)
 
 def fe_mare_est(data, wv_array, continuum = None, continuum_args = ()):
     '''
@@ -100,10 +100,10 @@ def fe_mare_est(data, wv_array, continuum = None, continuum_args = ()):
      : ndarray
        the processed ndarray
     '''
-    wavelengths = [730, 749, 949, 970]
+    wavelengths = [749, 949]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
-    return generic(data, wv_array, wavelengths, func = sp_funcs.fe_mare_est_func)
+    return generic_func(data, wv_array, wavelengths, func = sp_funcs.fe_mare_est_func)
 
 def luceyc_amat(data, wv_array, continuum = None, continuum_args = ()):
     '''
@@ -133,10 +133,10 @@ def luceyc_amat(data, wv_array, continuum = None, continuum_args = ()):
      : ndarray
        the processed ndarray
     '''
-    wavelengths = [730, 749, 949, 970]
+    wavelengths = [749, 949]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
-    return generic(data, wv_array, wavelengths, func = sp_funcs.luceyc_amat_func)
+    return generic_func(data, wv_array, wavelengths, func = sp_funcs.luceyc_amat_func)
 
 def luceyc_omat(data, wv_array, continuum = None, continuum_args = ()):
     '''
@@ -166,10 +166,10 @@ def luceyc_omat(data, wv_array, continuum = None, continuum_args = ()):
      : ndarray
        the processed ndarray
     '''
-    wavelengths = [730, 749, 949, 970]
+    wavelengths = [749, 949]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
-    return generic(data, wv_array, wavelengths, func = sp_funcs.luceyc_omat_func)
+    return generic_func(data, wv_array, wavelengths, func = sp_funcs.luceyc_omat_func)
 
 def mare_omat(data, wv_array, continuum = None, continuum_args = ()):
     '''
@@ -199,10 +199,10 @@ def mare_omat(data, wv_array, continuum = None, continuum_args = ()):
      : ndarray
        the processed ndarray
     '''
-    wavelengths = [730, 749, 949, 970]
+    wavelengths = [749, 949]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
-    return generic(data, wv_array, wavelengths, func = sp_funcs.mare_omat_func)
+    return generic_func(data, wv_array, wavelengths, func = sp_funcs.mare_omat_func)
 
 def tilt(data, wv_array, continuum = None, continuum_args = ()):
     '''
@@ -231,7 +231,7 @@ def tilt(data, wv_array, continuum = None, continuum_args = ()):
      : ndarray
        the processed ndarray
     '''
-    wavelengths = [909, 930, 1009, 1029]
+    wavelengths = [930, 1009]
     if continuum:
         continuum(data, wavelengths, continuum, continuum_args)
-    return generic(data, wv_array, wavelengths, func = sp_funcs.tilt_func)
+    return generic_func(data, wv_array, wavelengths, func = sp_funcs.tilt_func)

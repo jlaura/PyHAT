@@ -76,6 +76,7 @@ class HCube(np.ndarray):
         array = super(HCube, self).__repr__()
         return "\n".join([wavelengths, waxis, array])
 
+
     @property
     def get(self):
         """
