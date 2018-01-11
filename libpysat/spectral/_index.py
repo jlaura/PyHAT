@@ -217,7 +217,7 @@ def _get_subindices(keys, indexes, tolerance=0):
     return subindexes
 
 
-class SpectrumLocIndexer(pd.core.indexing._LocIndexer):
+class _SpectrumLocIndexer(pd.core.indexing._LocIndexer):
     """
     """
 
@@ -292,11 +292,31 @@ class SpectrumiLocIndexer(pd.core.indexing._iLocIndexer):
         return subframe
 
 
-class ArrayLocIndexer(object):
+class _ArrayLocIndexer(object):
+"""
+Label-location based indexer for selecting by labels on numpy arrays. i.e. .loc
+style access for numpy arrays.
 
+attributes
+----------
+
+waxis : int
+        the axis containing wavelength labels
+
+name : pandas style indexer name
+
+obj : ndarray, SpectraArray
+      reference to array tied to the indexer instance
+
+tolerance : Real
+            tolerance for indexing baseon floating point labels. All labels within the  index +/- tolerance
+            will be considered valid indices
+
+wave_table : dict
+             map between wavelength indices and positional indices
+
+"""
     def __init__(self, name='loc', obj=None, waxis=None, tolerance=.5):
-        """
-        """
         self.waxis = waxis
         if waxis is None:
             self.waxis = obj.ndim-1
@@ -318,17 +338,30 @@ class ArrayLocIndexer(object):
 
     def __getitem__(self, keys):
         """
+        Array label-location based indexing. Returns a subset from keys.
+
+        parameters
+        ----------
+
+        keys : object
+               keys to access on, normally a slice, list, or single index
+
+        returns
+        -------
+        : SpectrumArray
+          subset of the array from the keys 
+
         """
         try:
             indexes = list(_get_subindices(keys, tuple(self.index.levels), tolerance=self.tolerance))
-        except TypeError as e:
+        except TypeError as e:  # index returned was a scalar
             indexes = [_get_subindices(keys, tuple(self.index.levels), tolerance=self.tolerance)]
 
         try:
             indexes[self.waxis] = [self.wave_table[x] for x in indexes[self.waxis]]
             return self.obj[indexes]
-        except TypeError:  # only
+        except TypeError:  # indexes[sekf.waxis] returned scalar
             idx = self.wave_table[indexes[self.waxis]]
             return self.obj[idx]
-        except IndexError:
+        except IndexError: # wavelength axis was not accessed, nothing fanc need to be done
             return self.obj[indexes]
