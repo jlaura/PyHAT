@@ -40,8 +40,11 @@ class Spectrum(pd.Series):
 
     def continuum_correction(self, nodes = None, correction_nodes = [], method = linear, **kwargs):
         """
-        apply linear correction to all spectra
+        apply continuum correction to all spectra
         """
+
+        if nodes == None:
+            nodes = [self.iloc[0],self.iloc[-1]]
 
         return Spectrum(continuum_correction(self.loc[self.wavelengths].__array__(), self.wavelengths, nodes, correction_nodes, method, **kwargs)[0])
 
