@@ -1,8 +1,6 @@
 from libpysat.derived.m3 import development_funcs as dv_funcs
 from libpysat.utils.utils import generic_func
 
-#TODO: The continuum in these funcs should default to Linear
-
 def bd1umratio(data, wv_array):
     """
     Name: BD1um Ratio
