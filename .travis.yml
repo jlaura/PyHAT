@@ -27,8 +27,8 @@ before_install:
   - conda update -q conda
   - conda info -a   # Useful for debugging any issues with conda
   # Create the env
-  - conda create -q -n test python=$PYTHON_VERSION
-  - source activate test
+  - conda create -q -n test_env python=$PYTHON_VERSION
+  - source activate test_env
 
 install:
   # Install dependencies
@@ -51,3 +51,18 @@ after_success:
   - conda install conda-build anaconda-client
   - conda config --set anaconda_upload yes
   - conda build --token $CONDA_UPLOAD_TOKEN --python $PYTHON_VERSION .
+
+before_deploy:
+  - source activate test_env  # Reactivate the env to have all deps installed.
+  - conda install -c conda-forge pip nbsphinx
+  - pip install travis-sphinx
+  - travis-sphinx build --source=docs --nowarn # The sphinx build script
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  local_dir: build/html
+  on:
+    branch: dev  # To be converted to master when we merge

@@ -32,9 +32,9 @@ def fe_est(data, wv_array):
     Name: FE_est
     Parameter:Iron Estimate
     Formulation:
-        y0 = 1.19
-        x0 = 0.08
-        FE_est = (17.427*(-1*(math.atan(((R949/R749)-y0)/(R749 - x0))))) - 7.565
+    y0 = 1.19
+    x0 = 0.08
+    FE_est = (17.427*(-1*(math.atan(((R949/R749)-y0)/(R749 - x0))))) - 7.565
     Rationale: Iron estimate based on Lucey's Work
     Bands: R749, R949
 
