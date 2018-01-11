@@ -380,35 +380,3 @@ def get_band_numbers(wavelengths, wave_values, tolerance = .01):
         return bands[0]
     else:
         return bands
-
-def linear_correction(bands, ref_array, wv_array):
-    """
-    Perform a linear continuum correction.
-    Parameters
-    ----------
-        bands     : tuple(int)
-            Index of bands used to perform the continuum correction.
-        ref_array : array(float)
-            The reference array on which we will perform the continuum
-            correction.
-        wv_array  : array(float):
-            The array of wavelengths used to calculate the continuum correction.
-    Returns
-    -------
-        corrected : array(float)
-            The continuum corrected ref array.
-        y         : int
-            Continuum slope  @@TODO Check with J to make sure this is the correct description
-    """
-    try:
-        y1 = ref_array[bands[0]]
-        y2 = ref_array[bands[1]]
-        wv1 = wv_array[bands[0]]
-        wv2 = wv_array[bands[1]]
-
-        m = (y2-y1) / (wv2 - wv1)
-        b = y1 - (m * wv1)
-        y = (m * wv_array) + b
-        corrected = ref_array / y
-    except ZeroDivisionError:
-        return 0,0
