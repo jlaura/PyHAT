@@ -49,8 +49,6 @@ def reflectance1(data, wv_array):
 
 def reflectance2(data, wv_array):
     wavelengths = [749]
-    if continuum:
-        continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = pf.reflectance_func)
 
 def reflectance3(data, wv_array):
@@ -79,14 +77,10 @@ def twoum_slope(data, wv_array):
 
 def uvvis(data, wv_array):
     wavelengths = [419, 749]
-    if continuum:
-        continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = pf.uvvis_func)
 
 def visslope(data, wv_array):
     wavelengths = [419, 749]
-    if continuum:
-        continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = pf.visslope_func)
 
 def visuv(data, wv_array):
@@ -99,9 +93,9 @@ def visnir(data, wv_array):
 
 def calc_bdi_band(iteration, initial_band, step, data, wv_array):
     y = initial_band + (step*iteration)
-    y_idx = get_band_numbers(wv_array, [y])[0]
+    y_idx = get_band_numbers(wv_array, [y])
     wavelengths = [wv_array[y_idx - 3], y, wv_array[y_idx + 3]]
-    return generic_func(data, wv_array, wavelengths, func = bdi_func)
+    return generic_func(data, wv_array, wavelengths, func = pf.bdi_func)
 
 def bdi_generic(upper_limit, initial_band, step, data, wv_array):
     limit = range(0, upper_limit)
@@ -109,7 +103,7 @@ def bdi_generic(upper_limit, initial_band, step, data, wv_array):
     return 1 - np.sum(band_list, axis = 0)
 
 def bdi1000(data, wv_array):
-    return bdi_generic(27, 789, 20, data, wv_array, continuum=continuum, continuum_args=continuum_args)
+    return bdi_generic(27, 789, 20, data, wv_array)
 
 def bdi2000(data, wv_array):
-    return bdi_generic(22, 1658, 40, data, wv_array, continuum = continuum, continuum_args=continuum_args)
+    return bdi_generic(22, 1658, 40, data, wv_array)
