@@ -470,6 +470,18 @@ def bd1900(data, wv_array):
     return(generic_func(data, wv_array, wv, func = cf.bd1900_func))
 
 #@@TODO bdi2000
+def bdi2000(data, wv_array):
+    """
+    NAME: BDI2000
+    PARAMETER: 2 micron integrated band depth
+    FORMULATION *: divide R1660, R1815, R2140, R2210, R2250, R2290,
+      R2330, R2350, R2390, R2430, R2460 by linear fit from peak R
+      between 1.3 - 1.87 microns to R2530, then integrate over
+     (1 -  normalized radiances)
+    RATIONALE: pyroxene abundance and particle size
+    """
+    raise NotImplementedError
+
 
 def bd2100(data, wv_array):
     """
