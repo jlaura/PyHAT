@@ -27,18 +27,18 @@ before_install:
   - conda update -q conda
   - conda info -a   # Useful for debugging any issues with conda
   # Create the env
-  - conda create -q -n test python=$PYTHON_VERSION
-  - source activate test
+  - conda create -q -n test_env python=$PYTHON_VERSION
+  - source activate test_env
 
 install:
   # Install dependencies
   - conda config --add channels usgs-astrogeology
   - conda config --add channels conda-forge
-  - conda install -c conda-forge numpy scipy pandas gdal scikit-learn multipledispatch
-  - conda install -c usgs-astrogeology plio
+  - conda install --quiet -c conda-forge numpy scipy pandas gdal scikit-learn multipledispatch
+  - conda install --quiet -c usgs-astrogeology plio
 
   # Development installation
-  - conda install pytest pytest-cov
+  - conda install --quiet pytest pytest-cov
   - pip install coveralls
 
 script:
@@ -53,8 +53,10 @@ after_success:
   - conda build --token $CONDA_UPLOAD_TOKEN --python $PYTHON_VERSION .
 
 before_deploy:
+  - source activate test_env  # Reactivate the env to have all deps installed.
+  - conda install --quiet -c conda-forge pip nbsphinx
   - pip install travis-sphinx
-  - travis-sphinx build --source=docs --branches=dev # The sphinx build script
+  - travis-sphinx build --source=docs --nowarn # The sphinx build script
 
 deploy:
   provider: pages

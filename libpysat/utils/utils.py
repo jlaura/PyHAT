@@ -330,18 +330,30 @@ def continuum_correction(data, wv, nodes, correction_nodes=np.array([]), correct
 
     correction_idx = []
     for start, stop in zip(correction_nodes, correction_nodes[1:]):
+<<<<<<< HEAD
         start = np.where(np.isclose(wv, [start], atol=1))[0][0]
         stop = np.where(np.isclose(wv, [stop], atol=1))[0][0]+1 # +1 as slices are exclusive
         correction_idx.append((start, stop))
 
+=======
+        start = get_band_numbers(wv, [start], tolerance = .01)
+        stop = get_band_numbers(wv, [stop], tolerance = .01)
+        correction_idx.append((start, stop + 1))
+>>>>>>> 90cd8d560e227d355ccdc37d0ebf07208e5c792e
     # Make a copy of the input data that will house the corrected spectra
     corrected = np.copy(data)
     denom = np.zeros(data.shape)
 
     for i, (start, stop) in enumerate(zip(nodes, nodes[1:])):
         # Get the start and stop indices into the wavelength array. These define the correction nodes
+<<<<<<< HEAD
         start_idx = np.where(np.isclose(wv, [start], atol=1))[0][0]
         stop_idx = np.where(np.isclose(wv, [stop], atol=1))[0][0]+1 # +1 as slices are exclusive
+=======
+        start_idx = get_band_numbers(wv, [start], tolerance = .01)
+        stop_idx = get_band_numbers(wv, [stop], tolerance = .01)
+
+>>>>>>> 90cd8d560e227d355ccdc37d0ebf07208e5c792e
         # Grab the correction indices.  These define the length of the line to be corrected
         cor_idx = correction_idx[i]
 
@@ -356,7 +368,11 @@ def continuum_correction(data, wv, nodes, correction_nodes=np.array([]), correct
         print(wv[cor_idx[0]:cor_idx[1]].shape)
 
         # Compute an arbitrary correction
+<<<<<<< HEAD
         y = correction(data[tuple(nodeidx)], wv[cor_idx[0]:cor_idx[1]], axis=axis, **kwargs)
+=======
+        y = correction(data[start_idx:stop_idx + 1], wv[cor_idx[0]:cor_idx[1]], **kwargs)
+>>>>>>> 90cd8d560e227d355ccdc37d0ebf07208e5c792e
 
         # Apply the correction to a copy of the input data and then step to the next subset
         vals = data[tuple(corridx)] / y
@@ -386,28 +402,33 @@ def generic_func(data, wv_array, wavelengths, func = None):
     : func
       Returns the result from the given function
     """
-    bands = getbandnumbers(wv_array, wavelengths)
-    subset = data.take(bands, axis = 0)
+    subset = data.get[wavelengths, :, :]
     return func(subset, wavelengths)
 
-def getbandnumbers(wavelengths, wave_values):
+def get_band_numbers(wavelengths, wave_values, tolerance = .01):
     '''
     This parses the wavelenth list,finds the mean wavelength closest to the
-    provided wavelength, and returns the index of that value.  One (1) is added
-    to the index to grab the correct band.
+    provided wavelength, and returns the index of that value.
 
     Parameters
     ----------
-    wavelengths: A list of wavelengths, 0 based indexing
-    *args: A variable number of input wavelengths to map to bands
+    wavelengths : list
+                  A list of wavelengths, 0 based indexing
+
+    wave_values : list
+                  A list of input wavelengths to map to bands
 
     Returns
     -------
-    bands: A variable length list of bands.  These are in the same order they are
-    provided in.  Beware that altering the order will cause unexpected results.
+    bands : list
+            A variable length list of bands.  These are in the same order they are
+            provided in.  Beware that altering the order will cause unexpected results.
 
     '''
     bands = []
     for x in wave_values:
-        bands.append(min(range(len(wavelengths)), key=lambda i: abs(wavelengths[i]-x)))
-    return bands
+        bands.append(np.where(np.isclose(wavelengths, x, tolerance))[0][0])
+    if len(bands) == 1:
+        return bands[0]
+    else:
+        return bands

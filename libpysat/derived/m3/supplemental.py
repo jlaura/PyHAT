@@ -1,9 +1,8 @@
-from libpysat.utils.utils import generic_func, getbandnumbers
+from libpysat.utils.utils import generic_func, continuum_correction, linear
 from libpysat.derived.m3 import supplemental_funcs as sp_funcs
+from libpysat.spectral.spectra import Spectra
 
-#TODO: The continuum in these funcs should default to linear
-
-def curvature(data, wv_array, continuum = None, continuum_args = ()):
+def curvature(data, wv_array):
     '''
     Name: Curvature
     Parameter:1 um Band Curvature
@@ -20,23 +19,15 @@ def curvature(data, wv_array, continuum = None, continuum_args = ()):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
-
     Returns
     -------
      : ndarray
        the processed ndarray
     '''
     wavelengths = [749, 909, 1109]
-    if continuum:
-        continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = sp_funcs.curv_func)
 
-def fe_est(data, wv_array, continuum = None, continuum_args = ()):
+def fe_est(data, wv_array):
     '''
     Name: FE_est
     Parameter:Iron Estimate
@@ -56,11 +47,6 @@ def fe_est(data, wv_array, continuum = None, continuum_args = ()):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
 
     Returns
     -------
@@ -68,11 +54,9 @@ def fe_est(data, wv_array, continuum = None, continuum_args = ()):
        the processed ndarray
     '''
     wavelengths = [749, 949]
-    if continuum:
-        continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = sp_funcs.fe_est_func)
 
-def fe_mare_est(data, wv_array, continuum = None, continuum_args = ()):
+def fe_mare_est(data, wv_array):
     '''
     Name: FE_est_mare
     Parameter:Iron Estimate Mare
@@ -89,23 +73,15 @@ def fe_mare_est(data, wv_array, continuum = None, continuum_args = ()):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
-
     Returns
     -------
      : ndarray
        the processed ndarray
     '''
     wavelengths = [749, 949]
-    if continuum:
-        continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = sp_funcs.fe_mare_est_func)
 
-def luceyc_amat(data, wv_array, continuum = None, continuum_args = ()):
+def luceyc_amat(data, wv_array):
     '''
     Name: Lucey_OMAT
     Parameter:Optimal Maturity - clementine Legacy; Using Adams Constants
@@ -122,23 +98,15 @@ def luceyc_amat(data, wv_array, continuum = None, continuum_args = ()):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
-
     Returns
     -------
      : ndarray
        the processed ndarray
     '''
     wavelengths = [749, 949]
-    if continuum:
-        continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = sp_funcs.luceyc_amat_func)
 
-def luceyc_omat(data, wv_array, continuum = None, continuum_args = ()):
+def luceyc_omat(data, wv_array):
     '''
     Name: Lucey_OMAT
     Parameter:Optimal Maturity - clementine Legacy; Using Clementine Constants
@@ -155,23 +123,15 @@ def luceyc_omat(data, wv_array, continuum = None, continuum_args = ()):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
-
     Returns
     -------
      : ndarray
        the processed ndarray
     '''
     wavelengths = [749, 949]
-    if continuum:
-        continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = sp_funcs.luceyc_omat_func)
 
-def mare_omat(data, wv_array, continuum = None, continuum_args = ()):
+def mare_omat(data, wv_array):
     '''
     Name: Mare_OMAT
     Parameter:Optical maturity Highlands
@@ -188,23 +148,15 @@ def mare_omat(data, wv_array, continuum = None, continuum_args = ()):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
-
     Returns
     -------
      : ndarray
        the processed ndarray
     '''
     wavelengths = [749, 949]
-    if continuum:
-        continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = sp_funcs.mare_omat_func)
 
-def tilt(data, wv_array, continuum = None, continuum_args = ()):
+def tilt(data, wv_array):
     '''
     Name: Tilt
     Parameter: 1um tilt
@@ -220,18 +172,10 @@ def tilt(data, wv_array, continuum = None, continuum_args = ()):
                (n,1) array of wavelengths that correspond to the p
                dimension of the data array
 
-    continuum : callable
-                to perform a continuum correction
-
-    continuum_args : tuple
-                     of arguments to be passed to the continuum callable
-
     Returns
     -------
      : ndarray
        the processed ndarray
     '''
     wavelengths = [930, 1009]
-    if continuum:
-        continuum(data, wavelengths, continuum, continuum_args)
     return generic_func(data, wv_array, wavelengths, func = sp_funcs.tilt_func)
