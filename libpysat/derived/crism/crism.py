@@ -259,6 +259,7 @@ def olivine_index2(data, wv_array):
       + (((RC1474 ? R1474)/RC1474) * 0.4)
     RATIONALE: olivine will be strongly positive
     """
+    raise NotImplementedError
 
 
 def hcp_index(data, wv_array):
