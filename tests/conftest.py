@@ -7,12 +7,12 @@ def n_dim(n):
     return np.repeat(np.arange(1, n + 1), (25)).reshape(n,-1,5)
 
 @pytest.fixture
-def eight_dim():
-    return n_dim(8)
+def thirty_dim():
+    return n_dim(30)
 
 @pytest.fixture
-def seven_dim():
-    return n_dim(7)
+def twenty_five_dim():
+    return n_dim(25)
 
 @pytest.fixture
 def six_dim():
@@ -23,13 +23,17 @@ def five_dim():
     return n_dim(5)
 
 @pytest.fixture
-def three_dim():
-    return n_dim(3)
-
-@pytest.fixture
 def four_dim():
     return n_dim(4)
 
 @pytest.fixture
+def three_dim():
+    return n_dim(3)
+
+@pytest.fixture
 def two_dim():
     return n_dim(2)
+
+@pytest.fixture
+def one_dim():
+    return n_dim(1)

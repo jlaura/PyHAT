@@ -254,18 +254,25 @@ class _ArrayLocIndexer(object):
     """
     Label-location based indexer for selecting by labels on numpy arrays. i.e. .loc
     style access for numpy arrays.
+
     attributes
     ----------
+
     waxis : int
-        the axis containing wavelength labels
+            the axis containing wavelength labels
+
     name : pandas style indexer name
+
     obj : ndarray, SpectraArray
-        reference to array tied to the indexer instance
+          reference to array tied to the indexer instance
+
     tolerance : Real
-        tolerance for indexing baseon floating point labels. All labels within the 
-        index +/- tolerance will be considered valid indices
+                tolerance for indexing baseon floating point labels. All labels within the  index +/- tolerance
+                will be considered valid indices
+
     wave_table : dict
-        map between wavelength indices and positional indices
+                 map between wavelength indices and positional indices
+
     """
     def __init__(self, name='loc', obj=None, waxis=None, tolerance=.5):
         self.waxis = waxis
@@ -297,7 +304,8 @@ class _ArrayLocIndexer(object):
         returns
         -------
         : SpectrumArray
-          subset of the array from the keys 
+          subset of the array from the keys
+
         """
         try:
             indexes = list(_get_subindices(keys, tuple(self.index.levels), tolerance=self.tolerance))
