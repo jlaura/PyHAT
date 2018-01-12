@@ -1,12 +1,15 @@
 import numpy as np
+import pandas as pd
 
 from functools import reduce
 from functools import singledispatch
 
+from numbers import Real
+
 from plio.io import io_moon_minerology_mapper
 
 from . import _index as _idx
-
+from . import io
 
 class HCube(np.ndarray):
     """
@@ -18,7 +21,7 @@ class HCube(np.ndarray):
     wavelengths : pandas.Float64Index
                   The wavelengths store as a pandas index
 
-    get : ArrayLocIndexer
+    get : _ArrayLocIndexer
           Indexing object, maps wavelengths to indices allowing for access using
           band labels
 
@@ -26,10 +29,22 @@ class HCube(np.ndarray):
     """
     def __new__(cls, ndarray, wavelengths=[], waxis=None, tolerance=.5):
         obj = np.asarray(ndarray).view(cls)
-        obj.wavelengths = pd.Float64Index(wavelengths)
-        obj._get = _idx.ArrayLocIndexer(obj=obj, waxis=waxis, tolerance=tolerance)
+
+        if isinstance(wavelengths, Real):
+            obj.wavelengths = pd.Float64Index([wavelengths])
+        else:
+            obj.wavelengths = pd.Float64Index(wavelengths)
+
+        obj._get = _idx._ArrayLocIndexer(obj=obj, waxis=waxis, tolerance=tolerance)
         return obj
 
+
+    def __array_finalize__(self, obj):
+        if obj is None:
+            return obj
+
+        self.wavelengths = getattr(obj, 'wavelengths', None)
+        self.wavelengths = getattr(obj, '_get', None)
 
     def __getitem__(self, keys):
         """
@@ -43,38 +58,39 @@ class HCube(np.ndarray):
 
         returns
         -------
-        : _SpectraArray
+        : HCube
           copy of the subset of the array
 
         """
-        if hasattr(keys, '__iter__'):
-            if self._get.waxis <= len(keys):
-                # wavelength is being sliced
-                wavelengths=self.wavelengths[keys[self._get.waxis]]
-                newarr = super(_SpectraArray, self).__getitem__(keys)
-                return _SpectraArray(newarr, wavelengths, self._get.waxis, self._get.tolerance)
-            else:
-                newarr = super(_SpectraArray, self).__getitem__(keys)
-                if isinstance(keys, slice):
-                    return _SpectraArray(newarr, self.wavelengths, self._get.waxis, self._get.tolerance)
+        # TODO: Make this less garbage 
+        try:
+            if hasattr(keys, '__iter__'):
+                if self._get.waxis <= len(keys):
+                    # wavelength is being sliced
+                    wavelengths=self.wavelengths[keys[self._get.waxis]]
+                    newarr = super(HCube, self).__getitem__(keys)
+                    return HCube(newarr, wavelengths, self._get.waxis, self._get.tolerance)
                 else:
-                    return _SpectraArray(newarr, [self.wavelengths], self._get.waxis, self._get.tolerance)
-        else:
-            if self._get.waxis == 0:
-                # wavelength is being sliced
-                wavelengths=self.wavelengths[keys[self._get.waxis]]
-                newarr = super(_SpectraArray, self).__getitem__(keys)
-                return _SpectraArray(newarr, wavelengths, self._get.waxis, self._get.tolerance)
+                    newarr = super(HCube, self).__getitem__(keys)
+                    if isinstance(keys, slice):
+                        return HCube(newarr, self.wavelengths, self._get.waxis, self._get.tolerance)
+                    else:
+                        return HCube(newarr, [self.wavelengths], self._get.waxis, self._get.tolerance)
             else:
-                newarr = super(_SpectraArray, self).__getitem__(keys)
-                return _SpectraArray(newarr, self.wavelengths, self._get.waxis, self._get.tolerance)
+                if self._get.waxis == 0:
+                    # wavelength is being sliced
+                    wavelengths=self.wavelengths[keys]
+                    newarr = super(HCube, self).__getitem__(keys)
+                    return HCube(newarr, wavelengths, self._get.waxis, self._get.tolerance)
+                else:
+                    newarr = super(HCube, self).__getitem__(keys)
+                    return HCube(newarr, self.wavelengths, self._get.waxis, self._get.tolerance)
+        except Exception:
+            return super(HCube, self).__getitem__(keys)
 
-
-    def __repr__(self):
-        wavelengths = str(self.wavelengths)
-        waxis = str(self.get.waxis)
-        array = super(HCube, self).__repr__()
-        return "\n".join([wavelengths, waxis, array])
+    @classmethod
+    def from_m3(cls, f, tolerance=2, waxis=0):
+        return io.m3(f, tolerance, waxis)
 
 
     @property
@@ -85,7 +101,7 @@ class HCube(np.ndarray):
         see also
         --------
         _SpectraDataFrame.get : label-wise access to a spectral dataframe
-        ArrayLocIndexer : Enable label-wise access to numpy arrays
+        _ArrayLocIndexer : Enable label-wise access to numpy arrays
         """
         return self._get
 

@@ -289,6 +289,7 @@ class _ArrayLocIndexer(object):
             index.append(list(range(i)))
 
         if self.waxis < self.obj.ndim:
+            print(index)
             index[self.waxis] = self.obj.wavelengths
             self.index = pd.MultiIndex.from_product(index)
             wavesidx = list(range(self.obj.shape[self.waxis]))
@@ -319,5 +320,5 @@ class _ArrayLocIndexer(object):
         except TypeError:  # indexes[sekf.waxis] returned scalar
             idx = self.wave_table[indexes[self.waxis]]
             return self.obj[idx]
-        except IndexError: # wavelength axis was not accessed, nothing fanc need to be done
+        except IndexError: # wavelength axis was not accessed, nothing fancy needs to be done
             return self.obj[indexes]

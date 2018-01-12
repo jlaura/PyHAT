@@ -1,6 +1,6 @@
 from libpysat.utils.utils import generic_func, continuum_correction, linear
 from libpysat.derived.m3 import supplemental_funcs as sp_funcs
-from libpysat.spectral.spectra import Spectra
+from libpysat  import Spectra
 
 def curvature(data, wv_array):
     '''

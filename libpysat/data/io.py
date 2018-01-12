@@ -36,3 +36,20 @@ def spectral_profiler(f, tolerance=1):
         df = df.set_index(['minor', 'id'], drop=True)
 
         return sp.Spectra(df, wavelengths=wavelengths, tolerance=tolerance)
+
+
+def m3(f, tolerance = 2, waxis = 0):
+    """
+    Generate DataFrame from spectral profiler data.
+    parameters
+    ----------
+    f : str
+        file path to spectral profiler file
+    tolerance : Real
+                Tolerance for floating point index
+    """
+
+    wavelengths, _, ds = io_moon_minerology_mapper.openm3(f)
+    m3_array = ds.ReadAsArray()
+
+    return hc.HCube(m3_array, wavelengths, waxis = waxis, tolerance=tolerance)
