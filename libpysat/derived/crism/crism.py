@@ -166,8 +166,40 @@ def bd920(data, wv_array):
 
 
 #@@TODO rpeak1
+def rpeak1(data, wv_array):
+    """
+    NAME: BDI1000VIS
+    PARAMETER: 1 micron integrated band depth; VIS wavelengths
+    FORMULATION *: divide R830, R860, R890, R915 by RPEAK1 then
+      integrate over (1 -  normalized radiances)
+    RATIONALE: crystalline Fe+2 or Fe+3 minerals
+    """
+    raise NotImplementedError
+
 #@@TODO bdi1000VIS
-#@@TODO bdi1000R
+def bdi1000VIS(data, wv_array):
+    """
+    NAME: BDI1000VIS
+    PARAMETER: 1 micron integrated band depth; VIS wavelengths
+    FORMULATION *: divide R830, R860, R890, R915 by RPEAK1 then
+      integrate over (1 -  normalized radiances)
+    RATIONALE: crystalline Fe+2 or Fe+3 minerals
+    """
+    raise NotImplementedError
+
+#@@TODO bdi1000IR
+def bdi1000IR(data, w_array):
+   """
+   NAME: BDI1000IR
+     PARAMETER: 1 micron integrated band depth; IR wavelengths
+     FORMULATION *: divide R1030, R1050, R1080, R1150
+       by linear fit from peak R  between 1.3 - 1.87 microns to R2530
+       extrapolated backwards, then integrate over (1 -  normalized
+       radiances)
+     RATIONALE: crystalline Fe+2 minerals; corrected for overlying
+       aerosol induced slope
+   """
+   raise NotImplementedError
 
 def ira(data, wv_array):
     """
@@ -216,7 +248,18 @@ def olivine_index(data, wv_array):
     wv = [1080,1210,1330,1470,1695]
     return(generic_func(data, wv_array, wv, func = cf.olivine_index_func))
 
-#@@TODO olivine_index2
+#@@TODO olivine_index2 (labeled olivine_index3 in JPL doc?
+def olivine_index2(data, wv_array):
+    """
+    NAME: OLINDEX2 (beginning with TRDR version 3)
+    PARAMETER: olivine index with less sensitivity to illumination
+    FORMULATION *: (((RC1054 ? R1054)/RC1054) * 0.1)
+      + (((RC1211 ? R1211)/(RC1211) * 0.1)
+      + (((RC1329 ? R1329)/RC1329) * 0.4)
+      + (((RC1474 ? R1474)/RC1474) * 0.4)
+    RATIONALE: olivine will be strongly positive
+    """
+
 
 def hcp_index(data, wv_array):
     """
@@ -271,6 +314,16 @@ def lcp_index(data, wv_array):
 
 
 #@@TODO var
+def var(data, wv_array):
+    """
+    NAME: VAR
+    PARAMETER: spectral variance
+    FORMULATION *: find variance from a line fit from 1 - 2.3 micron
+      by summing in quadrature over the intervening wavelengths
+    RATIONALE: Ol & Px will have high values; Type 2 areas will have
+      low values
+    """
+    raise NotImplementedError
 
 def islope1(data, wv_array):
     """
