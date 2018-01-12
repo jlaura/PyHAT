@@ -15,6 +15,10 @@ def twenty_five_dim():
     return n_dim(25)
 
 @pytest.fixture
+def eight_dim():
+    return n_dim(8)
+
+@pytest.fixture
 def six_dim():
     return n_dim(6)
 
