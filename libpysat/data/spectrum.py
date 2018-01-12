@@ -2,11 +2,10 @@ import pandas as pd
 
 import numpy as np
 
-from plio.io import io_spectral_profiler
-
 from . import _index as _idx
-from ..transform.continuum import lincorr
-
+from ..utils.utils import linear
+from ..utils import utils
+from . import spectra
 
 class Spectrum(pd.Series):
     """
@@ -16,7 +15,7 @@ class Spectrum(pd.Series):
     def __init__(self, *args, wavelengths=[], metadata=[], tolerance=.5, **kwargs):
         super(Spectrum, self).__init__(*args, **kwargs)
 
-        self._get = _idx.SpectrumLocIndexer(name='loc', obj=self)
+        self._get = _idx._SpectrumLocIndexer(name='loc', obj=self)
         self._get._tolerance = tolerance
 
         self.wavelengths = wavelengths
@@ -26,17 +25,23 @@ class Spectrum(pd.Series):
     def _constructor(self):
         return Spectrum
 
+    def continuum_correction(self, nodes = None, correction_nodes=[], correction = linear, **kwargs):
+        """
+        apply linear correction to spectrum
+        """
+        
+        if nodes == None:
+            nodes = [wavelengths[0], wavelengths[-1]]
+
+        data, denom = utils.continuum_correction(self.values, self.wavelengths.values, nodes=nodes,
+                                    correction_nodes=correction_nodes, correction=correction, **kwargs)
+
+        return Spectrum(data, index=self.wavelengths, wavelengths=self.wavelengths, tolerance = self.tolerance)
+
 
     @property
     def _constructor_expanddim(self):
-        return pd.DataFrame
-
-
-    def linear_correction(self):
-        """
-        apply linear correction to all spectra
-        """
-        return lincorr(self)
+        return spectra.Spectra
 
 
     @property

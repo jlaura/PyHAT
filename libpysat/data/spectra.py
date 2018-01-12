@@ -9,16 +9,11 @@ from numbers import Number
 from functools import reduce
 from functools import singledispatch
 
-from plio.io import io_spectral_profiler, io_moon_minerology_mapper
-
-from . import _index as _idx
-
-from ..transform.continuum import lincorr
-
-from libpysat.utils.utils import linear_correction
-from libpysat.utils.utils import method_singledispatch
-
-
+from . import io
+from libpysat.data import _index as _idx
+from .spectrum import Spectrum
+from ..utils.utils import linear
+from ..utils import utils
 
 
 class Spectra(pd.DataFrame):
@@ -43,12 +38,12 @@ class Spectra(pd.DataFrame):
 
 
     def __init__(self, *args, wavelengths = [], metadata = [], tolerance=0, **kwargs):
-        super(_Spectra_DataFrame, self).__init__(*args, **kwargs)
+        super(Spectra, self).__init__(*args, **kwargs)
 
         get_name = self.loc.name
         iget_name = self.iloc.name
-        self._iget = _idx.SpectrumiLocIndexer(name=iget_name, obj=self)
-        self._get = _idx.SpectrumLocIndexer(name=get_name, obj=self)
+        self._iget = _idx._SpectrumiLocIndexer(name=iget_name, obj=self)
+        self._get = _idx._SpectrumLocIndexer(name=get_name, obj=self)
 
         self._get._tolerance = tolerance
         self.wavelengths = pd.Float64Index(wavelengths)
@@ -73,29 +68,20 @@ class Spectra(pd.DataFrame):
         """
         Returns constructor used when creating copies (i.e. when operations are run on the dataframe).
         """
-        return _Spectra_DataFrame
+        return Spectra
 
 
     def continuum_correction(self, nodes = None, correction_nodes=[], correction = linear, **kwargs):
         """
         apply linear correction to all spectra
         """
-        wavelengths = self.wavelengths.__array__()
-        bands = tuple([0, len(wavelengths)-1])
+        if not nodes:
+            nodes = [self.wavelengths[0], self.wavelengths[-1]]
 
-        def lincorr(row, nodes = None, correction_nodes=[], correction = linear, **kwargs):
-            data = row[wavelengths].__array__()
-            if nodes == None:
-                nodes = [wavelengths[0], wavelengths[1]]
-            return continuum_correction(data, wavelengths, nodes,
-                                        correction_nodes, correction, **kwargs)
-
-        data = self.apply(lincorr, axis=1, nodes=nodes,
-                          correction_nodes = correction_nodes,
-                          correction = correction, **kwargs)[0]
-        print(data)
-
-        return Spectra(data, wavelengths=self.wavelengths, tolerance = self.tolerance)
+        data = self.spectra.values
+        corrected, line = utils.continuum_correction(data, self.wavelengths.values ,nodes, correction_nodes, correction, axis=1, **kwargs)
+        print(corrected, line)
+        return Spectra(corrected, columns=self.spectra.columns, wavelengths=self.wavelengths, tolerance = self.tolerance)
 
 
     def __getitem__(self, key):
@@ -128,22 +114,7 @@ class Spectra(pd.DataFrame):
         tolerance : Real
                     Tolerance for floating point index
         """
-        geo_data = io_spectral_profiler.Spectral_Profiler(f)
-        meta = geo_data.ancillary_data
-
-        df = geo_data.spectra.to_frame().unstack(level=1)
-        df = df.transpose()
-        df = df.swaplevel(0,1)
-
-        df.index.names = ['minor', 'id']
-        meta.index.name = 'id'
-
-        wavelengths = df.columns
-
-        df = df.reset_index().merge(meta.reset_index(), on='id')
-        df = df.set_index(['minor', 'id'], drop=True)
-
-        return cls(df, wavelengths=wavelengths, tolerance=tolerance)
+        return io.spectral_profiler(f, tolerance=tolerance)
 
 
     @property
