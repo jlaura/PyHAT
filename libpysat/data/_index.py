@@ -289,7 +289,6 @@ class _ArrayLocIndexer(object):
             index.append(list(range(i)))
 
         if self.waxis < self.obj.ndim:
-            print(index)
             index[self.waxis] = self.obj.wavelengths
             self.index = pd.MultiIndex.from_product(index)
             wavesidx = list(range(self.obj.shape[self.waxis]))

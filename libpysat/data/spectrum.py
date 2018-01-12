@@ -2,9 +2,8 @@ import pandas as pd
 
 import numpy as np
 
+from ..transform import continuum
 from . import _index as _idx
-from ..utils.utils import linear
-from ..utils import utils
 from . import spectra
 
 class Spectrum(pd.Series):
@@ -25,15 +24,15 @@ class Spectrum(pd.Series):
     def _constructor(self):
         return Spectrum
 
-    def continuum_correction(self, nodes = None, correction_nodes=[], correction = linear, **kwargs):
+    def continuum_correction(self, nodes = None, correction_nodes=[], correction = continuum.linear, **kwargs):
         """
         apply linear correction to spectrum
         """
-        
+
         if nodes == None:
             nodes = [wavelengths[0], wavelengths[-1]]
 
-        data, denom = utils.continuum_correction(self.values, self.wavelengths.values, nodes=nodes,
+        data, denom = continuum.continuum_correction(self.values, self.wavelengths.values, nodes=nodes,
                                     correction_nodes=correction_nodes, correction=correction, **kwargs)
 
         return Spectrum(data, index=self.wavelengths, wavelengths=self.wavelengths, tolerance = self.tolerance)

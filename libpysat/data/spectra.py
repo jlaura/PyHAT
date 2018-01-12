@@ -12,7 +12,7 @@ from functools import singledispatch
 from . import io
 from libpysat.data import _index as _idx
 from .spectrum import Spectrum
-from ..utils.utils import linear
+from ..transform import continuum
 from ..utils import utils
 
 
@@ -71,7 +71,7 @@ class Spectra(pd.DataFrame):
         return Spectra
 
 
-    def continuum_correction(self, nodes = None, correction_nodes=[], correction = linear, **kwargs):
+    def continuum_correction(self, nodes = None, correction_nodes=[], correction = continuum.linear, **kwargs):
         """
         apply linear correction to all spectra
         """
@@ -79,8 +79,7 @@ class Spectra(pd.DataFrame):
             nodes = [self.wavelengths[0], self.wavelengths[-1]]
 
         data = self.spectra.values
-        corrected, line = utils.continuum_correction(data, self.wavelengths.values ,nodes, correction_nodes, correction, axis=1, **kwargs)
-        print(corrected, line)
+        corrected, line = continuum.continuum_correction(data, self.wavelengths.values ,nodes, correction_nodes, correction, axis=1, **kwargs)
         return Spectra(corrected, columns=self.spectra.columns, wavelengths=self.wavelengths, tolerance = self.tolerance)
 
 

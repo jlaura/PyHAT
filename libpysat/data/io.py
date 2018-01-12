@@ -6,7 +6,6 @@ from plio.io import io_spectral_profiler, io_moon_minerology_mapper
 from . import hcube as hc
 from . import spectra as sp
 
-__all__ = ['spectral_profiler']
 
 def spectral_profiler(f, tolerance=1):
         """
