@@ -48,21 +48,14 @@ script:
   - pytest --cov=pysat
 
 after_success:
+  # Code Coverage
   - coveralls
+  # Anaconda Upload
   - source deactivate
   - conda install conda-build anaconda-client
   - conda config --set anaconda_upload yes
   - conda build --token $CONDA_UPLOAD_TOKEN --python $PYTHON_VERSION .
-
-before_deploy:
+  # Docs to gh-pages
   - source activate test_env  # Reactivate the env to have all deps installed.
   - travis-sphinx build --source=docs --nowarn # The sphinx build script
-
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  keep_history: true
-  local_dir: build/html
-  on:
-    branch: dev  # To be converted to master when we merge
+  - travis-sphinx deploy --branch=dev
