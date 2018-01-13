@@ -37,7 +37,7 @@ install:
   - conda install --quiet -c conda-forge numpy scipy pandas gdal scikit-learn multipledispatch
   - conda install --quiet -c usgs-astrogeology plio
   # https://github.com/GoogleCloudPlatform/google-cloud-python/issues/2990
-  - pip install --upgrade pip setuptools
+  - conda install pip setuptools
 
   # Development installation
   - conda install --quiet pytest pytest-cov
@@ -56,7 +56,8 @@ after_success:
 
 before_deploy:
   - source activate test_env  # Reactivate the env to have all deps installed.
-  - pip install travis-sphinx nbsphinx
+  - conda install nbsphinx
+  - pip install travis-sphinx
   - travis-sphinx build --source=docs --nowarn # The sphinx build script
 
 deploy:
