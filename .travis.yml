@@ -58,4 +58,4 @@ after_success:
   # Docs to gh-pages
   - source activate test_env  # Reactivate the env to have all deps installed.
   - travis-sphinx build --source=docs --nowarn # The sphinx build script
-  - travis-sphinx deploy --branch=dev
+  - travis-sphinx deploy --branchws=dev
