@@ -40,8 +40,8 @@ install:
   - conda install pip setuptools
 
   # Development installation
-  - conda install --quiet pytest pytest-cov
-  - pip install coveralls
+  - conda install --quiet pytest pytest-cov nbsphinx
+  - pip install coveralls travis-sphinx
 
 script:
   - python setup.py install
@@ -56,8 +56,6 @@ after_success:
 
 before_deploy:
   - source activate test_env  # Reactivate the env to have all deps installed.
-  - conda install nbsphinx
-  - pip install travis-sphinx
   - travis-sphinx build --source=docs --nowarn # The sphinx build script
 
 deploy:
