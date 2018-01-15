@@ -11,11 +11,7 @@ source:
 build:
   number: 1
   skip: True  # [not py3k]
-
-channels:
-  - conda-forge
-  - usgs-astrogeology
-
+  
 requirements:
   build:
     - python
