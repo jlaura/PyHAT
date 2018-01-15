@@ -41,4 +41,4 @@ test_script:
 on_success:
   - cmd: deactivate
   - cmd: conda config --set anaconda_upload yes
-  - cmd: conda build --token %CONDA_UPLOAD_TOKEN% --channel conda-forge --chanel usgs-astrogeology .
+  - cmd: conda build --token %CONDA_UPLOAD_TOKEN% --channel conda-forge --channel usgs-astrogeology .
