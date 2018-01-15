@@ -44,7 +44,6 @@ install:
   - pip install coveralls travis-sphinx
 
 script:
-  - python setup.py install
   - pytest --cov=pysat
 
 after_success:
