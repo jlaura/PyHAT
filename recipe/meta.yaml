@@ -29,7 +29,7 @@ requirements:
 
 test:
   imports:
-    - pysat
+    - libpysat
 
 about:
   home: https://github.com/USGS-Astrogeology/PySAT
