@@ -220,7 +220,7 @@ class spectral_data(object):
 
         # sort by index to return the df to its original order
         self.df.sort_index(inplace=True)
-        self.folds_hist(sortby,50)
+        # self.folds_hist(sortby,50) # Deprecatead for now, This does need to be fixed at some point, however.
 
 
     def folds_hist(self, col_to_plot, nbins, xlabel='wt.%', ylabel='# of spectra'):
