@@ -20,7 +20,7 @@ def make_plot(x, y, figpath, figfile=None, xrange=None, yrange=None, xtitle='Ref
               ytitle='Prediction (wt.%)', title=None,
               lbl='', one_to_one=False, rmse=True, dpi=1000, color=None, annot_mask=None, cmap=None, colortitle='',
               loadfig=None, masklabel='', marker='o', linestyle='None', hline=None, hlinelabel=None, hlinestyle='--',
-              yzero=False, linewidth=1.0, vlines=None):
+              yzero=False, linewidth=1.0, vlines=None, xscale='linear', yscale='linear'):
     if loadfig is not None:
         fig = loadfig
         axes = fig.gca()
@@ -28,6 +28,10 @@ def make_plot(x, y, figpath, figfile=None, xrange=None, yrange=None, xtitle='Ref
         fig = plot.figure()
 
         axes = fig.gca()
+
+        axes.set_xscale(xscale)
+        axes.set_yscale(yscale)
+
         if title:
             fig.suptitle(title)
         if xtitle:
@@ -37,6 +41,11 @@ def make_plot(x, y, figpath, figfile=None, xrange=None, yrange=None, xtitle='Ref
         if xrange:
             axes.set_xlim(xrange)
             xind = np.where((x > xrange[0]) & (x < xrange[1]))
+        else:
+            xrange = [min(x), max(x)]
+            axes.set_xlim(xrange)
+            xind = np.where((x > xrange[0]) & (x < xrange[1]))
+
         if yrange:
             axes.set_ylim(yrange)
         else:

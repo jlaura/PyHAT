@@ -27,7 +27,7 @@ import sklearn.ensemble as ensemble
 
 from sklearn.manifold.t_sne import TSNE
 from sklearn.manifold.locally_linear import LocallyLinearEmbedding
-
+from sklearn.ensemble import IsolationForest
 
 def norm_total(df):
     df = df.div(df.sum(axis=1), axis=0)
