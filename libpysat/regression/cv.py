@@ -15,7 +15,7 @@ import pandas as pd
 from libpysat.regression.regression import regression
 from sklearn.cross_validation import LeaveOneLabelOut
 from sklearn.grid_search import ParameterGrid
-from sklearn.linear_model import ElasticNetCV, LassoCV, RidgeCV, OrthogonalMatchingPursuitCV, LarsCV, LassoLarsCV, enet_path, ElasticNet
+from sklearn.linear_model import enet_path, lasso_path
 from sklearn.linear_model.base import _pre_fit
 from sklearn.utils.validation import check_X_y, check_array
 warnings.filterwarnings('ignore')
@@ -25,13 +25,13 @@ import copy
 def RMSE(ypred, y):
     return np.sqrt(np.mean((np.squeeze(ypred) - np.squeeze(y)) ** 2))
 
-def ENet(X, y, X_holdout, y_holdout, alphas, paramgrid, colname = 'CV', intercept_in_colname = False):
+def path_calc(X, y, X_holdout, y_holdout, alphas, paramgrid, colname = 'CV', intercept_in_colname = False, yname = '', method = 'Elastic Net'):
     #make a copy of the parameters before popping things off
     copy_params = copy.deepcopy(paramgrid)
     fit_intercept = copy_params.pop('fit_intercept')
-    normalize = copy_params.pop('normalize')
     precompute = copy_params.pop('precompute')
     copy_X = copy_params.pop('copy_X')
+    normalize = False
 
     # this code adapted from sklearn ElasticNet fit function, which unfortunately doesn't accept multiple alphas at once
     X, y = check_X_y(X, y, accept_sparse='csc',
@@ -47,8 +47,12 @@ def ENet(X, y, X_holdout, y_holdout, alphas, paramgrid, colname = 'CV', intercep
     #do the path calculation, and tell how long it took
     print('Calculating path...')
     start_t = time.time()
-    path_alphas, path_coefs, path_gaps = enet_path(X, y, alphas=alphas,
+    if method == 'Elastic Net':
+        path_alphas, path_coefs, path_gaps, path_iters = enet_path(X, y, alphas=alphas, return_n_iter = True,
                                                    **copy_params)
+    if method == 'LASSO':
+        path_alphas, path_coefs, path_gaps, path_iters = lasso_path(X, y, alphas=alphas, return_n_iter=True,
+                                                                   **copy_params)
     dt = time.time() - start_t
     print('Took ' + str(dt) + ' seconds')
 
@@ -71,12 +75,14 @@ def ENet(X, y, X_holdout, y_holdout, alphas, paramgrid, colname = 'CV', intercep
         intercepts[j] = intercept
         rmses[j] = RMSE(y_pred_holdouts[j,:], y_holdout)
         if intercept_in_colname:
-            cvcols.append(('predict','"Elastic Net - '+ colname+' - Alpha:' + str(path_alphas[j]) + ' - Intercept:' +
+            cvcols.append(('predict','"' + method + ' - '+ yname + ' - '+ colname+' - Alpha:' + str(path_alphas[j]) + ' - Intercept:' +
                  str(intercept) + '-' + str(paramgrid) + '"'))
         else:
-            cvcols.append(('predict','"Elastic Net - ' + colname + ' - Alpha:' + str(path_alphas[j]) + ' - ' + str(paramgrid) + '"'))
+            cvcols.append(('predict','"'+ method + ' - ' + yname + ' - ' + colname + ' - Alpha:' + str(path_alphas[j]) + ' - ' + str(paramgrid) + '"'))
 
-    return path_alphas, path_coefs, intercepts, y_pred_holdouts, rmses, cvcols
+    return path_alphas, path_coefs, intercepts, path_iters, y_pred_holdouts, rmses, cvcols
+
+
 
 class cv:
     def __init__(self, params,progressbar = None):
@@ -114,14 +120,11 @@ class cv:
                 output_tmp = pd.concat([output_tmp]*len(alphas))
                 output_tmp['alphas'] = alphas
 
-            model = regression([method], [yrange], [self.paramgrid[i]])
-            modelkey = "{} - {} - ({}, {}) {}".format(method, ycol[0][-1], yrange[0], yrange[1], self.paramgrid[i])
 
             rmsecv_folds_tmp = np.empty(shape=(0))  # Create empty array to hold RMSECV for each fold
             alphas_out = np.empty(shape=(0))
             cvcols_all = np.empty(shape=(0))
 
-            pass
             foldcount = 1
             for train, holdout in cv_iterator:  # Iterate through each of the folds in the training set
                   # ycol[-1]+'_cv_'+method+'_param'+str(i))  #create the name of the column in which results will be stored
@@ -130,25 +133,23 @@ class cv:
                 cv_holdout = Train.iloc[holdout]  # extract the data that will be held out of the model
 
                 if calc_path:
-                    if method == 'Elastic Net':
+                    # get X and y data
+                    X = cv_train[xcols]
+                    y = cv_train[ycol]
 
-                        # get X and y data
-                        X = cv_train[xcols]
-                        y = cv_train[ycol]
+                    #do the path calculation
+                    path_alphas,\
+                    path_coefs,\
+                    intercepts,\
+                    path_n_iters,\
+                    y_pred_holdouts,\
+                    fold_rmses,\
+                    cvcols = path_calc(X, y, cv_holdout[xcols], cv_holdout[ycol], alphas, self.paramgrid[i], yname = ycol[0][-1],
+                                       intercept_in_colname=False, method = method) #don't include the intercept in the column name because it is slightly different for each fold
 
-                        #do the path calculation
-                        path_alphas,\
-                        path_coefs,\
-                        intercepts,\
-                        y_pred_holdouts,\
-                        fold_rmses,\
-                        cvcols = ENet(X, y, cv_holdout[xcols], cv_holdout[ycol], alphas, self.paramgrid[i])
-
-                        output_tmp['Fold '+str(foldcount)] = fold_rmses
-                        for n in list(range(len(path_alphas))):
-                            Train.set_value(Train.index[holdout], cvcols[n], y_pred_holdouts[n])
-
-
+                    output_tmp['Fold '+str(foldcount)] = fold_rmses
+                    for n in list(range(len(path_alphas))):
+                        Train.set_value(Train.index[holdout], cvcols[n], y_pred_holdouts[n])
 
                 else:
                     cvcols = [('predict', '"'+method+'-CV-' + str(self.paramgrid[i]) + '"')]
@@ -171,7 +172,6 @@ class cv:
                 rmsecv.append(RMSE(Train[col], Train[ycol]))
             output_tmp['RMSECV']=rmsecv
 
-
             #fit the model on the full training set using the current settings
             if calc_path:
                 X = Train[xcols]
@@ -180,16 +180,33 @@ class cv:
                 path_alphas, \
                 path_coefs, \
                 intercepts, \
+                path_n_iters, \
                 ypred_train, \
                 rmsec_train, \
-                cols = ENet(X, y, X, y, alphas, self.paramgrid[i], intercept_in_colname=True, colname = 'Cal')
+                cols = path_calc(X, y, X, y, alphas, self.paramgrid[i], intercept_in_colname=True, colname = 'Cal',
+                                 yname = ycol[0][-1], method = method)
 
 
                 for n in list(range(len(path_alphas))):
                     Train[cols[n]]=ypred_train[n] #put the training set predictions in the data frame
-                    pass
+                    #create the model and manually set its parameters based on the path results rather than training it
+                    model = regression([method], [yrange], [self.paramgrid[i]])
+                    model.model.set_params(alpha = path_alphas[n])
+                    setattr(model.model, 'intercept_', intercepts[n])
+                    setattr(model.model, 'coef_', np.squeeze(path_coefs)[:,n])
+                    setattr(model.model, 'n_iter_', path_n_iters[n])
+
+                    #add the model and its name to the list
+                    models.append(model)
+                    modelkey = "{} - {} - ({}, {}) Alpha: {}, {}".format(method, ycol[0][-1], yrange[0], yrange[1],path_alphas[n],
+                                                              self.paramgrid[i])
+                    modelkeys.append(modelkey)
+
                 output_tmp['RMSEC'] = rmsec_train
             else:
+                model = regression([method], [yrange], [self.paramgrid[i]])
+                modelkey = "{} - {} - ({}, {}) {}".format(method, ycol[0][-1], yrange[0], yrange[1], self.paramgrid[i])
+
                 model.fit(Train[xcols], Train[ycol])
                 #if the fit is good, then predict the training set
                 if model.goodfit:
@@ -213,10 +230,7 @@ class cv:
                 output = output_tmp
             pass
 
-        # rmsecv_folds = np.array(rmsecv_folds)
-        # for i in list(range(len(rmsecv_folds[0, :]))):
-        #     label = 'Fold' + str(i)
-        #     output[label] = rmsecv_folds[:, i]
+
         #make the columns of the output data drame multi-indexed
         cols = output.columns.values
         cols = [('cv', i) for i in cols]
