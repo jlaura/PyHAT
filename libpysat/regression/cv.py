@@ -15,7 +15,7 @@ import pandas as pd
 from libpysat.regression.regression import regression
 from sklearn.cross_validation import LeaveOneLabelOut
 from sklearn.grid_search import ParameterGrid
-from sklearn.linear_model import ElasticNetCV, LassoCV, RidgeCV, OrthogonalMatchingPursuitCV, LarsCV, LassoLarsCV, enet_path
+from sklearn.linear_model import ElasticNetCV, LassoCV, RidgeCV, OrthogonalMatchingPursuitCV, LarsCV, LassoLarsCV, enet_path, ElasticNet
 from sklearn.linear_model.base import _pre_fit
 from sklearn.utils.validation import check_X_y, check_array
 warnings.filterwarnings('ignore')
@@ -95,66 +95,34 @@ class cv:
         except:
             print('***No folds found! Did you remember to define folds before running cross validation?***')
 
-        rmsecv_folds = []
-        rmsec = []
-        rmsecv = []
         models = []
         modelkeys = []
 
-        # loop through the grid of parameters, do cross validation for each permutation
-        # try:
-        #     self.progress.setMaximum(len(self.paramgrid))
-        #     self.progress.setValue(0)
-        #     self.progress.show()
-        # except:
-        #     pass
-
         for i in list(range(len(self.paramgrid))):
             print(self.paramgrid[i])
-#            self.progress.setValue(i)
+            # create an empty output data frame to serve as template
+            output_tmp = pd.DataFrame()
+            # add columns for RMSEC, RMSECV, and RMSE for the folds
+            output_tmp['RMSEC'] = 0
+            output_tmp['RMSECV'] = 0
+            for f in np.array(range(cv_iterator.n_unique_labels)) + 1:
+                output_tmp['Fold ' + str(f)] = 0
+            #fill in the output template based on the current permutation parameters
+            for k in self.paramgrid[i].keys():
+                output_tmp.at[0,k]=self.paramgrid[i][k]
+            if alphas is not None:
+                output_tmp = pd.concat([output_tmp]*len(alphas))
+                output_tmp['alphas'] = alphas
+
             model = regression([method], [yrange], [self.paramgrid[i]])
             modelkey = "{} - {} - ({}, {}) {}".format(method, ycol[0][-1], yrange[0], yrange[1], self.paramgrid[i])
 
             rmsecv_folds_tmp = np.empty(shape=(0))  # Create empty array to hold RMSECV for each fold
             alphas_out = np.empty(shape=(0))
             cvcols_all = np.empty(shape=(0))
-            #if possible, leverage sklearn efficient CV functions
-            # if calc_path:
-            #     if method == 'Elastic Net':
-            #         path_alphas, path_coefs, path_gaps, path_iters = enet_path(alphas=alphas,
-            #                               **self.paramgrid[i])
-            #         pass
-            #     if method == 'LASSO':
-            #         CV = LassoCV(alphas=alphas, cv=cv_iterator, n_jobs=-1, **self.paramgrid[i])
-            #         CV.fit(Train[xcols],Train[ycol])
-            #
-            #
-            #     for j in list(range(len(CV.mse_path_))):
-            #         rmsecvs_tmp = pd.DataFrame(np.sqrt(CV.mse_path_[j]))
-            #         rmsecvs_tmp['Average RMSECV'] = np.mean(np.sqrt(CV.mse_path_[j], axis=1))
-            #         rmsecvs_tmp['alpha'] = CV.alphas_
-            #         try:
-            #             rmsecvs_tmp['l1_ratio'] = CV.l1_ratio[j]
-            #         except:
-            #             pass
-            #         for key, value in self.paramgrid[i].items():
-            #             rmsecvs_tmp[key] = value
-            #         try:
-            #             rmsecvs.concat(rmsecvs_tmp)
-            #         except:
-            #             rmsecvs = rmsecvs_tmp
-            #
-            #     # if method == 'LARS':
-            #     #     pass
-            #     # if method == 'LASSO LARS':
-            #     #     pass
-            #     # if method == 'OMP':
-            #     #     pass
-            #     # if method == 'Ridge':
-            #     #     CV = RidgeCV(alphas = alphas, cv = cv_iterator, **self.paramgrid[i], store_cv_values=True)
-            #     #     CV.fit(Train[xcols],Train[ycol])
 
-            #else:
+            pass
+            foldcount = 1
             for train, holdout in cv_iterator:  # Iterate through each of the folds in the training set
                   # ycol[-1]+'_cv_'+method+'_param'+str(i))  #create the name of the column in which results will be stored
 
@@ -168,19 +136,19 @@ class cv:
                         X = cv_train[xcols]
                         y = cv_train[ycol]
 
+                        #do the path calculation
                         path_alphas,\
                         path_coefs,\
                         intercepts,\
                         y_pred_holdouts,\
-                        rmsecvs,\
+                        fold_rmses,\
                         cvcols = ENet(X, y, cv_holdout[xcols], cv_holdout[ycol], alphas, self.paramgrid[i])
-                        rmsecv_folds_tmp = np.hstack((rmsecv_folds_tmp, rmsecvs))
 
-
+                        output_tmp['Fold '+str(foldcount)] = fold_rmses
                         for n in list(range(len(path_alphas))):
                             Train.set_value(Train.index[holdout], cvcols[n], y_pred_holdouts[n])
-                        alphas_out = np.hstack((alphas_out, path_alphas))
-                        #cvcols_all = np.hstack((cvcols_all, cvcols))
+
+
 
                 else:
                     cvcols = [('predict', '"'+method+'-CV-' + str(self.paramgrid[i]) + '"')]
@@ -193,13 +161,16 @@ class cv:
                     #add the predictions to the appropriate column in the training data
                     Train.set_value(Train.index[holdout], cvcols[0], y_pred_holdout)
                     #append the RMSECV to the list
-                    rmsecv_folds_tmp = np.hstack((rmsecv_folds_tmp,RMSE(y_pred_holdout, cv_holdout[ycol])))
+                    output_tmp['Fold '+str(foldcount)]=RMSE(y_pred_holdout, cv_holdout[ycol])
 
-            #append the RMSECVs for the current settings to the collection of all RMSECVs
-            rmsecv_folds.append(rmsecv_folds_tmp)
+                foldcount = foldcount + 1
 
+            #now that all the folds have been held out and predicted, calculate the overall rmsecv and add it to the output
+            rmsecv = []
             for col in cvcols:
-                rmsecv.append(RMSE(Train[ycol], Train[col]))
+                rmsecv.append(RMSE(Train[col], Train[ycol]))
+            output_tmp['RMSECV']=rmsecv
+
 
             #fit the model on the full training set using the current settings
             if calc_path:
@@ -209,14 +180,15 @@ class cv:
                 path_alphas, \
                 path_coefs, \
                 intercepts, \
-                y_pred_holdouts, \
-                rmsec, \
-                cols = ENet(X, y, X, y, alphas, self.paramgrid[i], intercept_in_colname=True)
+                ypred_train, \
+                rmsec_train, \
+                cols = ENet(X, y, X, y, alphas, self.paramgrid[i], intercept_in_colname=True, colname = 'Cal')
 
 
                 for n in list(range(len(path_alphas))):
-                    Train.set_value(Train.index[holdout], cols[n], y_pred_holdouts[n])
-                alphas_out = np.hstack((alphas_out, path_alphas))
+                    Train[cols[n]]=ypred_train[n] #put the training set predictions in the data frame
+                    pass
+                output_tmp['RMSEC'] = rmsec_train
             else:
                 model.fit(Train[xcols], Train[ycol])
                 #if the fit is good, then predict the training set
@@ -228,25 +200,26 @@ class cv:
                 else:
                     ypred_train = Train[ycol] * np.nan
 
-            #add the calibration predictions to the appropriate column
-            calcol = ('predict', '"'+method + '-Cal-' + str(self.paramgrid[i])+'"')
-            Train[calcol] = ypred_train
-            #append the RMSEC for the current settings to the cllection of all RMSECs
-            rmsec.append(RMSE(ypred_train, Train[ycol]))
+                #add the calibration predictions to the appropriate column
+                calcol = ('predict', '"'+method + '-Cal-' + str(self.paramgrid[i])+'"')
+                Train[calcol] = ypred_train
+                #append the RMSEC for the current settings to the cllection of all RMSECs
+                output_tmp['RMSEC'] = RMSE(ypred_train, Train[ycol])
 
-            #create an output data frame from the grid of parameters
-            output = pd.DataFrame(self.paramgrid)
 
-            #add columns for RMSEC, RMSECV, and RMSECV for the folds
-            output['RMSEC'] = rmsec
-            output['RMSECV'] = rmsecv
-            rmsecv_folds = np.array(rmsecv_folds)
-            for i in list(range(len(rmsecv_folds[0, :]))):
-                label = 'Fold' + str(i)
-                output[label] = rmsecv_folds[:, i]
-            #make the columns of the output data drame multi-indexed
-            cols = output.columns.values
-            cols = [('cv', i) for i in cols]
-            output.columns = pd.MultiIndex.from_tuples(cols)
+            try:
+                output = pd.concat((output, output_tmp))
+            except:
+                output = output_tmp
+            pass
 
-            return Train, output, models, modelkeys
+        # rmsecv_folds = np.array(rmsecv_folds)
+        # for i in list(range(len(rmsecv_folds[0, :]))):
+        #     label = 'Fold' + str(i)
+        #     output[label] = rmsecv_folds[:, i]
+        #make the columns of the output data drame multi-indexed
+        cols = output.columns.values
+        cols = [('cv', i) for i in cols]
+        output.columns = pd.MultiIndex.from_tuples(cols)
+
+        return Train, output, models, modelkeys
