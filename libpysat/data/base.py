@@ -9,7 +9,7 @@ class PySatBase(object):
 
     @property
     def metadata(self):
-        if self._metadata_index:
+        if self._metadata_index is not None:
             return self.loc[self._metadata_index]
 
     @metadata.setter
@@ -30,9 +30,9 @@ class PySatBase(object):
             raise TypeError
 
     def _reindex(self):
-        if self.wavelengths:
+        if self.wavelengths is not None:
             wv = Index(np.round(self.wavelengths, decimals=self.tolerance))
-            if self._metadata_index:
+            if self._metadata_index is not None:
                 index = wv.append(Index(self._metadata_index))
             else:
                 index = wv

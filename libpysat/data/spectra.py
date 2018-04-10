@@ -16,6 +16,7 @@ from .spectrum import Spectrum
 from ..transform import continuum
 from ..utils import utils
 
+import libpysat
 
 class Spectra(PySatBase, DataFrame):
     """
@@ -47,7 +48,6 @@ class Spectra(PySatBase, DataFrame):
         self.wavelengths = wavelengths
         self._metadata_index = metadata_index
         self.tolerance = tolerance
-
         self._reindex()
 
     @property
@@ -116,6 +116,11 @@ class Spectra(PySatBase, DataFrame):
         #else:
         #     return self.get[:,key]
 
+
+    @classmethod
+    def from_file(cls, filename, **kwargs):
+
+        return io.read_file(filename, **kwargs)
 
     '''@classmethod
     def from_spectral_profiler(cls, f, tolerance=1):
