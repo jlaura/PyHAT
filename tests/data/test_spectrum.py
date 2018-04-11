@@ -99,5 +99,4 @@ def test_generic_return(basic_spectrum):
 def test_smoothing_return_type(spectrum, func):
     ss = spectrum.smooth(func=func)
     assert isinstance(ss, Spectrum)
-
     

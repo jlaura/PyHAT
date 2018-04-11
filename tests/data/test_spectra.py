@@ -2,6 +2,7 @@ import numpy as np
 from pandas import Index, MultiIndex, DataFrame, concat
 import pytest
 
+import libpysat
 from libpysat import Spectra, Spectrum
 
 @pytest.fixture
@@ -130,4 +131,9 @@ def test_concat(spectra):
 
     assert isinstance(s, DataFrame)
 
-    
+@pytest.mark.parametrize("spectrum, func", 
+                         [(spectra(), libpysat.transform.smooth.boxcar),
+                          (spectra(), libpysat.transform.smooth.gaussian)])
+def test_smoothing_return_type(spectrum, func):
+    ss = spectrum.smooth(func=func)
+    assert isinstance(ss, Spectra)
