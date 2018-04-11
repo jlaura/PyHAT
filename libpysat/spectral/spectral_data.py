@@ -22,7 +22,7 @@ from libpysat.spectral.jade import JADE
 from libpysat.spectral.lra import low_rank_align as LRA
 from sklearn import cross_validation
 from sklearn.decomposition import PCA, FastICA
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, SpectralClustering
 from sklearn.preprocessing import StandardScaler
 import sklearn.ensemble as ensemble
 
@@ -387,6 +387,9 @@ class spectral_data(object):
     def cluster(self, col, method, params, kws):
         if method == 'K-Means':
             self.do_cluster = KMeans(*params, **kws)
+        if method == 'Spectral':
+            self.do_cluster = SpectralClustering(*params, **kws)
+
         self.do_cluster.fit(self.df[col])
         self.df[(method, 'Cluster')] = self.do_cluster.labels_
 
