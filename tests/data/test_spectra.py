@@ -151,7 +151,8 @@ def test_concat(spectra):
                           (spectra_metadata()[['a', 'b']], libpysat.transform.smooth.gaussian, Spectra),
                           (spectra()['a'], libpysat.transform.smooth.boxcar, Spectrum),
                           (spectra_metadata()['a'], libpysat.transform.smooth.gaussian, Spectrum),
-                          (spectra_metadata()[['a', 'c']], libpysat.transform.smooth.gaussian, Spectra)
+                          (spectra_metadata()[['a', 'c']], libpysat.transform.smooth.gaussian, Spectra),
+                          (spectra_multiindex(), libpysat.transform.smooth.boxcar, Spectra)
                          ])
 def test_smoothing_return_type(spectrum, func, cls):
     ss = spectrum.smooth(func=func, preserve_metadata=False)

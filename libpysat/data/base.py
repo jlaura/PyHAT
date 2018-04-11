@@ -64,5 +64,4 @@ class PySatBase(object):
                 index = wv.append(Index(self._metadata_index))
             else:
                 index = wv
-            print(index)
             self.index = index
