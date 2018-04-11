@@ -9,8 +9,6 @@ def _spectral_unary_op(this, new, preserve_metadata=True):
 
     # Create the new class with the metadata obj, but the
     # data only index
-    print(this)
-    print(new)
     if isinstance(this, libpysat.Spectrum):
         new = libpysat.Spectrum(new, wavelengths=this.wavelengths,
                         metadata=None,
