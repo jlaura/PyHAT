@@ -1,11 +1,24 @@
 import numpy as np
 from pandas import Index
 
+from ..transform import smooth
+
+import libpysat
+
+def _spectral_unary_op(this, new):
+    cls = this.__class__
+    return cls(new, wavelengths=this.wavelengths,
+             metadata=this.metadata,
+             tolerance=this.tolerance)
 
 class PySatBase(object):
 
-    def continuum_correction(self):
-        pass
+    def continuum_correct(self, func):
+        print('CC')
+
+    def smooth(self, func=libpysat.transform.smooth.boxcar, **kwargs):
+        res = func(self.values, **kwargs)
+        return _spectral_unary_op(self, res)
 
     @property
     def metadata(self):

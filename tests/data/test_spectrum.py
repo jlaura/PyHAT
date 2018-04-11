@@ -2,6 +2,7 @@ import numpy as np
 from pandas import Index
 import pytest
 
+import libpysat
 from libpysat import Spectrum
 
 @pytest.fixture
@@ -9,6 +10,12 @@ def basic_spectrum():
     return Spectrum([1,2,3,4],
                     index=[2.2, 3.3, 4.4, 5.5],
                     wavelengths=[2.2, 3.3, 4.4, 5.5])
+
+@pytest.fixture
+def long_spectrum():
+    return Spectrum([1, 1.5, 2, 2.5, 5, 3, 3.5, 7, 4, 4.5, 5],
+                    index=range(11),
+                    wavelengths=range(11))
 
 @pytest.fixture
 def metadata_spectrum():
@@ -85,3 +92,12 @@ def test_generic_return(basic_spectrum):
 
     m = basic_spectrum.sort_index()
     assert isinstance(m, Spectrum)
+
+@pytest.mark.parametrize("spectrum, func", 
+                         [(long_spectrum(), libpysat.transform.smooth.boxcar),
+                          (long_spectrum(), libpysat.transform.smooth.gaussian)])
+def test_smoothing_return_type(spectrum, func):
+    ss = spectrum.smooth(func=func)
+    assert isinstance(ss, Spectrum)
+
+    

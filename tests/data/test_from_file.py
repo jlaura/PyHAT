@@ -15,3 +15,4 @@ def test_read_sp(spectral_profiler_2c):
     assert len(s.metadata.index) == 43
     assert isinstance(s, Spectra)
     assert isinstance(s.data, Spectra)
+    
