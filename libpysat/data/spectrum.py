@@ -39,7 +39,9 @@ class Spectrum(PySatBase, Series):
 
     @property
     def data(self):
-        return Spectrum(to_numeric(self.loc[self.wavelengths]))
+        # Have to apply the tolerances when doing the positional lookup
+        wv = Index(np.round(self.wavelengths, decimals=self.tolerance))
+        return Spectrum(to_numeric(self.loc[wv]))
 
     @property
     def _constructor(self):

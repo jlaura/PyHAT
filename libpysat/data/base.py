@@ -1,24 +1,41 @@
 import numpy as np
-from pandas import Index
+from pandas import Index, concat
 
 from ..transform import smooth
 
 import libpysat
 
-def _spectral_unary_op(this, new):
-    cls = this.__class__
-    return cls(new, wavelengths=this.wavelengths,
-             metadata=this.metadata,
-             tolerance=this.tolerance)
+def _spectral_unary_op(this, new, preserve_metadata=True):
+
+    # Create the new class with the metadata obj, but the
+    # data only index
+    print(this)
+    print(new)
+    if isinstance(this, libpysat.Spectrum):
+        new = libpysat.Spectrum(new, wavelengths=this.wavelengths,
+                        metadata=None,
+                        tolerance=this.tolerance,
+                        index=this.data.index)
+    else:
+        new = libpysat.Spectra(new, wavelengths=this.wavelengths,
+            metadata=None,
+            tolerance=this.tolerance,
+            index=this.data.index, 
+            columns=this.data.columns)
+
+    if preserve_metadata:
+        new = concat((new, this.metadata))
+        new.metadata = this.metadata
+    return new
 
 class PySatBase(object):
 
     def continuum_correct(self, func):
         print('CC')
 
-    def smooth(self, func=libpysat.transform.smooth.boxcar, **kwargs):
-        res = func(self.values, **kwargs)
-        return _spectral_unary_op(self, res)
+    def smooth(self, func=libpysat.transform.smooth.boxcar, preserve_metadata='True', **kwargs):
+        res = func(self.data.values, **kwargs)
+        return _spectral_unary_op(self, res, preserve_metadata=preserve_metadata)
 
     @property
     def metadata(self):
@@ -49,4 +66,5 @@ class PySatBase(object):
                 index = wv.append(Index(self._metadata_index))
             else:
                 index = wv
+            print(index)
             self.index = index

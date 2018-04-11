@@ -51,7 +51,6 @@ def gaussian(y, window_size=3, sigma=2, axis=0, **kwargs):
     if 'mode' not in kwargs.keys():
         kwargs['mode'] = 'same'
     filt = signal.gaussian(window_size, sigma)
-    print(filt)
     if y.ndim == 1:
         return np.convolve(y, filt, **kwargs)
     else:
