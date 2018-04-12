@@ -22,12 +22,13 @@ from libpysat.spectral.jade import JADE
 from libpysat.spectral.lra import low_rank_align as LRA
 from sklearn import cross_validation
 from sklearn.decomposition import PCA, FastICA
+from sklearn.cluster import KMeans, SpectralClustering
 from sklearn.preprocessing import StandardScaler
 import sklearn.ensemble as ensemble
 
 from sklearn.manifold.t_sne import TSNE
 from sklearn.manifold.locally_linear import LocallyLinearEmbedding
-
+from sklearn.ensemble import IsolationForest
 
 def norm_total(df):
     df = df.div(df.sum(axis=1), axis=0)
@@ -382,6 +383,16 @@ class spectral_data(object):
             self.df[(method, str(i))] = dim_red_result[:, i - 1]
 
         return self.do_dim_red
+
+    def cluster(self, col, method, params, kws):
+        if method == 'K-Means':
+            self.do_cluster = KMeans(*params, **kws)
+        if method == 'Spectral':
+            self.do_cluster = SpectralClustering(*params, **kws)
+
+        self.do_cluster.fit(self.df[col])
+        self.df[(method, 'Cluster')] = self.do_cluster.labels_
+
 
     def outlier_removal(self, col, method, params):
         if method == 'Isolation Forest':

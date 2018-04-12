@@ -154,6 +154,7 @@ class cv:
                 else:
                     cvcols = [('predict', '"'+method+'-CV-' + str(self.paramgrid[i]) + '"')]
                     #fit the model and predict teh held-out data
+                    model = regression([method], [yrange], [self.paramgrid[i]])
                     model.fit(cv_train[xcols], cv_train[ycol])
                     if model.goodfit:
                         y_pred_holdout = model.predict(cv_holdout[xcols])
