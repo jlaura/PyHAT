@@ -3,7 +3,7 @@ from regression.regression import regression
 
 def test_PLS():
     regress = regression(method=['PLS'], yrange=[0.0, 100.0], params=[{'n_components': 0,
-                                                                       'scale': False}], ransacparams={})
+                                                                       'scale': False}])
 
 
 def test_GP():
@@ -13,18 +13,16 @@ def test_GP():
                                   'random_start': 1,
                                   'theta0': 1.0,
                                   'thetaL': 0.1,
-                                  'thetaU': 100.0}], ransacparams={})
+                                  'thetaU': 100.0}])
 
 
 def test_OLS():
-    regress = regression(method=['OLS'], yrange=[0.0, 100.0], params=[{'fit_intercept': True}], ransacparams={})
+    regress = regression(method=['OLS'], yrange=[0.0, 100.0], params=[{'fit_intercept': True}])
 
 
 def test_OMP():
     regress = regression(method=['OMP'], yrange=[0.0, 100.0], params=[{'fit_intercept': True,
-                                                                       'n_nonzero_coefs': 615,
-                                                                       'CV': True}],
-                         ransacparams={})
+                                                                       'n_nonzero_coefs': 615}])
 
 
 def test_Lasso():
@@ -34,8 +32,7 @@ def test_Lasso():
                                   'max_iter': 1000,
                                   'tol': 0.0001,
                                   'positive': False,
-                                  'selection': 'random',
-                                  'CV': True}], ransacparams={})
+                                  'selection': 'random'}])
 
 
 def test_Elastic_Net():
@@ -51,8 +48,7 @@ def test_Elastic_Net():
                                   'warm_start': False,
                                   'positive': False,
                                   'selection': 'cyclic',
-                                  'random_state': 'None'}],
-                         ransacparams={})
+                                  'random_state': 'None'}])
 
 
 def test_Ridge():
@@ -64,8 +60,7 @@ def test_Ridge():
                                   'normalize': False,
                                   'solver': 'auto',
                                   'tol': 0.0,
-                                  'random_state': ''}],
-                         ransacparams={})
+                                  'random_state': ''}])
 
 
 def test_Bayesian_Ridge():
@@ -80,7 +75,7 @@ def test_Bayesian_Ridge():
                                   'fit_intercept': True,
                                   'normalize': False,
                                   'copy_X': True,
-                                  'verbose': False}], ransacparams={})
+                                  'verbose': False}])
 
 
 def test_ARD():
@@ -96,8 +91,7 @@ def test_ARD():
                                   'fit_intercept': True,
                                   'normalize': False,
                                   'copy_X': True,
-                                  'verbose': False}],
-                         ransacparams={})
+                                  'verbose': False}])
 
 
 def test_LARS():
@@ -110,7 +104,7 @@ def test_LARS():
                                   'precompute': True,
                                   'copy_X': True,
                                   'eps': 2.220445,
-                                  'fit_path': True}], ransacparams={})
+                                  'fit_path': True}])
 
 
 def test_Lasso_LARS():
@@ -124,7 +118,7 @@ def test_Lasso_LARS():
                                   'precompute': 'Auto',
                                   'max_iter': 500,
                                   'eps': 2.220446,
-                                  'fit_path': True}], ransacparams={})
+                                  'fit_path': True}])
 
 
 def test_SVR():
@@ -138,7 +132,7 @@ def test_SVR():
                                                                        'tol': 0.001,
                                                                        'cache_size': 200,
                                                                        'verbose': False,
-                                                                       'max_iter': -1}], ransacparams={})
+                                                                       'max_iter': -1}])
 
 
 def test_KRR():
@@ -148,7 +142,7 @@ def test_KRR():
                                   'gamma': 'None',
                                   'degree': 3.0,
                                   'coef0': 1.0,
-                                  'kernel_params': 'None'}], ransacparams={})
+                                  'kernel_params': 'None'}])
 
 
 test_PLS()
