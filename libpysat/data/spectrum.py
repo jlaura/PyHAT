@@ -53,6 +53,8 @@ class Spectrum(PySatBase, Series):
         if type(val) == Series:
             val.__class__ = Spectrum
             val.wavelengths = self.wavelengths
+            val._metadata_index = self._metadata_index
+            val._tolerance = self._tolerance
         return val
 
     def __getitem__(self, key):

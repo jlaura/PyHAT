@@ -1,4 +1,5 @@
 import numpy as np
+import numpy.polynomial.polynomial as poly
 import pandas as pd
 import scipy.stats as ss
 
@@ -25,10 +26,6 @@ def regression(ny, nx):
     y = m * np.asarray(nx) + b
     return y
 
-def cubic(spectrum, nodes):
-    raise (NotImplemented)
-
-
 def linear(ny, nx):
     """
     Compute a continuum using a line between two points
@@ -53,29 +50,18 @@ def linear(ny, nx):
     y = m * np.asarray(nx) + b
     return y
 
-def adaptive_polynomial(ny, nx, points, window=5, order=2):
-    #Define the search windows
-    windows = np.empty(len(points), dtype=list)
-    for i, point in enumerate(points):
-        windows[i] = ((np.where((nx > point - window) & (nx < point + window))[0]))
-
-    #Get the maximum within the window
-    maxima = np.empty(len(points), dtype = int)
-    for i, t_window in enumerate(windows):
-        maxima[i] = ny[t_window.argmax() + t_window[0]]
-
-    x = np.asarray([nx[i-1] for i in maxima])
-    y = np.asarray([ny[i-1] for i in maxima])
-
-    fit = np.polyfit(x,y,order)
-    continuum = np.polyval(fit,nx)
-
+def polynomial(ny, nx, order=2):    
+    coeffs = poly.polyfit(nx,ny,order)
+    continuum = poly.polyval(nx, coeffs)
     return continuum
 
 
-def continuum_correction(data, wv, nodes, correction_nodes=np.array([]), correction=linear, axis=0, **kwargs):
+def continuum_correction(data, wv, nodes, correction_nodes=np.array([]),
+                         correction=linear, axis=0, adaptive=False,
+                         window=3, **kwargs):
     if not correction_nodes:
         correction_nodes = nodes
+
     correction_idx = []
     for start, stop in zip(correction_nodes, correction_nodes[1:]):
         start = np.where(np.isclose(wv, [start], atol=1))[0][0]
@@ -86,9 +72,13 @@ def continuum_correction(data, wv, nodes, correction_nodes=np.array([]), correct
     denom = np.zeros(data.shape)
 
     for i, (start, stop) in enumerate(zip(nodes, nodes[1:])):
-        # Get the start and stop indices into the wavelength array. These define the correction nodes
-        start_idx = np.where(np.isclose(wv, [start], atol=1))[0][0]
-        stop_idx = np.where(np.isclose(wv, [stop], atol=1))[0][0]+1 # +1 as slices are exclusive
+        if adaptive:
+            start_idx = np.argmax(wv[start-window:start+window+1])
+            stop_idx = np.argmin(wv[start-window:start+window+1])
+        else:
+            # Get the start and stop indices into the wavelength array. These define the correction nodes
+            start_idx = np.where(np.isclose(wv, [start], atol=1))[0][0]
+            stop_idx = np.where(np.isclose(wv, [stop], atol=1))[0][0]+1 # +1 as slices are exclusive
         # Grab the correction indices.  These define the length of the line to be corrected
         cor_idx = correction_idx[i]
 

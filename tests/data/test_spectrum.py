@@ -110,15 +110,16 @@ def test_smoothing_return_type(spectrum, func):
     ss = spectrum.smooth(func=func)
     assert isinstance(ss, Spectrum)
     
-@pytest.mark.parametrize("spectrum, func", 
-                         [(long_spectrum(), libpysat.transform.continuum.linear),
-                          (long_spectrum(), libpysat.transform.continuum.regression),
-                          (metadata_spectrum(), libpysat.transform.continuum.regression)])
-def test_continumm_correction_return_type(spectrum, func):
-    cc, denom = spectrum.continuum_correct(func=func)
+@pytest.mark.parametrize("spectrum, func, kwargs", 
+                         [(long_spectrum(), libpysat.transform.continuum.linear, {}),
+                          (long_spectrum(), libpysat.transform.continuum.regression, {}),
+                          (metadata_spectrum(), libpysat.transform.continuum.regression, {}),
+                          (long_spectrum(), libpysat.transform.continuum.polynomial, {'order':1})
+                          ])
+def test_continumm_correction_return_type(spectrum, func, kwargs):
+    cc, denom = spectrum.continuum_correct(func=func, **kwargs)
     assert isinstance(cc, Spectrum)
     assert isinstance(denom, Spectrum)
-
 
 @pytest.mark.parametrize("spectrum, func, metadata, expected", 
                          [(long_spectrum(), libpysat.transform.continuum.linear, True, None),
