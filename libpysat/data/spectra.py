@@ -1,20 +1,9 @@
 from pandas import DataFrame, Series, to_numeric
-import random as rand
-
 import numpy as np
-
-from numbers import Real
-from numbers import Number
-
-from functools import reduce
-from functools import singledispatch
 
 from . import io
 from .base import PySatBase
-from libpysat.data import _index as _idx
 from .spectrum import Spectrum
-from ..transform import continuum
-from ..utils import utils
 
 import libpysat
 
