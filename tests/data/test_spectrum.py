@@ -14,8 +14,8 @@ def basic_spectrum():
 @pytest.fixture
 def long_spectrum():
     return Spectrum([1, 1.5, 2, 2.5, 5, 3, 3.5, 7, 4, 4.5, 5],
-                    index=range(11),
-                    wavelengths=range(11))
+                    index=np.arange(1,12),
+                    wavelengths=np.arange(1,12))
 
 @pytest.fixture
 def metadata_spectrum():
@@ -100,3 +100,9 @@ def test_smoothing_return_type(spectrum, func):
     ss = spectrum.smooth(func=func)
     assert isinstance(ss, Spectrum)
     
+@pytest.mark.parametrize("spectrum, func", 
+                         [(long_spectrum(), libpysat.transform.continuum.linear),
+                          (long_spectrum(), libpysat.transform.continuum.linear)])
+def test_continumm_correction_return_type(spectrum, func):
+    cc, denom = spectrum.continuum_correct(func=func)
+    assert isinstance(cc, Spectrum)

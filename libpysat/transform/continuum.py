@@ -100,13 +100,13 @@ def horgan(data, wv_array, points, window):
 def continuum_correction(data, wv, nodes, correction_nodes=np.array([]), correction=linear, axis=0, **kwargs):
     if not correction_nodes:
         correction_nodes = nodes
-
+    print('NDS', nodes, correction_nodes, wv)
     correction_idx = []
     for start, stop in zip(correction_nodes, correction_nodes[1:]):
         start = np.where(np.isclose(wv, [start], atol=1))[0][0]
         stop = np.where(np.isclose(wv, [stop], atol=1))[0][0]+1 # +1 as slices are exclusive
         correction_idx.append((start, stop))
-
+    print(correction_idx)
     # Make a copy of the input data that will house the corrected spectra
     corrected = np.copy(data)
     denom = np.zeros(data.shape)
@@ -115,17 +115,15 @@ def continuum_correction(data, wv, nodes, correction_nodes=np.array([]), correct
         # Get the start and stop indices into the wavelength array. These define the correction nodes
         start_idx = np.where(np.isclose(wv, [start], atol=1))[0][0]
         stop_idx = np.where(np.isclose(wv, [stop], atol=1))[0][0]+1 # +1 as slices are exclusive
-
         # Grab the correction indices.  These define the length of the line to be corrected
         cor_idx = correction_idx[i]
 
         nodeidx = [slice(None, None)]*len(data.shape)
-        nodeidx[axis] = slice(start_idx,stop_idx)
+        nodeidx[axis] = slice(start_idx,stop_idx+1)
         corridx = [slice(None, None)]*len(data.shape)
-        corridx[axis] = slice(cor_idx[0],cor_idx[1])
-
+        corridx[axis] = slice(cor_idx[0],cor_idx[1]+1)
         # Compute an arbitrary correction
-        y = correction(data[tuple(nodeidx)], wv[cor_idx[0]:cor_idx[1]], axis=axis, **kwargs)
+        y = correction(data[tuple(nodeidx)], wv[cor_idx[0]:cor_idx[1]+1], axis=axis, **kwargs)
 
         # Apply the correction to a copy of the input data and then step to the next subset
         vals = data[tuple(corridx)] / y

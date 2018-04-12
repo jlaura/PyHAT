@@ -6,6 +6,23 @@ from ..transform import smooth
 import libpysat
 
 def _spectral_unary_op(this, new, preserve_metadata=True):
+    """
+    Wrapper for funcs that should return a spectral type
+
+    Parameters
+    ----------
+    this : obj
+           The parent or source Spectra/Spectrum that is operated on
+
+    new : obj
+          The return from the operation. Should be an ndarray, series,
+          or dataframe
+    
+    preserve_metadata : bool
+                        Whether or not the metadata should be added to 
+                        the returned object if any metadata is present
+                        on the parent (this) object. Default: True
+    """
 
     # Create the new class with the metadata obj, but the
     # data only index
@@ -28,8 +45,21 @@ def _spectral_unary_op(this, new, preserve_metadata=True):
 
 class PySatBase(object):
 
-    def continuum_correct(self, func):
-        print('CC')
+    def continuum_correct(self, nodes=[], correction_nodes=[],
+                         func=libpysat.transform.continuum.linear, 
+                         preserve_metadata=True,
+                         **kwargs):
+        if not nodes:
+            nodes = [self.wavelengths[0], self.wavelengths[-1]]
+        res, denom = libpysat.transform.continuum.continuum_correction(self.data.values,
+                                                                       self.wavelengths,
+                                                                       nodes=nodes,
+                                                                       correction_nodes=correction_nodes,
+                                                                       correction=func,
+                                                                       **kwargs)
+        res = _spectral_unary_op(self, res, preserve_metadata=preserve_metadata)
+        return res, denom
+
 
     def smooth(self, func=libpysat.transform.smooth.boxcar, preserve_metadata='True', **kwargs):
         res = func(self.data.values, **kwargs)

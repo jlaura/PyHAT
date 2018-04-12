@@ -152,9 +152,12 @@ def test_concat(spectra):
                           (spectra()['a'], libpysat.transform.smooth.boxcar, Spectrum),
                           (spectra_metadata()['a'], libpysat.transform.smooth.gaussian, Spectrum),
                           (spectra_metadata()[['a', 'c']], libpysat.transform.smooth.gaussian, Spectra),
-                          (spectra_multiindex(), libpysat.transform.smooth.boxcar, Spectra)
+                          (spectra_multiindex(), libpysat.transform.smooth.boxcar, Spectra),
+                          (spectra_multiindex()[(0,'a')], libpysat.transform.smooth.boxcar, Spectrum),
+                          (spectra_multiindex()[0], libpysat.transform.smooth.gaussian, Spectra)
                          ])
-def test_smoothing_return_type(spectrum, func, cls):
+def test_func_return_type(spectrum, func, cls):
+    # Using smoothing as a proxy, test the return type for a spectral func
     ss = spectrum.smooth(func=func, preserve_metadata=False)
     ss = spectrum.smooth(func=func, preserve_metadata=True)
     assert isinstance(ss, cls)
