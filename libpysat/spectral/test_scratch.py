@@ -7,7 +7,7 @@ Created on Fri Nov 07 12:29:20 2014
 
 import glob
 
-import baseline_code.ccam_remove_continuum
+from libpysat.spectral.baseline_code import ccam_remove_continuum
 import matplotlib.pyplot as plot
 import numpy
 from scipy.io.idl import readsav
@@ -22,7 +22,7 @@ x = numpy.arange(len(muv))
 # plot.figure()
 # plot.plot(muv_noise)
 
-test = baseline_code.ccam_remove_continuum.ccam_remove_continuum(x, muv, 5, 2, 2)
+test = ccam_remove_continuum.ccam_remove_continuum(x, muv, 5, 2, 2)
 plot.figure()
 plot.plot(test)
 plot.plot(muv_orig)
