@@ -3,46 +3,40 @@ import pandas as pd
 import scipy.stats as ss
 
 
-def regression(nx, ny):
+def regression(ny, nx):
     """
-    Parameters
-    ==========
-    specturm : pd.series
-               Pandas Series object
+    Compute a continuum using a standard linear regression.
 
-    nodes : list
-            of nodes to be used for the continuum
+    Parameters
+    ----------
+    nx : np.ndarray
+         A 1d array of the x values (generally wavelength)
+
+    ny : np.ndarray
+         A 1d array of the y values (generally the observed)
 
     Returns
-    =======
-    corrected : array
-                Continuum corrected array
-
-    continuum : array
-                The continuum used to correct the data
-
-    x : array
-        The potentially truncated x values
+    -------
+    y : nd.array
+        A 1d continuum correction
     """
 
-    m, b, r_value, p_value, stderr = ss.linregress(nx, ny)
-    c = m * nx + b
-    return c
-
+    m, b, _, _, _ = ss.linregress(nx, ny)
+    y = m * np.asarray(nx) + b
+    return y
 
 def cubic(spectrum, nodes):
     raise (NotImplemented)
 
 
-def linear(data, wv_array, axis=0):
+def linear(ny, nx):
     """
-    perform linear continuum correction on a ndarray
+    Compute a continuum using a line between two points
 
-    parameters
+    Parameters
     ----------
-
     data : ndarray
-           The array to continuum correct
+           A 1d array of y (observed) values
 
     wv_array : ndarray
                array of wavelengths parallel to the wavelengths axis
@@ -50,63 +44,43 @@ def linear(data, wv_array, axis=0):
     axis : int
            The array axis along which the wavelengths exist
     """
-    y1 = np.take(data, 0, axis=axis)
-    y2 = np.take(data, -1, axis=axis)
-    wv1 = wv_array[0]
-    wv2 = wv_array[-1]
+    y1 = ny[0]
+    y2 = ny[-1]
+    wv1 = nx[0]
+    wv2 = nx[-1]
     m = (y2 - y1) / (wv2 - wv1)
     b = y1 - (m * wv1)
-
-    new_wv_shape = [wv_array.size] + [s for s in m.shape]
-    wv_array = np.repeat(wv_array, m.size).reshape(new_wv_shape)
-
-    y = m * wv_array
-    y += b
-
-    # reshape the array back to normal
-    # TODO: make this less ugly
-    for i in range(data.ndim-1):
-        y = np.swapaxes(y, i, i+1)
+    y = m * np.asarray(nx) + b
     return y
 
-
-def regression(data, wv_array):
-    m,b,_,_,_ =  ss.linregress(wv_array, data)
-    regressed_continuum = m * wv_array + b
-    return  data / regressed_continuum
-
-
-def horgan(data, wv_array, points, window):
+def adaptive_polynomial(ny, nx, points, window=5, order=2):
     #Define the search windows
     windows = np.empty(len(points), dtype=list)
     for i, point in enumerate(points):
-        windows[i] = ((np.where((wv_array > point - window) & (wv_array < point + window))[0]))
+        windows[i] = ((np.where((nx > point - window) & (nx < point + window))[0]))
 
     #Get the maximum within the window
     maxima = np.empty(len(points), dtype = int)
     for i, t_window in enumerate(windows):
-        maxima[i] = data[t_window.argmax() + t_window[0]]
+        maxima[i] = ny[t_window.argmax() + t_window[0]]
 
-    x = np.asarray([wv_array[i-1] for i in maxima])
-    y = np.asarray([data[i-1] for i in maxima])
+    x = np.asarray([nx[i-1] for i in maxima])
+    y = np.asarray([ny[i-1] for i in maxima])
 
-    fit = np.polyfit(x,y,2)
-    continuum = np.polyval(fit,wv_array)
-    continuum_corrected =  data / continuum
+    fit = np.polyfit(x,y,order)
+    continuum = np.polyval(fit,nx)
 
-    return continuum_corrected
+    return continuum
 
 
 def continuum_correction(data, wv, nodes, correction_nodes=np.array([]), correction=linear, axis=0, **kwargs):
     if not correction_nodes:
         correction_nodes = nodes
-    print('NDS', nodes, correction_nodes, wv)
     correction_idx = []
     for start, stop in zip(correction_nodes, correction_nodes[1:]):
         start = np.where(np.isclose(wv, [start], atol=1))[0][0]
         stop = np.where(np.isclose(wv, [stop], atol=1))[0][0]+1 # +1 as slices are exclusive
         correction_idx.append((start, stop))
-    print(correction_idx)
     # Make a copy of the input data that will house the corrected spectra
     corrected = np.copy(data)
     denom = np.zeros(data.shape)
@@ -123,15 +97,12 @@ def continuum_correction(data, wv, nodes, correction_nodes=np.array([]), correct
         corridx = [slice(None, None)]*len(data.shape)
         corridx[axis] = slice(cor_idx[0],cor_idx[1]+1)
         # Compute an arbitrary correction
-        y = correction(data[tuple(nodeidx)], wv[cor_idx[0]:cor_idx[1]+1], axis=axis, **kwargs)
+        y = np.apply_along_axis(correction, axis, data[tuple(nodeidx)],
+                                wv[cor_idx[0]:cor_idx[1]+1], **kwargs)
+        #y = correction(data[tuple(nodeidx)], wv[cor_idx[0]:cor_idx[1]+1], axis=axis, **kwargs)
 
         # Apply the correction to a copy of the input data and then step to the next subset
         vals = data[tuple(corridx)] / y
         corrected[tuple(corridx)] = vals
         denom[tuple(corridx)] = y
     return corrected, denom
-
-
-correction_methods = {'linear': linear,
-                      'regression': regression,
-                      'cubic': cubic}

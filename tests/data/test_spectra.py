@@ -7,7 +7,7 @@ from libpysat import Spectra, Spectrum
 
 @pytest.fixture
 def spectra():
-    return Spectra(np.arange(16).reshape(4,4),
+    return Spectra(np.arange(1,17).reshape(4,4),
                    index=[2.22221, 3.33331, 4.400001, 5.500001],
                    wavelengths=[2.22221, 3.33331, 4.400001, 5.500001], 
                    columns=['a', 'b', 'c', 'd'])
@@ -16,7 +16,7 @@ def spectra():
 def spectra_multiindex():
     multi = [(0, 'a'), (0, 'b'), (1, 'a'), (1, 'b')]
     cols = MultiIndex.from_tuples(multi, names=['observationid', 'wv'])
-    return Spectra(np.arange(20).reshape(5,4),
+    return Spectra(np.arange(1,21).reshape(5,4),
                    index=[2.22221, 3.33331, 4.400001, 5.500001, 6.6],
                    wavelengths=[2.22221, 3.33331, 4.400001, 5.500001, 6.6], 
                    columns=cols)
@@ -29,7 +29,7 @@ def spectra_metadata():
         return Spectra([[1,2,3,4],
                         [1,2,3,4],
                         [1,2,3,4],
-                        [1,2,4,4],
+                        [1,2,3,4],
                         ['a', 'a', 'a', 'a'],
                         ['b', 'b', 'b', 'b'],
                         ['c', 'c', 'c', 'c']],
@@ -161,3 +161,23 @@ def test_func_return_type(spectrum, func, cls):
     ss = spectrum.smooth(func=func, preserve_metadata=False)
     ss = spectrum.smooth(func=func, preserve_metadata=True)
     assert isinstance(ss, cls)
+
+
+@pytest.mark.parametrize("spectrum, func, cls", 
+                         [(spectra(), libpysat.transform.continuum.linear, Spectra),
+                          (spectra(), libpysat.transform.continuum.regression, Spectra),
+                          (spectra_metadata()['a'], libpysat.transform.continuum.regression, Spectrum),
+                          (spectra_metadata(), libpysat.transform.continuum.linear, Spectra),
+                          (spectra_metadata()[['a', 'b']], libpysat.transform.continuum.linear, Spectra),
+                          (spectra_metadata()[['a', 'b']], libpysat.transform.continuum.linear, Spectra),
+                          (spectra()['a'],  libpysat.transform.continuum.linear, Spectrum),
+                          (spectra_multiindex(), libpysat.transform.continuum.regression, Spectra),
+                          (spectra_multiindex()[(0,'a')], libpysat.transform.continuum.regression, Spectrum),
+                          (spectra_multiindex()[0],  libpysat.transform.continuum.linear, Spectra),
+                          (spectra_metadata()['a'], libpysat.transform.continuum.regression, Spectrum),
+                         ])
+def test_continuum_correction_metadata(spectrum, func, cls):
+    cc, denom = spectrum.continuum_correct(func=func)
+    print(cc)
+    print(denom)
+    assert isinstance(cc, cls)
