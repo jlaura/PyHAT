@@ -93,7 +93,10 @@ def CCAM_SAV(input_data, ave=True):
     try:
         data['darkname']
     except:
-        data['darkname'] = data['darkspec']
+        try:
+            data['darkname'] = data['darkspec']
+        except:
+            pass
 
     metadata = [fname,
                 fname[4:13],

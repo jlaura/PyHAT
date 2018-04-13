@@ -2,6 +2,7 @@
 # Header data is stored as attributes of the data frame
 # White space is stripped from the column names
 import os
+import gc
 
 import numpy as np
 import pandas as pd
@@ -13,6 +14,7 @@ from libpysat.spectral.spectral_data import spectral_data
 
 
 def CCAM_CSV(input_data, ave=True):
+    #These try/excepts are clunky but get the job done
     try:
         df = pd.read_csv(input_data, header=14, engine='c')
         cols = list(df.columns.values)
@@ -134,8 +136,10 @@ def CCAM_SAV(input_data, ave=True):
                                                         'dnoiseiter',
                                                         'dnoisesig',
                                                         'matchedfilter']))
-    metadata = pd.DataFrame(metadata, columns=pd.MultiIndex.from_tuples(metadata_cols), index=df.index)
-
+    try:
+       metadata = pd.DataFrame(metadata, columns=pd.MultiIndex.from_tuples(metadata_cols), index=df.index)
+    except:
+        pass
     df = pd.concat([metadata, df], axis=1)
     if ave == True:
         df = df.loc['average']
@@ -146,9 +150,9 @@ def CCAM_SAV(input_data, ave=True):
     return df
 
 
-def ccam_batch(directory, searchstring='*.csv', to_csv=None, lookupfile=None, ave=True, progressbar=None):
+def ccam_batch(directory, searchstring='*.csv', to_csv=None, lookupfile=None, ave=True, progressbar=None, left_on = 'sclock', right_on='Spacecraft Clock'):
     # Determine if the file is a .csv or .SAV
-    if '.sav' in searchstring.lower():
+    if 'sav' in searchstring.lower():
         is_sav = True
     else:
         is_sav = False
@@ -180,16 +184,18 @@ def ccam_batch(directory, searchstring='*.csv', to_csv=None, lookupfile=None, av
         progressbar.setRange(0, filelist.size)
         progressbar.show()
     filecount = 0
+    workinglist = []
+    subcount = 0
+
     for i, file in enumerate(filelist):
         filecount = filecount + 1
+        print('File #'+str(filecount))
         print(file)
         if is_sav:
             tmp = CCAM_SAV(file, ave=ave)
         else:
             tmp = CCAM_CSV(file, ave=ave)
-        if i == 0:
-            combined = tmp
-        else:
+        try:
             # This ensures that rounding errors are not causing mismatches in columns
             cols1 = list(combined['wvl'].columns)
             cols2 = list(tmp['wvl'].columns)
@@ -197,16 +203,32 @@ def ccam_batch(directory, searchstring='*.csv', to_csv=None, lookupfile=None, av
                 combined = pd.concat([combined, tmp])
             else:
                 print("Wavelengths don't match!")
+        except:
+            combined = tmp
+        # if doing single shots, save out the data every 50 files so that the program doesn't run out of memory
+        if filecount % 50 == 0 and ave == False:
+            workingfilename = 'temporary_data_files_'+str(subcount)+'-'+str(filecount)+'.csv'
+            workinglist.append(workingfilename)
+            combined.to_csv(workingfilename)
+            subcount = filecount
+            del combined
+            gc.collect()
         if progressbar:
             progressbar.setValue(filecount)
             QtCore.QCoreApplication.processEvents()
         pass
+    if ave == False:
+        for f in workinglist:
+            pass
+        
 
     combined.loc[:, ('meta', 'sclock')] = pd.to_numeric(combined.loc[:, ('meta', 'sclock')])
 
     if lookupfile is not None:
-
-        combined = lookup(combined, lookupfile=lookupfile.replace('[','').replace(']','').replace("'",'').replace(' ','').split(','))
+        try:
+            combined = lookup(combined, lookupfile=lookupfile, left_on=left_on, right_on=right_on, skiprows=1)
+        except:
+            combined = lookup(combined, lookupfile=lookupfile, left_on=left_on, right_on=right_on, skiprows=0)
     if to_csv is not None:
         combined.to_csv(to_csv)
     return spectral_data(combined)
