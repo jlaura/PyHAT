@@ -82,21 +82,24 @@ class sm:
         for i in range(len(blendranges)): #loop over each composition range
             for j in range(len(predictions[0])): #loop over each spectrum
                 ref_tmp=predictions[-1][j]   #get the reference model predicted value
-                #check whether the prediction for the reference spectrum is within the current range            
+                #check whether the prediction for the reference spectrum is within the current range
                 inrangecheck=(ref_tmp>blendranges[i][0])&(ref_tmp<blendranges[i][1])
      
                 if inrangecheck: 
-                    if self.toblend[i][0]==self.toblend[i][1]: #if the results being blended are identical, no blending necessary!
-                        blendval=predictions[self.toblend[i][0]][j]
+                    try:
+                        if self.toblend[i][0]==self.toblend[i][1]: #if the results being blended are identical, no blending necessary!
+                            blendval=predictions[self.toblend[i][0]][j]
 
-                    else:
-                        weight1 = 1 - (ref_tmp - blendranges[i][0]) / (
-                            blendranges[i][1] - blendranges[i][0])  # define the weight applied to the lower model
-                        weight2 = (ref_tmp - blendranges[i][0]) / (
-                            blendranges[i][1] - blendranges[i][0])  # define the weight applied to the higher model
-                        # calculated the blended value (weighted sum)
-                        blendval = weight1 * predictions[self.toblend[i][0]][j] + weight2 * \
-                                                                                  predictions[self.toblend[i][1]][j]
+                        else:
+                            weight1 = 1 - (ref_tmp - blendranges[i][0]) / (
+                                blendranges[i][1] - blendranges[i][0])  # define the weight applied to the lower model
+                            weight2 = (ref_tmp - blendranges[i][0]) / (
+                                blendranges[i][1] - blendranges[i][0])  # define the weight applied to the higher model
+                            # calculated the blended value (weighted sum)
+                            blendval = weight1 * predictions[self.toblend[i][0]][j] + weight2 * \
+                                                                                      predictions[self.toblend[i][1]][j]
+                    except:
+                        pass
                     if overwrite:
                         blended[j] = blendval  # If overwrite is true, write the blended result no matter what
                     else:

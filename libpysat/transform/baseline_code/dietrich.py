@@ -1,5 +1,5 @@
 import numpy as np
-from libpysat.spectral.baseline_code.common import iterative_threshold, Baseline
+from libpysat.transform.baseline_code.common import iterative_threshold, Baseline
 from scipy.ndimage.morphology import binary_erosion
 from scipy.signal import convolve
 
