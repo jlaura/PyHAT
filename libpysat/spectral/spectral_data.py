@@ -25,7 +25,7 @@ from sklearn.decomposition import PCA, FastICA
 from sklearn.cluster import KMeans, SpectralClustering
 from sklearn.preprocessing import StandardScaler
 import sklearn.ensemble as ensemble
-
+from sklearn.neighbors import LocalOutlierFactor
 from sklearn.manifold.t_sne import TSNE
 from sklearn.manifold.locally_linear import LocallyLinearEmbedding
 from sklearn.ensemble import IsolationForest
@@ -397,14 +397,20 @@ class spectral_data(object):
     def outlier_removal(self, col, method, params):
         if method == 'Isolation Forest':
             self.do_outlier_removal = IsolationForest(**params)
+        if method == 'Local Outlier Factor':
+            self.do_outlier_removal =LocalOutlierFactor(**params)
         else:
             method == None
         self.do_outlier_removal.fit(np.array(self.df[col]))
-        outlier_scores = self.do_outlier_removal.decision_function(np.array(self.df[col]))
-        self.df[('meta','Outlier Scores - '+method+str(params))] = outlier_scores
-        #is_outlier = self.do_outlier_removal.predict(np.array(self.df[col]))
-        #self.df[('meta', 'Outliers - ' + method + str(params))] = is_outlier
-
+        if method == 'Isolation Forest':
+            outlier_scores = self.do_outlier_removal.decision_function(np.array(self.df[col]))
+            self.df[('meta','Outlier Scores - '+method+str(params))] = outlier_scores
+            is_outlier = self.do_outlier_removal.predict(np.array(self.df[col]))
+            self.df[('meta', 'Outliers - ' + method + str(params))] = is_outlier
+        if method == 'Local Outlier Factor':
+            is_outlier = self.do_outlier_removal.fit_predict(np.array(self.df[col]))
+            self.df[('meta', 'Outliers - ' + method + str(params))] = is_outlier
+            self.df[('meta', 'Outlier Factor - '+method + str(params))] = self.do_outlier_removal.negative_outlier_factor_
         return self.do_outlier_removal
 
     def pca(self, col, nc=None, load_fit=None):
