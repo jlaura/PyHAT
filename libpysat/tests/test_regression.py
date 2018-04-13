@@ -1,9 +1,10 @@
-from regression.regression import regression
+from libpysat.regression.regression import regression
 
 
 def test_PLS():
-    regress = regression(method=['PLS'], yrange=[0.0, 100.0], params=[{'n_components': 0,
-                                                                       'scale': False}])
+
+    regress = regression(method=['PLS'], yrange=[0.0, 100.0],
+                         params=[{'n_components': 0,'scale': False}])
 
 
 def test_GP():
@@ -17,7 +18,8 @@ def test_GP():
 
 
 def test_OLS():
-    regress = regression(method=['OLS'], yrange=[0.0, 100.0], params=[{'fit_intercept': True}])
+    regress = regression(method=['OLS'], yrange=[0.0, 100.0],
+                         params=[{'fit_intercept': True}])
 
 
 def test_OMP():
@@ -117,6 +119,7 @@ def test_Lasso_LARS():
                                   'copy_X': True,
                                   'precompute': 'Auto',
                                   'max_iter': 500,
+                                  'model': 0,
                                   'eps': 2.220446,
                                   'fit_path': True}])
 
@@ -143,8 +146,6 @@ def test_KRR():
                                   'degree': 3.0,
                                   'coef0': 1.0,
                                   'kernel_params': 'None'}])
-
-
 test_PLS()
 test_GP()
 test_OLS()
