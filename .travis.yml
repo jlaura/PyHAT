@@ -43,7 +43,7 @@ install:
 
 script:
   - python setup.py install
-  - pytest --cov=libpysat
+  - pytest --cov=pysat
 
 after_success:
   - coveralls
