@@ -45,3 +45,5 @@ def two_dim():
 @pytest.fixture
 def one_dim():
     return n_dim(1)
+
+
