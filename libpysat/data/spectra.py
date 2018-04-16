@@ -1,21 +1,11 @@
 from pandas import DataFrame, Series, to_numeric
-import random as rand
-
 import numpy as np
-
-from numbers import Real
-from numbers import Number
-
-from functools import reduce
-from functools import singledispatch
 
 from . import io
 from .base import PySatBase
-from libpysat.data import _index as _idx
 from .spectrum import Spectrum
-from ..transform import continuum
-from ..utils import utils
 
+import libpysat
 
 class Spectra(PySatBase, DataFrame):
     """
@@ -37,7 +27,6 @@ class Spectra(PySatBase, DataFrame):
     # attributes that carry over on operations
     _metadata = ['wavelengths', '_metadata_index', '_tolerance']
 
-
     def __init__(self, *args, **kwargs):
         wavelengths = kwargs.pop('wavelengths', None)
         metadata_index = kwargs.pop('metadata', None)
@@ -47,7 +36,6 @@ class Spectra(PySatBase, DataFrame):
         self.wavelengths = wavelengths
         self._metadata_index = metadata_index
         self.tolerance = tolerance
-
         self._reindex()
 
     @property
@@ -101,8 +89,10 @@ class Spectra(PySatBase, DataFrame):
         if isinstance(result, Series):
             result.__class__ = Spectrum
             result.wavelengths = self.wavelengths
-            result.tolerance = self.tolerance
             result._metadata_index = self._metadata_index
+            # Tolerance has to be set last because a change in tolerance updates
+            # the existing indices
+            result.tolerance = self.tolerance
             self._reindex()
         elif isinstance(result, DataFrame):
             result.__class__ = Spectra
@@ -111,23 +101,7 @@ class Spectra(PySatBase, DataFrame):
             result._metadata_index = self._metadata_index
             self._reindex()
         return result
-        #if isinstance(self.index, pd.MultiIndex):
-        #    return self.get[:,:,key]
-        #else:
-        #     return self.get[:,key]
 
-
-    '''@classmethod
-    def from_spectral_profiler(cls, f, tolerance=1):
-        """
-        Generate DataFrame from spectral profiler data.
-
-        parameters
-        ----------
-        f : str
-            file path to spectral profiler file
-
-        tolerance : Real
-                    Tolerance for floating point index
-        """
-        return io.spectral_profiler(f, tolerance=tolerance)'''
+    @classmethod
+    def from_file(cls, filename, **kwargs):
+        return io.read_file(filename, **kwargs)

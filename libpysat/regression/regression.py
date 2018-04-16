@@ -43,24 +43,66 @@ class regression:
             self.model = linear.LinearRegression(**params[i])
 
         if self.method[i] == 'OMP':
-          # create a temporary set of parameters
+            # check whether to do CV or not
+            self.do_cv = params[i]['CV']
+            # create a temporary set of parameters
             params_temp = copy.copy(params[i])
-            self.model = linear.OrthogonalMatchingPursuit(**params_temp)
+            # Remove CV parameter
+            params_temp.pop('CV')
+            if self.do_cv is False:
+                self.model = linear.OrthogonalMatchingPursuit(**params_temp)
+            else:
+                if 'precompute' in params[i]:
+                    params_temp.pop('precompute')
+                self.model = linear.OrthogonalMatchingPursuitCV(**params_temp)
 
         if self.method[i] == 'LASSO':
             # create a temporary set of parameters
             params_temp = copy.copy(params[i])
+            # check whether to do CV or not
+            try:
+                self.do_cv = params[i]['CV']
+                # Remove CV parameter
+                params_temp.pop('CV')
+            except:
+                self.do_cv = False
 
-            self.model = linear.Lasso(**params_temp)
+            if self.do_cv is False:
+                self.model = linear.Lasso(**params_temp)
+            else:
+                params_temp.pop('alpha')
+                self.model = linear.LassoCV(**params_temp)
 
         if self.method[i] == 'Elastic Net':
             params_temp = copy.copy(params[i])
-            self.model = linear.ElasticNet(**params_temp)
+            try:
+                self.do_cv = params[i]['CV']
+                params_temp.pop('CV')
+            except:
+                self.do_cv = False
+
+            if self.do_cv is False:
+                self.model = linear.ElasticNet(**params_temp)
+            else:
+                params_temp['l1_ratio'] = [.1, .5, .7, .9, .95, .99, 1]
+                self.model = linear.ElasticNetCV(**params_temp)
 
         if self.method[i] == 'Ridge':
             # create a temporary set of parameters
             params_temp = copy.copy(params[i])
-            self.model = linear.Ridge(**params_temp)
+            try:
+                # check whether to do CV or not
+                self.do_cv = params[i]['CV']
+
+                # Remove CV parameter
+                params_temp.pop('CV')
+            except:
+                self.do_cv = False
+
+            if self.do_cv:
+                self.model = linear.RidgeCV(**params_temp)
+            else:
+                self.model = linear.Ridge(**params_temp)
 
         if self.method[i] == 'BRR':
             self.model = linear.BayesianRidge(**params[i])
@@ -71,10 +113,33 @@ class regression:
         if self.method[i] == 'LARS':
             # create a temporary set of parameters
             params_temp = copy.copy(params[i])
-            self.model = linear.Lars(**params_temp)
+            try:
+                # check whether to do CV or not
+                self.do_cv = params[i]['CV']
+
+                # Remove CV parameter
+                params_temp.pop('CV')
+            except:
+                self.do_cv = False
+
+            if self.do_cv is False:
+                self.model = linear.Lars(**params_temp)
+            else:
+                self.model = linear.LarsCV(**params_temp)
 
         if self.method[i] == 'LASSO LARS':
-            self.model = linear.LassoLars(**params)
+            model = params[i]['model']
+            params_temp = copy.copy(params[i])
+            params_temp.pop('model')
+
+            if model == 0:
+                self.model = linear.LassoLars(**params_temp)
+            elif model == 1:
+                self.model = linear.LassoLarsCV(**params_temp)
+            elif model == 2:
+                self.model = linear.LassoLarsIC(**params_temp)
+            else:
+                print("Something went wrong, \'model\' should be 0, 1, or 2")
 
         if self.method[i] == 'SVR':
             self.model = svm.SVR(**params[i])
@@ -131,9 +196,7 @@ class regression:
     def predict(self, x, i=0):
         if self.method[i] == 'GP':
             x = self.do_reduce_dim.transform(x)
-        print(len(x))
         return self.model.predict(x)
-
 
     def calc_Qres_Lev(self, x):
         # calculate spectral residuals

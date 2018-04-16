@@ -10,55 +10,11 @@ from scipy import signal
 
 import libpysat.transform.baseline_code.watrous as watrous
 import numpy
-import scipy.signal
 
 
 def within_range(data, rangevals, col):
     mask = (data[('meta', col)] > rangevals[0]) & (data[('meta', col)] < rangevals[1])
     return data.loc[mask]
-
-
-def boxcar(y, window_size=3):
-    """
-    Smooth the input vector using the mean of the neighboring values,
-    where neighborhood size is defined by the window.
-
-    Parameters
-    ==========
-    y : array
-        The vector to be smoothed.
-
-    window_size : int
-                  An odd integer describing the window size.
-
-    Returns
-    =======
-     : array
-       The smoothed array.
-
-    """
-    filt = np.ones(window_size) / window_size
-    return Series(np.convolve(y, filt, mode='same'), index=y.index)
-
-
-def gaussian(y, window_size=3, sigma=2):
-    """
-    Apply a gaussian filter to smooth the input vector
-
-    Parameters
-    ==========
-    y :  array
-         The input array
-
-    window_size : int
-                  An odd integer describing the size of the filter.
-
-    sigma : float
-            The numver of standard deviation
-    """
-    filt = signal.gaussian(window_size, sigma)
-    return Series(signal.convolve(y, filt, mode='same'), index=y.index)
-
 
 # TODO: The common parsing should be a decorator
 
@@ -218,7 +174,7 @@ def get_noise(Data, niter=3):
         # ;im_smooth, Data, ima_med, winsize=3, method='median'
         sigma = sigma_clip(Data - ima_med, niter=niter) / 0.969684
     if dim == 1:
-        sigma_out, mean = sigma_clip(Data - scipy.signal.medfilt(Data, 3), niter=niter)
+        sigma_out, mean = sigma_clip(Data - signal.medfilt(Data, 3), niter=niter)
         sigma = sigma_out / 0.893421
 
     return sigma
