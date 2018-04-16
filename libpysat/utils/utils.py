@@ -237,3 +237,53 @@ def remove_field_name(a, name):
         names.remove(name)
     b = a[names]
     return b
+
+# This function finds rows of the data frame where a specified column has
+# values matching a specified set of values
+# (Useful for extracting folds)
+def rows_match(df, column_name, isin_array, invert=False):
+    if invert:
+        new_df = df.loc[-df[column_name].isin(isin_array)]
+    else:
+        new_df = df.loc[df[column_name].isin(isin_array)]
+    return new_df
+
+ # This function takes the sum of data over two specified wavelength ranges,
+# calculates the ratio of the sums, and adds the ratio as a column in the data frame
+def ratio(df, range1, range2, rationame=''):
+    cols = df['wvl'].columns.values
+    cols1 = cols[(cols >= range1[0]) & (cols <= range1[1])]
+    cols2 = cols[(cols >= range2[0]) * (cols <= range2[1])]
+
+    df1 = df['wvl'].loc[:, cols1]
+    df2 = df['wvl'].loc[:, cols2]
+
+    sum1 = df1.sum(axis=1)
+    sum2 = df2.sum(axis=1)
+
+    ratio = sum1 / sum2
+
+    df[('ratio', rationame)] = ratio
+    return df
+
+def col_within_range(self, rangevals, col):
+    mask = (self.df[('meta', col)] > rangevals[0]) & (self.df[('meta', col)] < rangevals[1])
+    return self.df.loc[mask]
+
+def enumerate_duplicates(df, col):
+    rows = df[('meta', col)]
+    rows = rows.fillna('-')
+    rows = [str(x) for x in rows]
+    unique_rows = np.unique(rows)
+    rows = np.array(rows)
+    rows_list = list(rows)
+    for i in unique_rows:
+        if i is not '-':
+            matchindex = np.where(rows == i)[0]
+
+            if len(matchindex) > 1:
+                for n, name in enumerate(rows[matchindex]):
+                    rows_list[matchindex[n]] = i + ' - ' + str(n + 1)
+
+    df[('meta', col)] = rows_list
+    return df

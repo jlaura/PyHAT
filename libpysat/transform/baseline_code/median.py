@@ -1,4 +1,4 @@
-from libpysat.spectral.baseline_code.common import Baseline
+from libpysat.transform.baseline_code.common import Baseline
 from scipy.signal import medfilt
 
 
