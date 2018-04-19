@@ -2,7 +2,6 @@ from pandas import Series
 import numpy as np
 
 from ..transform import continuum
-from . import _index as _idx
 from . import spectra
 from .base import PySatBase
 
