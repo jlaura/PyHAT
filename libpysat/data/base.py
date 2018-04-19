@@ -1,7 +1,7 @@
 import numpy as np
 from pandas import Index, concat
 
-from ..transform import smooth
+from ..transform import smooth, continuum
 
 import libpysat
 
@@ -46,7 +46,7 @@ def _spectral_unary_op(this, new, preserve_metadata=True):
 class PySatBase(object):
 
     def continuum_correct(self, nodes=[], correction_nodes=[],
-                         func=libpysat.transform.continuum.linear, 
+                         func=continuum.linear, 
                          preserve_metadata=True,
                          **kwargs):
         """
@@ -96,7 +96,7 @@ class PySatBase(object):
         """
         if not nodes:
             nodes = [self.wavelengths[0], self.wavelengths[-1]]
-        res, denom = libpysat.transform.continuum.continuum_correction(self.data.values,
+        res, denom = continuum.continuum_correction(self.data.values,
                                                                        self.wavelengths,
                                                                        nodes=nodes,
                                                                        correction_nodes=correction_nodes,
@@ -107,7 +107,7 @@ class PySatBase(object):
         return res, denom
 
 
-    def smooth(self, func=libpysat.transform.smooth.boxcar, preserve_metadata='True', **kwargs):
+    def smooth(self, func=smooth.boxcar, preserve_metadata='True', **kwargs):
         res = func(self.data.values, **kwargs)
         return _spectral_unary_op(self, res, preserve_metadata=preserve_metadata)
 

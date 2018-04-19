@@ -1,6 +1,6 @@
 from libpysat.derived.m3 import pipe
 
-def mustard(data, wv_array):
+def mustard(data):
     """
     Name: Visualization from Mustard et al. 2011
     Parameter:1.58um reflectance, 1um integrated band depth, 2um integrated band depth
@@ -25,8 +25,8 @@ def mustard(data, wv_array):
      : ndarray
        the processed ndarray
     """
-    red = pipe.bdi1000(data, wv_array)
-    green = pipe.bdi2000(data, wv_array)
-    blue = pipe.reflectance4(data, wv_array)
+    red = pipe.bdi1000(data)
+    green = pipe.bdi2000(data)
+    blue = pipe.reflectance4(data)
 
     return [red, green, blue]

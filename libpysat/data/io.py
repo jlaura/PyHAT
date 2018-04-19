@@ -1,9 +1,8 @@
 import pandas as pd
 import numpy as np
 
-from plio.io import io_spectral_profiler, io_moon_minerology_mapper
+from plio.io import io_spectral_profiler
 
-from . import hcube as hc
 import libpysat
 
 
@@ -35,22 +34,6 @@ def spectral_profiler(f, **kwargs):
                                            columns=joined.columns,
                                            **kwargs)
 
-
-def m3(f, tolerance = 2, waxis = 0):
-    """
-    Generate DataFrame from spectral profiler data.
-    parameters
-    ----------
-    f : str
-        file path to spectral profiler file
-    tolerance : Real
-                Tolerance for floating point index
-    """
-
-    wavelengths, _, ds = io_moon_minerology_mapper.openm3(f)
-    m3_array = ds.ReadAsArray()
-
-    return hc.HCube(m3_array, wavelengths, waxis = waxis, tolerance=tolerance)
 
 DRIVERS = [spectral_profiler]
 

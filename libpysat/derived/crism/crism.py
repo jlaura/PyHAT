@@ -1,37 +1,43 @@
-from libpysat.utils.utils import generic_func
-from libpysat.derived.crism import crism_funcs as cf
 import numpy as np
 
+from . import crism_funcs as cf
+from ..utils import generic_func
 
-def rockdust1(data, wv_array):
+
+def r770(data, **kwargs):
     """
     Name: R770
     Parameter: 0.77micron reflectance
     Formulation: R770
-    Rationale: rock/dust
+    Kernel Width:
+      - R770: 5
+    Rationale: Higher value more dusty or icy
+    Caveats: Sensitive to slope effects, clouds
 
     Parameters
     ----------
     data : ndarray
            (n,m,p) array
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
     Returns
     -------
      : ndarray
        the processed ndarray
     """
     wv = [770]
-    return(generic_func(data, wv_array, wv, func = cf.rockdust1_func))
+    kernels = {770:5}
+    res = generic_func(data, wv, kernels=kernels, func = cf.rockdust1_func, **kwargs)
+    return res
 
-
-def rockdust2(data, wv_array):
+def rbr(data, **kwargs):
     """
     Name: RBR
     Parameter: Red/Blue Ratio
     Formulation: R770 / R440
-    Rationale: rock/dust
+    Kernel Width:
+      - R440: 5
+      - R770: 5
+    Rationale: Higher value indicates more npFeOx
+    Caveats: Sensitive to dust in atmosphere
 
     Parameters
     ----------
@@ -46,9 +52,11 @@ def rockdust2(data, wv_array):
        the processed ndarray
     """
     wv = [440, 770]
-    return(generic_func(data, wv_array, wv, func = cf.rockdust2_func))
+    kernels = {440:5,
+               770:5}
+    return(generic_func(data, wv, kernels=kernels, func=cf.rockdust2_func, **kwargs))
 
-def bd530(data, wv_array):
+'''def bd530(data, **kwargs):
     """
     NAME: BD530
     PARAMETER: 0.53 micron band depth
@@ -69,9 +77,9 @@ def bd530(data, wv_array):
 
     """
     wv = [440,530,709]
-    return(generic_func(data, wv_array, wv, func = cf.bd530_func))
+    return(generic_func(data, wv, func = cf.bd530_func, **kwargs))
 
-def sh600(data, wv_array):
+def sh600(data, **kwargs):
     """
     NAME: SH600
     PARAMETER: 0.60 micron shoulder height
@@ -92,10 +100,10 @@ def sh600(data, wv_array):
 
     """
     wv = [533,600,710]
-    return(generic_func(data, wv_array, wv, func = cf.sh600_func))
+    return(generic_func(data, wv, func=cf.sh600_func, **kwargs))
 
 
-def bd640(data, wv_array):
+def bd640(data, **kwargs):
     """
     NAME: BD640
     PARAMETER: 0.64 micron band depth
@@ -116,9 +124,9 @@ def bd640(data, wv_array):
 
     """
     wv = [600,648,709]
-    return(generic_func(data, wv_array, wv, func = cf.bd640_func))
+    return(generic_func(data, wv, func = cf.bd640_func, **kwargs))
 
-def bd860(data, wv_array):
+def bd860(data, **kwargs):
     """
     NAME: BD860
     PARAMETER: 0.86 micron band depth
@@ -139,9 +147,9 @@ def bd860(data, wv_array):
 
     """
     wv = [800,860,984]
-    return(generic_func(data, wv_array, wv, func = cf.bd860_func))
+    return(generic_func(data, wv, func = cf.bd860_func, **kwargs))
 
-def bd920(data, wv_array):
+def bd920(data, **kwargs):
     """
     NAME: BD920
     PARAMETER: 0.92 micron band depth
@@ -162,11 +170,11 @@ def bd920(data, wv_array):
 
     """
     wv = [800,920,984]
-    return(generic_func(data, wv_array, wv, func = cf.bd920_func))
+    return(generic_func(data, wv, func = cf.bd920_func, **kwargs))
 
 
 #@@TODO rpeak1
-def rpeak1(data, wv_array):
+def rpeak1(data, **kwargs):
     """
     NAME: BDI1000VIS
     PARAMETER: 1 micron integrated band depth; VIS wavelengths
@@ -177,7 +185,7 @@ def rpeak1(data, wv_array):
     raise NotImplementedError
 
 #@@TODO bdi1000VIS
-def bdi1000VIS(data, wv_array):
+def bdi1000VIS(data, **kwargs):
     """
     NAME: BDI1000VIS
     PARAMETER: 1 micron integrated band depth; VIS wavelengths
@@ -188,7 +196,7 @@ def bdi1000VIS(data, wv_array):
     raise NotImplementedError
 
 #@@TODO bdi1000IR
-def bdi1000IR(data, w_array):
+def bdi1000IR(data, **kwargs):
    """
    NAME: BDI1000IR
      PARAMETER: 1 micron integrated band depth; IR wavelengths
@@ -201,7 +209,7 @@ def bdi1000IR(data, w_array):
    """
    raise NotImplementedError
 
-def ira(data, wv_array):
+def ira(data, **kwargs):
     """
     NAME: IRA
     PARAMETER: 1.3 micron reflectance
@@ -222,9 +230,9 @@ def ira(data, wv_array):
 
     """
     wv = [1330]
-    return(generic_func(data, wv_array, wv, func = cf.ira_func))
+    return(generic_func(data, wv, func = cf.ira_func, **kwargs))
 
-def olivine_index(data, wv_array):
+def olivine_index(data, **kwargs):
     """
     NAME: OLINDEX (prior to TRDR version 3)
     PARAMETER: olivine index
@@ -246,10 +254,10 @@ def olivine_index(data, wv_array):
 
     """
     wv = [1080,1210,1330,1470,1695]
-    return(generic_func(data, wv_array, wv, func = cf.olivine_index_func))
+    return(generic_func(data, wv, func = cf.olivine_index_func, **kwargs))
 
 #@@TODO olivine_index2 (labeled olivine_index3 in JPL doc?
-def olivine_index2(data, wv_array):
+def olivine_index2(data, **kwargs):
     """
     NAME: OLINDEX2 (beginning with TRDR version 3)
     PARAMETER: olivine index with less sensitivity to illumination
@@ -262,7 +270,7 @@ def olivine_index2(data, wv_array):
     raise NotImplementedError
 
 
-def hcp_index(data, wv_array):
+def hcp_index(data, **kwargs):
     """
     NAME: HCPXINDEX
     PARAMETER: pyroxene index
@@ -285,10 +293,10 @@ def hcp_index(data, wv_array):
 
     """
     wv = [1080,1470,2067]
-    return(generic_func(data, wv_array, wv, func = cf.hcp_index_func))
+    return(generic_func(data, wv, func = cf.hcp_index_func, **kwargs))
 
 
-def lcp_index(data, wv_array):
+def lcp_index(data, **kwargs):
     """
      NAME: LCPINDEX
     PARAMETER: pyroxene index
@@ -311,11 +319,11 @@ def lcp_index(data, wv_array):
 
     """
     wv = [1080,1330,1815]
-    return(generic_func(data, wv_array, wv, func = cf.lcp_index_func))
+    return(generic_func(data, wv, func = cf.lcp_index_func, **kwargs))
 
 
 #@@TODO var
-def var(data, wv_array):
+def var(data, **kwargs):
     """
     NAME: VAR
     PARAMETER: spectral variance
@@ -326,7 +334,7 @@ def var(data, wv_array):
     """
     raise NotImplementedError
 
-def islope1(data, wv_array):
+def islope1(data, **kwargs):
     """
     NAME: ISLOPE1
     PARAMETER: -1 * spectral slope1
@@ -347,9 +355,9 @@ def islope1(data, wv_array):
 
     """
     wv = [1815,2530]
-    return(generic_func(data, wv_array, wv, func = cf.islope1_func))
+    return(generic_func(data, wv, func = cf.islope1_func, **kwargs))
 
-def bd1435(data, wv_array):
+def bd1435(data, **kwargs):
     """
     NAME: BD1435
     PARAMETER: 1.435 micron band depth
@@ -370,10 +378,10 @@ def bd1435(data, wv_array):
 
     """
     wv = [1370,1430,1470]
-    return(generic_func(data, wv_array, wv, func = cf.bd1435_func))
+    return(generic_func(data, wv, func = cf.bd1435_func, **kwargs))
 
 
-def bd1500(data, wv_array):
+def bd1500(data, **kwargs):
     """
     NAME: BD1500
     PARAMETER: 1.5 micron band depth
@@ -395,10 +403,10 @@ def bd1500(data, wv_array):
 
     """
     wv = [1367,1505,1558,1808]
-    return(generic_func(data, wv_array, wv, func = cf.bd1500_func))
+    return(generic_func(data, wv, func = cf.bd1500_func, **kwargs))
 
 
-def icer1(data, wv_array):
+def icer1(data, **kwargs):
     """
     NAME: ICER1
     PARAMETER: 1.5 micron and 1.43 micron band ratio
@@ -419,10 +427,10 @@ def icer1(data, wv_array):
 
     """
     wv = [1430,1510]
-    return(generic_func(data, wv_array, wv, func = cf.icer1_func))
+    return(generic_func(data, wv, func = cf.icer1_func, **kwargs))
 
 
-def bd1750(data, wv_array):
+def bd1750(data, **kwargs):
     """
     NAME: BD1750
     PARAMETER: 1.75 micron band depth
@@ -443,10 +451,10 @@ def bd1750(data, wv_array):
 
     """
     wv = [1557,1750,1815]
-    return(generic_func(data, wv_array, wv, func = cf.bd1750_func))
+    return(generic_func(data, wv, func = cf.bd1750_func, **kwargs))
 
 
-def bd1900(data, wv_array):
+def bd1900(data, **kwargs):
     """
     NAME: BD1900
     PARAMETER: 1.9 micron band depth
@@ -468,10 +476,10 @@ def bd1900(data, wv_array):
 
     """
     wv = [1874,1927,1973,2006]
-    return(generic_func(data, wv_array, wv, func = cf.bd1900_func))
+    return(generic_func(data, wv, func = cf.bd1900_func, **kwargs))
 
 #@@TODO bdi2000
-def bdi2000(data, wv_array):
+def bdi2000(data, **kwargs):
     """
     NAME: BDI2000
     PARAMETER: 2 micron integrated band depth
@@ -484,7 +492,7 @@ def bdi2000(data, wv_array):
     raise NotImplementedError
 
 
-def bd2100(data, wv_array):
+def bd2100(data, **kwargs):
     """
     NAME: BD2100
     PARAMETER: 2.1 micron band depth
@@ -505,10 +513,10 @@ def bd2100(data, wv_array):
 
     """
     wv = [1930,2120,2140,2250]
-    return(generic_func(data, wv_array, wv, func = cf.bd2100_func))
+    return(generic_func(data, wv, func = cf.bd2100_func, **kwargs))
 
 
-def bd2210(data, wv_array):
+def bd2210(data, **kwargs):
     """
     NAME: BD2210
     PARAMETER: 2.21 micron band depth
@@ -529,9 +537,9 @@ def bd2210(data, wv_array):
 
     """
     wv = [2140,2210,2250]
-    return(generic_func(data, wv_array, wv, func = cf.bd2210_func))
+    return(generic_func(data, wv, func = cf.bd2210_func, **kwargs))
 
-def bd2290(data, wv_array):
+def bd2290(data, **kwargs):
     """
     NAME: BD2290
     PARAMETER: 2.29 micron band depth
@@ -553,10 +561,10 @@ def bd2290(data, wv_array):
       (at 2.292  microns)
     """
     wv = [2250,2290,2350]
-    return(generic_func(data, wv_array, wv, func = cf.bd2290_func))
+    return(generic_func(data, wv, func = cf.bd2290_func, **kwargs))
 
 
-def d2300(data, wv_array):
+def d2300(data, **kwargs):
     """
     NAME: D2300
     PARAMETER: 2.3 micron drop
@@ -580,10 +588,10 @@ def d2300(data, wv_array):
 
     """
     wv = [1815, 2120, 2170, 2210, 2290, 2320, 2330, 2530]
-    return(generic_func(data, wv_array, wv, func = cf.d2300_func))
+    return(generic_func(data, wv, func = cf.d2300_func, **kwargs))
 
 
-def sindex(data, wv_array):
+def sindex(data, **kwargs):
     """
     NAME: SINDEX
     PARAMETER: Convexity at 2.29 microns  due to absorptions at
@@ -608,9 +616,9 @@ def sindex(data, wv_array):
 
     """
     wv = [2100,2400,2290]
-    return(generic_func(data, wv_array, wv, func = cf.sindex_func))
+    return(generic_func(data, wv, func = cf.sindex_func, **kwargs))
 
-def icer2(data, wv_array):
+def icer2(data, **kwargs):
     """
     NAME: ICER2
     PARAMETER: gauge 2.7 micron band
@@ -631,9 +639,9 @@ def icer2(data, wv_array):
 
     """
     wv = [2530,2600]
-    return(generic_func(data, wv_array, wv, func = cf.icer2_func))
+    return(generic_func(data, wv, func = cf.icer2_func, **kwargs))
 
-def bdcarb(data, wv_array):
+def bdcarb(data, **kwargs):
     """
     NAME: BDCARB
     PARAMETER: overtone band depth
@@ -655,9 +663,9 @@ def bdcarb(data, wv_array):
 
     """
     wv = [2230,2330,2390,2530,2600]
-    return(generic_func(data, wv_array, wv, func = cf.bdcarb_func))
+    return(generic_func(data, wv, func = cf.bdcarb_func, **kwargs))
 
-def bd3000(data, wv_array):
+def bd3000(data, **kwargs):
     """
     NAME: BD3000
     PARAMETER: 3 micron band depth
@@ -678,9 +686,9 @@ def bd3000(data, wv_array):
 
     """
     wv = [2210,2530,3000]
-    return(generic_func(data, wv_array, wv, func = cf.bd3000_func))
+    return(generic_func(data, wv, func = cf.bd3000_func, **kwargs))
 
-def bd3100(data, wv_array):
+def bd3100(data, **kwargs):
     """
     NAME: BD3100
     PARAMETER: 3.1 micron band depth
@@ -701,9 +709,9 @@ def bd3100(data, wv_array):
 
     """
     wv = [3000,3120,3250]
-    return(generic_func(data, wv_array, wv, func = cf.bd3100_func))
+    return(generic_func(data, wv, func = cf.bd3100_func, **kwargs))
 
-def bd3200(data, wv_array):
+def bd3200(data, **kwargs):
     """
     NAME: BD3200
     PARAMETER: 3.2 micron band depth
@@ -724,9 +732,9 @@ def bd3200(data, wv_array):
 
     """
     wv = [3250,3320,3390]
-    return(generic_func(data, wv_array, wv, func = cf.bd3200_func))
+    return(generic_func(data, wv, func = cf.bd3200_func, **kwargs))
 
-def bd3400(data, wv_array):
+def bd3400(data, **kwargs):
     """
     NAME: BD3400
     PARAMETER: 3.4 micron band depth
@@ -747,9 +755,9 @@ def bd3400(data, wv_array):
 
     """
     wv = [3250,3390,3500,3630]
-    return(generic_func(data, wv_array, wv, func = cf.bd3400_func))
+    return(generic_func(data, wv, func = cf.bd3400_func, **kwargs))
 
-def cindex(data, wv_array):
+def cindex(data, **kwargs):
     """
     NAME: CINDEX
     PARAMETER: gauge 3.9 micron band
@@ -772,4 +780,4 @@ def cindex(data, wv_array):
     Algorithm differs from published - coded as per CAT
     """
     wv = [3630,3750,3950]
-    return(generic_func(data, wv_array, wv, func = cf.cindex_func))
+    return(generic_func(data, wv, func = cf.cindex_func, **kwargs))'''
