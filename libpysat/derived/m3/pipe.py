@@ -3,8 +3,6 @@ import numpy as np
 from .import pipe_funcs as pf
 from ..utils import generic_func
 
-from libpysat.utils.utils import get_band_numbers
-
 def bd620(data, **kwargs):
     """
     Parameters

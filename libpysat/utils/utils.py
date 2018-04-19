@@ -6,30 +6,6 @@ import numpy as np
 import pandas as pd
 import scipy.stats as ss
 
-
-def method_singledispatch(func):
-    """
-    New dispatch decorator that looks at the second argument to
-    avoid self
-    Parameters
-    ----------
-    func : Object
-        Function object to be dispatched
-    Returns
-    wrapper : Object
-        Wrapped function call chosen by the dispatcher
-    ----------
-    """
-    dispatcher = singledispatch(func)
-
-    def wrapper(*args, **kw):
-        return dispatcher.dispatch(args[1].__class__)(*args, **kw)
-
-    wrapper.register = dispatcher.register
-    update_wrapper(wrapper, dispatcher)
-    return wrapper
-
-
 def crossform(a):
     """
     Return the cross form, e.g. a in the cross product of a b.
@@ -263,31 +239,3 @@ def remove_field_name(a, name):
         names.remove(name)
     b = a[names]
     return b
-
-def get_band_numbers(wavelengths, wave_values, tolerance = .01):
-    '''
-    This parses the wavelenth list,finds the mean wavelength closest to the
-    provided wavelength, and returns the index of that value.
-
-    Parameters
-    ----------
-    wavelengths : list
-                  A list of wavelengths, 0 based indexing
-
-    wave_values : list
-                  A list of input wavelengths to map to bands
-
-    Returns
-    -------
-    bands : list
-            A variable length list of bands.  These are in the same order they are
-            provided in.  Beware that altering the order will cause unexpected results.
-
-    '''
-    bands = []
-    for x in wave_values:
-        bands.append(np.where(np.isclose(wavelengths, x, tolerance))[0][0])
-    if len(bands) == 1:
-        return bands[0]
-    else:
-        return bands
