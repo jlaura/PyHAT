@@ -2,6 +2,7 @@ import numpy as np
 from pandas import Index
 import pytest
 
+import libpysat
 from libpysat import Spectrum
 
 @pytest.fixture
@@ -9,6 +10,12 @@ def basic_spectrum():
     return Spectrum([1,2,3,4],
                     index=[2.2, 3.3, 4.4, 5.5],
                     wavelengths=[2.2, 3.3, 4.4, 5.5])
+
+@pytest.fixture
+def long_spectrum():
+    return Spectrum([1, 1.5, 2, 2.5, 5, 3, 3.5, 7, 4, 4.5, 5],
+                    index=np.arange(1,12),
+                    wavelengths=np.arange(1,12))
 
 @pytest.fixture
 def metadata_spectrum():
@@ -78,6 +85,16 @@ def test_set_tolerance(spectrum, tolerance, expected):
     assert isinstance(spectrum, Spectrum)
     np.testing.assert_array_equal(spectrum.index, expected)
 
+
+@pytest.mark.parametrize("spectrum, tolerance",
+                        [(floatwv_spectrum(), 'a'),
+                         (floatwv_spectrum(), [1,2,3]),
+                         (floatwv_metadata_spectrum(), np.float64(12.1)),
+                         (floatwv_metadata_spectrum(), np.int64(1))])
+def test_set_bad_tolerance(spectrum, tolerance):
+    with pytest.raises(TypeError) as e:
+        spectrum.tolerance = tolerance
+
 def test_generic_return(basic_spectrum):
     m = basic_spectrum.take([2, 3])
     assert isinstance(m, Spectrum)
@@ -85,3 +102,35 @@ def test_generic_return(basic_spectrum):
 
     m = basic_spectrum.sort_index()
     assert isinstance(m, Spectrum)
+
+@pytest.mark.parametrize("spectrum, func", 
+                         [(long_spectrum(), libpysat.transform.smooth.boxcar),
+                          (long_spectrum(), libpysat.transform.smooth.gaussian)])
+def test_smoothing_return_type(spectrum, func):
+    ss = spectrum.smooth(func=func)
+    assert isinstance(ss, Spectrum)
+    
+@pytest.mark.parametrize("spectrum, func, kwargs", 
+                         [(long_spectrum(), libpysat.transform.continuum.linear, {}),
+                          (long_spectrum(), libpysat.transform.continuum.regression, {}),
+                          (metadata_spectrum(), libpysat.transform.continuum.regression, {}),
+                          (long_spectrum(), libpysat.transform.continuum.polynomial, {'order':1})
+                          ])
+def test_continumm_correction_return_type(spectrum, func, kwargs):
+    cc, denom = spectrum.continuum_correct(func=func, **kwargs)
+    assert isinstance(cc, Spectrum)
+    assert isinstance(denom, Spectrum)
+
+@pytest.mark.parametrize("spectrum, func, metadata, expected", 
+                         [(long_spectrum(), libpysat.transform.continuum.linear, True, None),
+                          (long_spectrum(), libpysat.transform.continuum.regression, False, None),
+                          (metadata_spectrum(), libpysat.transform.continuum.regression, True, ['foo', 'bar', 'bat']),
+                          (metadata_spectrum(), libpysat.transform.continuum.regression, False, None)])
+def test_continuum_correction_metadata(spectrum, func, metadata, expected):
+    cc, denom = spectrum.continuum_correct(func=func, preserve_metadata=metadata)
+    if expected is None:
+        assert cc.metadata is expected
+    else:
+        assert cc._metadata_index.tolist() == expected
+
+
