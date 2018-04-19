@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from .. import io_utils
+from libpysat.fileio import io_utils
 
 
 class TestIoUtils(unittest.TestCase):
