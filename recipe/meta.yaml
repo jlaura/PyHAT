@@ -18,25 +18,14 @@ requirements:
     - setuptools
     - numpy >=1.10
     - scipy
+    - plio
     - pandas
-    - scikit-learn
-    - multipledispatch
-    - yaml
-    - pvl
-    - vc 14  # [win and py>=35]
-    
   run:
     - python
-    - setuptools
     - numpy >=1.10
     - scipy
-    - pandas
-    - scikit-learn
-    - multipledispatch
-    - yaml
     - plio
-    - vc 14  # [win and py>=35]
-    
+    - pandas
 
 test:
   imports:
