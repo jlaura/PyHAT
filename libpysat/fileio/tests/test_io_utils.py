@@ -3,7 +3,6 @@ import unittest
 
 from libpysat.fileio import io_utils
 
-
 class TestIoUtils(unittest.TestCase):
     def setUp(self):
         pass
