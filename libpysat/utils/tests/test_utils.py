@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from .. import utils
+from libpysat.utils import utils
 
 
 class TestUtils(unittest.TestCase):
