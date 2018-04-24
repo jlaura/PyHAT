@@ -1,6 +1,6 @@
 import numpy as np
 from numpy.polynomial.hermite import hermvander
-from libpysat.spectral.baseline_code.common import Baseline
+from libpysat.transform.baseline_code.common import Baseline
 
 try:
     from cvxopt import matrix as cvx_matrix, solvers

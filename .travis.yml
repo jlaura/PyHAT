@@ -9,6 +9,7 @@ os:
 
 branches:
 only:
+  - dev
   - master
 
 before_install:
@@ -33,7 +34,7 @@ install:
   # Install dependencies
   - conda config --add channels usgs-astrogeology
   - conda config --add channels conda-forge
-  - conda install -c conda-forge numpy scipy pandas gdal
+  - conda install -c conda-forge numpy scipy pandas gdal scikit-learn
   - conda install -c usgs-astrogeology plio
 
   # Development installation
@@ -42,7 +43,7 @@ install:
 
 script:
   - python setup.py install
-  - pytest --cov=pysat
+  - pytest --cov=libpysat
 
 after_success:
   - coveralls
@@ -50,3 +51,10 @@ after_success:
   - conda install conda-build anaconda-client
   - conda config --set anaconda_upload yes
   - conda build --token $CONDA_UPLOAD_TOKEN --python $PYTHON_VERSION .
+deploy:
+  provider: pypi
+  user: tisaconundrum
+  password: $PYPI_PASSWORD
+  distributions: sdist bdist_wheel
+  on:
+    branch: master
