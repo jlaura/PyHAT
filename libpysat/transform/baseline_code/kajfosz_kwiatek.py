@@ -1,5 +1,5 @@
 import numpy as np
-from libpysat.spectral.baseline_code.common import Baseline
+from libpysat.transform.baseline_code.common import Baseline
 
 
 def kajfosz_kwiatek_baseline(bands, intensities, top_width=0,

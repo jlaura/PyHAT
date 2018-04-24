@@ -1,5 +1,5 @@
 import numpy as np
-from libpysat.spectral.baseline_code.common import Baseline
+from libpysat.transform.baseline_code.common import Baseline
 
 
 def polyfit_baseline(bands, intensities, poly_order=5, num_stdv=3.0,

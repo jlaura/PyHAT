@@ -1,5 +1,5 @@
 import numpy as np
-from libpysat.spectral.baseline_code.common import WhittakerSmoother, Baseline
+from libpysat.transform.baseline_code.common import WhittakerSmoother, Baseline
 
 
 def airpls_baseline(intensities, smoothness_param=100, max_iters=10,
