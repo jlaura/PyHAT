@@ -35,8 +35,8 @@ install:
 build_script:
   - cmd: python setup.py install
   
-test_script:
-  - cmd: pytest libpysat/
+#test_script:
+#  - cmd: pytest libpysat/
 
 on_success:
   - cmd: deactivate
