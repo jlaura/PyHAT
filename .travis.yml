@@ -43,13 +43,14 @@ install:
 
 script:
   - python setup.py install
+#  - pytest --cov=libpysat
 
 after_success:
-  - coveralls
+#  - coveralls
   - source deactivate
-  - conda install conda-build anaconda-client
-  - conda config --set anaconda_upload yes
-  - conda build --token $CONDA_UPLOAD_TOKEN --python $PYTHON_VERSION .
+#  - conda install conda-build anaconda-client
+#  - conda config --set anaconda_upload yes
+#  - conda build --token $CONDA_UPLOAD_TOKEN --python $PYTHON_VERSION .
 deploy:
   provider: pypi
   user: tisaconundrum
