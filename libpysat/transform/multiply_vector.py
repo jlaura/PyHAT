@@ -1,5 +1,6 @@
 #this function multiplies all the spectra in a data frame by a vector.
-
+import numpy as np
+import pandas as pd
 def multiply_vector(df, vectorfile):
     df_spectra = df['wvl']
     # TODO: check to make sure wavelengths match before multiplying
