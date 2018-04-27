@@ -35,7 +35,7 @@ def remove_baseline(df, method='ALS', segment=True, params=None):
         br = MedianFilter()
     elif method == 'Rubberband':
         br = Rubberband()
-    elif method == 'CCAM':
+    elif method == 'Stationary Wavelets':
         br = ccam_br()
         # if method == 'wavelet':
         #   br=Wavelet()
@@ -57,4 +57,4 @@ def remove_baseline(df, method='ALS', segment=True, params=None):
     df_baseline['wvl'] = br.baseline
     df['wvl'] = df['wvl']-df_baseline['wvl']
 
-    return df
+    return df, df_baseline
