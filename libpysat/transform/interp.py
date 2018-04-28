@@ -1,6 +1,8 @@
 #This function interpolates the spectra in one data frame onto a new set of wavelenths.
 # Typically used to get data from different instruments onto the same set of weavelengths so they can be used together.
 import numpy as np
+import scipy as sp
+import pandas as pd
 
 def interp(df, xnew):
     xnew = np.array(xnew, dtype='float')
