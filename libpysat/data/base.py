@@ -23,7 +23,6 @@ def _spectral_unary_op(this, new, preserve_metadata=True):
                         the returned object if any metadata is present
                         on the parent (this) object. Default: True
     """
-
     # Create the new class with the metadata obj, but the
     # data only index
     if isinstance(this, libpysat.Spectrum):
@@ -97,11 +96,11 @@ class PySatBase(object):
         if not nodes:
             nodes = [self.wavelengths[0], self.wavelengths[-1]]
         res, denom = continuum.continuum_correction(self.data.values,
-                                                                       self.wavelengths,
-                                                                       nodes=nodes,
-                                                                       correction_nodes=correction_nodes,
-                                                                       correction=func,
-                                                                       **kwargs)
+                                                    self.wavelengths,
+                                                    nodes=nodes,
+                                                    correction_nodes=correction_nodes,
+                                                    correction=func,
+                                                    **kwargs)
         res = _spectral_unary_op(self, res, preserve_metadata=preserve_metadata)
         denom = _spectral_unary_op(self, denom, preserve_metadata=False)
         return res, denom
@@ -123,6 +122,8 @@ class PySatBase(object):
 
     @property
     def tolerance(self):
+        if not hasattr(self, '_tolerance'):
+            self._tolerance = 2
         return self._tolerance
     
     @tolerance.setter

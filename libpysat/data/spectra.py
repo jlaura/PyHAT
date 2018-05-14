@@ -36,16 +36,15 @@ class Spectra(PySatBase, DataFrame):
         self.wavelengths = wavelengths
         self._metadata_index = metadata_index
         self.tolerance = tolerance
-        self._reindex()
 
     @property
     def data(self):
         # Trying to support indices as either index or column
         wv = np.round(self.wavelengths, self.tolerance)
         try:
-            return self[wv]
+            return self[wv].astype(np.float)
         except:
-            return self.loc[wv]
+            return self.loc[wv].astype(np.float)
 
     @property
     def _constructor_sliced(self):

@@ -11,7 +11,7 @@ from pandas import to_numeric, Index
 class Spectrum(PySatBase, Series):
     """
     """
-    _metadata = ['wavelengths', '_metadata_index', '_tolerance']
+    _metadata = ['wavelengths','_metadata_index', '_tolerance']
 
     def __new__(cls, *args, **kwargs):
         kwargs.pop('wavelengths', None)
