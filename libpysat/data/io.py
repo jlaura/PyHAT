@@ -20,19 +20,16 @@ def spectral_profiler(f, **kwargs):
         """
         geo_data = io_spectral_profiler.Spectral_Profiler(f)
         meta = geo_data.ancillary_data
+        meta.index.names = ['id']
+        df = geo_data.spectra.transpose()
+        df.index.names = ['id', 'minor']
+        joined = df.join(meta, how='inner').transpose()
 
-        meta = meta.transpose()
-        meta.columns.names = ['id']
-        df = geo_data.spectra.to_frame().unstack(level=1)
-        df.columns.names = ['id', 'minor']
-        
-        joined = df.transpose().join(meta.transpose(), how='inner').transpose()
-        
-        return libpysat.Spectra(joined, wavelengths=df.index,
-                                           metadata=meta.index,
-                                           index=joined.index,
-                                           columns=joined.columns,
-                                           **kwargs)
+        return libpysat.Spectra(joined, wavelengths=geo_data.wavelengths,
+                                        metadata=meta.columns,
+                                        index=joined.index,
+                                        columns=joined.columns,
+                                        **kwargs)
 
 
 DRIVERS = [spectral_profiler]
