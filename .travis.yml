@@ -54,6 +54,8 @@ after_success:
   - conda install conda-build anaconda-client
   - conda config --set anaconda_upload yes
   - conda build --token $CONDA_UPLOAD_TOKEN --python $PYTHON_VERSION .
+  # Rebuild docker containers using the package
+  - curl -H "Content-Type: application/json" --data '{"build": true}' -X POST https://registry.hub.docker.com/u/jlaura/spark-jupyter/trigger/a7bf04a8-8ced-4587-8658-d6da81c707a7/
   # Docs to gh-pages
   - source activate test_env  # Reactivate the env to have all deps installed.
   - travis-sphinx build --source=docs --nowarn # The sphinx build script
