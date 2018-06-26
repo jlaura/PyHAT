@@ -141,4 +141,8 @@ class PySatBase(object):
                 index = wv.append(Index(self._metadata_index))
             else:
                 index = wv
-            self.index = index
+            try:
+                # This could be cleaner because if the df is square this will fail.
+                self.index = index
+            except:
+                self.columns = index
