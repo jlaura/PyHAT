@@ -18,6 +18,7 @@ def crism_img():
     def create_dense(_):
         return np.arange(1, 4402).reshape(489, 3, 3)
 
+    crism.loc.__getitem__ = mock.MagicMock(side_effect=create)
     crism.iloc.__getitem__ = mock.MagicMock(side_effect=create)
     crism.__getitem__ = mock.MagicMock(side_effect=create_dense)
     wv = np.asarray(list(crism_wv.values()))

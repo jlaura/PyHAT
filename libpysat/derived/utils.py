@@ -37,9 +37,90 @@ def generic_func(data, wavelengths, kernels={}, func=None, axis=0, pass_wvs=Fals
             subset = subset[0]
     else:
         subset = data.loc[wavelengths, :, :]
+
+    for i in subset:
+        i[i == data.no_data_value] = 0
+
     if pass_wvs:
         return func(subset, wavelengths, **kwargs)
+
     return func(subset, **kwargs)
+
+def compute_b_a(wavelengths):
+    '''
+    Given a set of three wavelengths compute there b and a values as per
+    the Viviano Beck CRISM Derived Products paper
+    (Revised CRISM spectral parameters and summary
+    products based on the currently detected
+    mineral diversity on Mars)
+
+    Parameters
+    ----------
+    wavelengths : iterable
+        A list of three wavelength values
+
+    Returns
+    -------
+    b : float
+        b value from the paper
+
+    a : float
+        a value from the paper
+    '''
+    wavelengths.sort()
+    lambda_s, lambda_c, lambda_l = wavelengths
+
+    b = (lambda_c - lambda_s) / (lambda_l - lambda_s)
+    a = 1.0 - b
+    return b, a
+
+def compute_slope(x1, x2, y1, y2):
+    '''
+    Computes slope given two points on a line
+
+    Parameters
+    ----------
+    x1 : float
+        First points x value
+
+    x2 : float
+        Second points x value
+
+    y1 : float
+        First points y value
+
+    y2 : float
+        Second points y value
+
+    Returns
+    -------
+    : float
+        Slope between the two points
+    '''
+
+    return (y2 - y1) / (x2 - x1)
+
+def line_fit(slope, x, b):
+    '''
+    Finds the y value for a given x using a given slope and y intercept
+
+    Parameters
+    ----------
+    slope : float
+        Slope of a line
+
+    x : float
+        Point along the x axis of a line
+
+    b : float
+        Y intercept of a line
+
+    Returns
+    -------
+    : float
+        Y coordinate corresponding to the given x
+    '''
+    return (slope * x) + b
 
 def calc_bdi_band(data, iteration, initial_band, step, **kwargs):
     """
@@ -68,7 +149,7 @@ def calc_bdi_band(data, iteration, initial_band, step, **kwargs):
     """
     y = initial_band + (step * iteration)
     wv_array = data.wavelengths
-    vals = np.abs(data.wavelengths-y)
+    vals = np.abs(data.wavelengths - y)
     minidx = np.argmin(vals)
     wavelengths = [wv_array[minidx - 3], y, wv_array[minidx + 3]]
     wvlims = [wavelengths[0], y, wavelengths[-1]]
