@@ -35,10 +35,10 @@ install:
 build_script:
   - cmd: python setup.py install
   
-test_script:
-  - cmd: pytest libpysat/
+#test_script:
+#  - cmd: pytest libpysat/
 
 on_success:
   - cmd: deactivate
-  - cmd: conda config --set anaconda_upload yes
-  - cmd: conda build --token %CONDA_UPLOAD_TOKEN% --channel conda-forge --channel usgs-astrogeology .
+#  - cmd: conda config --set anaconda_upload yes
+#  - cmd: conda build --token %CONDA_UPLOAD_TOKEN% --channel conda-forge --channel usgs-astrogeology .
