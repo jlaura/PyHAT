@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from libpysat.derived.m3 import new
+from libpyhat.derived.m3 import new
 
 def test_mustard(m3_img):
     res = new.mustard(m3_img)

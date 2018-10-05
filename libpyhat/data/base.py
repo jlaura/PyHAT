@@ -3,7 +3,7 @@ from pandas import Index, concat
 
 from ..transform import smooth, continuum
 
-import libpysat
+import libpyhat
 
 def _spectral_unary_op(this, new, preserve_metadata=True):
     """
@@ -17,24 +17,24 @@ def _spectral_unary_op(this, new, preserve_metadata=True):
     new : obj
           The return from the operation. Should be an ndarray, series,
           or dataframe
-    
+
     preserve_metadata : bool
-                        Whether or not the metadata should be added to 
+                        Whether or not the metadata should be added to
                         the returned object if any metadata is present
                         on the parent (this) object. Default: True
     """
     # Create the new class with the metadata obj, but the
     # data only index
-    if isinstance(this, libpysat.Spectrum):
-        new = libpysat.Spectrum(new, wavelengths=this.wavelengths,
+    if isinstance(this, libpyhat.Spectrum):
+        new = libpyhat.Spectrum(new, wavelengths=this.wavelengths,
                         metadata=None,
                         tolerance=this.tolerance,
                         index=this.data.index)
     else:
-        new = libpysat.Spectra(new, wavelengths=this.wavelengths,
+        new = libpyhat.Spectra(new, wavelengths=this.wavelengths,
             metadata=None,
             tolerance=this.tolerance,
-            index=this.data.index, 
+            index=this.data.index,
             columns=this.data.columns)
 
     if preserve_metadata and this.metadata is not None:
@@ -42,10 +42,10 @@ def _spectral_unary_op(this, new, preserve_metadata=True):
         new.metadata = this.metadata.index
     return new
 
-class PySatBase(object):
+class PyHatBase(object):
 
     def continuum_correct(self, nodes=[], correction_nodes=[],
-                         func=continuum.linear, 
+                         func=continuum.linear,
                          preserve_metadata=True,
                          **kwargs):
         """
@@ -59,9 +59,9 @@ class PySatBase(object):
                 the domain (regression). Nodes are the label values in the
                 wavelength attributes. When not specified the first and last
                 wavelengths are utilized. For example, in the unspecified case
-                and a linear correction wavelengths[0] (the first) and 
+                and a linear correction wavelengths[0] (the first) and
                 wavelengths[-1] (the final) values are used as the endpoints. More
-                than 2 nodes can be specified, resulting in a piecewise continuum. 
+                than 2 nodes can be specified, resulting in a piecewise continuum.
                 For example, nodes=[500,1500,2000] will compute and apply 2 continuum,
                 one in the {500,1500} domain and one in the {1500,2000} domain.
 
@@ -80,7 +80,7 @@ class PySatBase(object):
         preserve_metadata : bool
                             If True (the default) the object returned by this
                             function will maintain any metadata that existed on
-                            the original object.  In other words, if a spectrum/spectra 
+                            the original object.  In other words, if a spectrum/spectra
                             had metadata, the continuum corrected spectrum/spectra will
                             also have the same metadata.
 
@@ -125,7 +125,7 @@ class PySatBase(object):
         if not hasattr(self, '_tolerance'):
             self._tolerance = 2
         return self._tolerance
-    
+
     @tolerance.setter
     def tolerance(self, val):
         if isinstance(val, int):

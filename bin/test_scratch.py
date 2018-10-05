@@ -7,7 +7,7 @@ Created on Fri Nov 07 12:29:20 2014
 
 import glob
 
-from libpysat.spectral.baseline_code import ccam_remove_continuum
+from libpyhat.spectral.baseline_code import ccam_remove_continuum
 import numpy
 from scipy.io.idl import readsav
 

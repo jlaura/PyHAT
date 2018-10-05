@@ -1,7 +1,7 @@
 # Load one set of data that will be used to create the model
 import pandas as pd
 
-from libpysat.spectral.spectral_data import spectral_data
+from libpyhat.spectral.spectral_data import spectral_data
 
 data1 = "G:/.csvfile/full_db_mars_corrected_dopedTiO2_pandas_format.csv"
 data1 = spectral_data(pd.read_csv(data1, header=[0, 1], verbose=True))

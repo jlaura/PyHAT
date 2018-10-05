@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from libpysat.derived.m3 import supplemental as sup
+from libpyhat.derived.m3 import supplemental as sup
 
 def test_curvature(m3_img):
     res = sup.curvature(m3_img)
@@ -9,13 +9,13 @@ def test_curvature(m3_img):
 
 def test_fe_est(m3_img):
     res = sup.fe_est(m3_img)
-    np.testing.assert_array_almost_equal(res, np.array([[-33.12599412, -27.63587155, -20.91762514], 
+    np.testing.assert_array_almost_equal(res, np.array([[-33.12599412, -27.63587155, -20.91762514],
                                                         [-15.99699961, -13.07633664, -11.36015607],
                                                         [-10.30167489, -9.61287544, -9.14316831]]))
 
 def test_fe_mare_est(m3_img):
     res = sup.fe_mare_est(m3_img)
-    np.testing.assert_array_almost_equal(res, np.array([[ -328.359308, -351.4761815, -449.634938], 
+    np.testing.assert_array_almost_equal(res, np.array([[ -328.359308, -351.4761815, -449.634938],
                                                         [-566.55416525, -690.9775808, -819.1530905],
                                                         [-949.472654, -1081.13225113, -1213.685204]]))
 

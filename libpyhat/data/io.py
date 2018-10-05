@@ -3,7 +3,7 @@ import numpy as np
 
 from plio.io import io_spectral_profiler
 
-import libpysat
+import libpyhat
 
 
 def spectral_profiler(f, **kwargs):
@@ -25,7 +25,7 @@ def spectral_profiler(f, **kwargs):
         df.index.names = ['id', 'minor']
         joined = df.join(meta, how='inner').transpose()
 
-        return libpysat.Spectra(joined, wavelengths=geo_data.wavelengths,
+        return libpyhat.Spectra(joined, wavelengths=geo_data.wavelengths,
                                         metadata=meta.columns,
                                         index=joined.index,
                                         columns=joined.columns,

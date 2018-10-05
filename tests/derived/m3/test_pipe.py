@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from libpysat.derived.m3 import pipe
+from libpyhat.derived.m3 import pipe
 
 def test_onenum_min(m3_img):
     res = pipe.oneum_min(m3_img)

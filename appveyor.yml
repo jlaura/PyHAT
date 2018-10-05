@@ -21,7 +21,7 @@ install:
   - cmd: call %PYTHON%
   - cmd: conda config --set always_yes yes --set changeps1 no
   - cmd: conda update -q conda
-  - cmd: conda install conda-build anaconda-client 
+  - cmd: conda install conda-build anaconda-client
   - cmd: conda create -q -n test_env python=%PYTHON_VERSION%
   - cmd: activate test_env
   - cmd: conda config --add channels conda-forge
@@ -34,9 +34,9 @@ install:
 
 build_script:
   - cmd: python setup.py install
-  
+
 test_script:
-  - cmd: pytest libpysat/
+  - cmd: pytest libpyhat/
 
 on_success:
   - cmd: deactivate

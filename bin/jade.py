@@ -10,12 +10,12 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #######################################################################
@@ -26,7 +26,7 @@ import numpy as np
 from numpy import *
 from numpy.linalg import eig, pinv
 
-#JADE class created for compatibility with PySAT
+#JADE class created for compatibility with PyHAT
 class JADE():
     def __init__(self,n_components=4):
         self.n_components = n_components
@@ -62,63 +62,63 @@ class JADE():
 def jadeR(X, m=None, verbose=True):
     """
     Blind separation of real signals with JADE.
-    
+
     jadeR implements JADE, an Independent Component Analysis (ICA) algorithm
     developed by Jean-Francois Cardoso. See
     http://www.tsi.enst.fr/~cardoso/guidesepsou.html , and papers cited
     at the end of the source file.
-        
+
     Translated into NumPy from the original Matlab Version 1.8 (May 2005) by
     Gabriel Beckers, http://gbeckers.nl .
-    
+
     Parameters:
-    
+
         X -- an nxT data matrix (n sensors, T samples). May be a numpy array or
              matrix.
-    
+
         m -- output matrix B has size mxn so that only m sources are
              extracted.  This is done by restricting the operation of jadeR
              to the m first principal components. Defaults to None, in which
              case m=n.
-        
+
         verbose -- print info on progress. Default is True.
-    
+
     Returns:
-    
+
         An m*n matrix B (NumPy matrix type), such that Y=B*X are separated
         sources extracted from the n*T data matrix X. If m is omitted, B is a
         square n*n matrix (as many sources as sensors). The rows of B are
         ordered such that the columns of pinv(B) are in order of decreasing
         norm; this has the effect that the `most energetically significant`
         components appear first in the rows of Y=B*X.
-    
+
     Quick notes (more at the end of this file):
-    
+
     o This code is for REAL-valued signals.  A MATLAB implementation of JADE
         for both real and complex signals is also available from
         http://sig.enst.fr/~cardoso/stuff.html
-    
+
     o This algorithm differs from the first released implementations of
         JADE in that it has been optimized to deal more efficiently
         1) with real signals (as opposed to complex)
         2) with the case when the ICA model does not necessarily hold.
-    
+
     o There is a practical limit to the number of independent
         components that can be extracted with this implementation.  Note
         that the first step of JADE amounts to a PCA with dimensionality
         reduction from n to m (which defaults to n).  In practice m
         cannot be `very large` (more than 40, 50, 60... depending on
         available memory)
-    
+
     o See more notes, references and revision history at the end of
         this file and more stuff on the WEB
         http://sig.enst.fr/~cardoso/stuff.html
-    
+
     o For more info on NumPy translation, see the end of this file.
-    
+
     o This code is supposed to do a good job!  Please report any
         problem relating to the NumPY code gabriel@gbeckers.nl
-    
+
     Copyright original Matlab code : Jean-Francois Cardoso <cardoso@sig.enst.fr>
     Copyright Numpy translation : Gabriel Beckers <gabriel@gbeckers.nl>
     """
@@ -329,11 +329,11 @@ def jadeR(X, m=None, verbose=True):
     #  - Added reference to the Neural Comp. paper.
     #
     # -  V1.7, Nov. 16, 2002
-    #   - Reverted the mean removal code to an earlier version (not using 
+    #   - Reverted the mean removal code to an earlier version (not using
     #     repmat) to keep the code octave-compatible.  Now less efficient,
-    #     but does not make any significant difference wrt the total 
+    #     but does not make any significant difference wrt the total
     #     computing cost.
-    #   - Remove some cruft (some debugging figures were created.  What 
+    #   - Remove some cruft (some debugging figures were created.  What
     #     was this stuff doing there???)
     #
     #

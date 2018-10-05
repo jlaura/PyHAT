@@ -1,7 +1,7 @@
 import pytest
 
-from libpysat.examples import get_path
-from libpysat import Spectra
+from libpyhat.examples import get_path
+from libpyhat import Spectra
 
 
 @pytest.fixture
@@ -15,4 +15,3 @@ def test_read_sp(spectral_profiler_2c):
     assert len(s.metadata.index) == 139
     assert isinstance(s, Spectra)
     assert isinstance(s.data, Spectra)
-    

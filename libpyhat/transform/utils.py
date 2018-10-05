@@ -8,7 +8,7 @@ import numpy as np
 from pandas import Series
 from scipy import signal
 
-import libpysat.transform.baseline_code.watrous as watrous
+import libpyhat.transform.baseline_code.watrous as watrous
 import numpy
 
 

@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from libpysat.derived.crism import crism_algs
+from libpyhat.derived.crism import crism_algs
 
 def test_r770(crism_img):
     res = crism_algs.r770(crism_img)
