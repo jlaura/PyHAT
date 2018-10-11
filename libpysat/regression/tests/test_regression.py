@@ -6,6 +6,7 @@ def test_PLS():
                          params=[{'n_components': 0,'scale': False}])
 
 
+'''
 def test_GP():
     regress = regression(method=['GP'], yrange=[0.0, 100.0],
                          params=[{'reduce_dim': 'PCA',
@@ -14,6 +15,7 @@ def test_GP():
                                   'theta0': 1.0,
                                   'thetaL': 0.1,
                                   'thetaU': 100.0}])
+'''
 
 
 def test_OLS():
