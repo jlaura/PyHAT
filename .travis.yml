@@ -34,8 +34,9 @@ install:
   # Install dependencies
   - conda config --add channels usgs-astrogeology
   - conda config --add channels conda-forge
-  - conda install --quiet -c conda-forge numpy scipy pandas gdal libgdal scikit-learn multipledispatch
-  - conda install --quiet -c usgs-astrogeology plio
+  # - conda install --quiet -c conda-forge numpy scipy pandas gdal libgdal scikit-learn multipledispatch
+  # - conda install --quiet -c usgs-astrogeology plio
+  - conda env update -n test_env -f environment.yml
   # https://github.com/GoogleCloudPlatform/google-cloud-python/issues/2990
   - conda install pip setuptools
 
