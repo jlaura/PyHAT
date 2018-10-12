@@ -4,12 +4,12 @@ channels:
   - conda-forge
 dependencies:
   - python=3
-  - jupyter
   - numpy
   - pandas
   - scipy
   - scikit-learn
   - multipledispatch
+  - ncurses
   - yaml
   - pvl
   - plio
