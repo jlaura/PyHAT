@@ -25,9 +25,8 @@
   - Enter the cloned repo: `cd PySAT`
   - Pull the `dev` branch: `git fetch && git checkout dev`
   - Install the dependencies: `conda create -f environment.yml`
-  
+
 # Demo
 
   - Execute the `jupyter notebook` that will open a new browser tab with the Jupyter homepage.
   - Launch (click) the `Kaguya_Spectral_Profiler.ipynb` notebook.
-

@@ -1,4 +1,4 @@
-from libpysat.regression.regression import regression
+from libpyhat.regression.regression import regression
 
 
 def test_PLS():

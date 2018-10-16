@@ -1,5 +1,5 @@
 import numpy as np
-from libpysat.derived.m3 import pipe
+from libpyhat.derived.m3 import pipe
 
 def mustard(data):
     """

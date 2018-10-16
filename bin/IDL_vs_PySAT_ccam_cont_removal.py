@@ -11,7 +11,7 @@ import numpy
 import pandas as pd
 from scipy.io.idl import readsav
 
-from libpysat.spectral.spectral_data import spectral_data
+from libpyhat.spectral.spectral_data import spectral_data
 
 filelist = glob.glob(r"E:\ChemCam\Calibration Data\LANL_testbed\Caltargets\*calib.sav")
 filelist2 = glob.glob(r"E:\ChemCam\Calibration Data\LANL_testbed\Caltargets\test.sav")

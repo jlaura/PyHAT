@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue May 10 16:16:11 2016
-This function is used to run cross validation 
-to help choose the optimal number of components. Folds are stratified 
+This function is used to run cross validation
+to help choose the optimal number of components. Folds are stratified
 according to a user-specified column
 
 @author: rbanderson
@@ -12,7 +12,7 @@ import warnings
 import numpy as np
 # from sklearn.linear_model import RANSACRegressor as RANSAC
 import pandas as pd
-from libpysat.regression.regression import regression
+from libpyhat.regression.regression import regression
 from sklearn.cross_validation import LeaveOneLabelOut
 from sklearn.grid_search import ParameterGrid
 warnings.filterwarnings('ignore')

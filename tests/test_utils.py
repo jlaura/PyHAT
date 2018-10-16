@@ -1,3 +1,3 @@
 import pytest
 
-from libpysat.derived import utils, m3, crism
+from libpyhat.derived import utils, m3, crism

@@ -2,12 +2,12 @@ from pandas import DataFrame, Series, to_numeric
 import numpy as np
 
 from . import io
-from .base import PySatBase
+from .base import PyHatBase
 from .spectrum import Spectrum
 
-import libpysat
+import libpyhat
 
-class Spectra(PySatBase, DataFrame):
+class Spectra(PyHatBase, DataFrame):
     """
     A pandas derived DataFrame used to store spectral and hyper-spectral observations.
 
@@ -32,7 +32,7 @@ class Spectra(PySatBase, DataFrame):
         metadata_index = kwargs.pop('metadata', None)
         tolerance = kwargs.pop('tolerance', 2)
         super(Spectra, self).__init__(*args, **kwargs)
-        
+
         self.wavelengths = wavelengths
         self._metadata_index = metadata_index
         self.tolerance = tolerance

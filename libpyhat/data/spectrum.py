@@ -3,12 +3,12 @@ import numpy as np
 
 from ..transform import continuum
 from . import spectra
-from .base import PySatBase
+from .base import PyHatBase
 
 from pandas import to_numeric, Index
 
-    
-class Spectrum(PySatBase, Series):
+
+class Spectrum(PyHatBase, Series):
     """
     """
     _metadata = ['wavelengths','_metadata_index', '_tolerance']
@@ -29,7 +29,7 @@ class Spectrum(PySatBase, Series):
         metadata_index = kwargs.pop('metadata', None)
         tolerance = kwargs.pop('tolerance', 2)
         super(Spectrum, self).__init__(*args, **kwargs)
-        
+
         self.wavelengths = wavelengths
         self._metadata_index = metadata_index
         self.tolerance = tolerance

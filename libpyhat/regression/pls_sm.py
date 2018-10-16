@@ -5,9 +5,9 @@ Created on Sat Mar 26 20:15:46 2016
 @author: rbanderson
 """
 import numpy as np
-import libpysat.spectral.within_range as within_range
+import libpyhat.spectral.within_range as within_range
 import scipy.optimize as opt
-from libpysat.spectral.meancenter import meancenter
+from libpyhat.spectral.meancenter import meancenter
 from sklearn.cross_decomposition.pls_ import PLSRegression
 
 

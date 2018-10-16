@@ -8,7 +8,7 @@ according to a user-specified column
 @author: rbanderson
 """
 import numpy as np
-from libpysat.spectral.meancenter import meancenter
+from libpyhat.spectral.meancenter import meancenter
 from sklearn.cross_decomposition.pls_ import PLSRegression
 from sklearn.cross_validation import LeaveOneLabelOut
 

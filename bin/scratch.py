@@ -1,5 +1,5 @@
-from libpysat.fileio import io_ccam_pds
-import libpysat.spectral.spectral_data as sd
+from libpyhat.fileio import io_ccam_pds
+import libpyhat.spectral.spectral_data as sd
 import pandas as pd
 import numpy as np
 
