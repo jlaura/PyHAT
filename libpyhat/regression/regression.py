@@ -12,7 +12,7 @@ import sklearn.linear_model as linear
 import sklearn.svm as svm
 from sklearn.cross_decomposition.pls_ import PLSRegression
 from sklearn.decomposition import PCA, FastICA
-from sklearn.gaussian_process import GaussianProcess
+from sklearn.gaussian_process import GaussianProcessRegressor
 
 
 class regression:
@@ -156,7 +156,7 @@ class regression:
             # Remove parameters not accepted by Gaussian Process
             params_temp.pop('reduce_dim')
             params_temp.pop('n_components')
-            self.model = GaussianProcess(**params_temp)
+            self.model = GaussianProcessRegressor(**params_temp)
 
 
     def fit(self, x, y, i=0):
