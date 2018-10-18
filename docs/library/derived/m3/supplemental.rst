@@ -5,6 +5,6 @@ The :mod:`derived.m3.supplemental` module
 
 .. versionadded:: 0.1.0
 
-.. automodule:: libpysat.derived.m3.supplemental
+.. automodule:: libpyhat.derived.m3.supplemental
    :synopsis:
    :members:

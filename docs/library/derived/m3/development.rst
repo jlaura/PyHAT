@@ -5,6 +5,6 @@ The :mod:`derived.m3.development` module
 
 .. versionadded:: 0.1.0
 
-.. automodule:: libpysat.derived.m3.development
+.. automodule:: libpyhat.derived.m3.development_funcs
    :synopsis:
    :members:

@@ -5,6 +5,6 @@ The :mod:`derived.crism.crism` module
 
 .. versionadded:: 0.1.0
 
-.. automodule:: libpysat.derived.crism.crism
+.. automodule:: libpyhat.derived.crism.crism_algs
    :synopsis:
    :members:
