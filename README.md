@@ -13,16 +13,16 @@
 
 # Installation - For Users
   - Install [Anaconda Python](https://www.continuum.io/downloads).  Be sure to get Python 3.x
-  - Create a conda env for PySAT: `conda create -n pysat`
+  - Create a conda env for PyHAT: `conda create -n pyhat`
   - Add conda forge to your channels list: `conda config --add channels conda-forge`
-  - Activate the PySAT environment: `source activate pysat` (for windows: `activate pysat`)
-  - To install: `conda install -c usgs-astrogeology pysat`
+  - Activate the PyHAT environment: `source activate pyhat` (for windows: `activate phsat`)
+  - To install: `conda install -c usgs-astrogeology pyhat`
 
 # Installation - For Developers
   - Install [Anaconda Python](https://www.continuum.io/downloads).  Be sure to get Python 3.x
   - Add conda forge to your channels list: `conda config --add channels conda-forge`
-  - Clone this repo: `git clone https://github.com/USGS-Astrogeology/PySAT`
-  - Enter the cloned repo: `cd PySAT`
+  - Clone this repo: `git clone https://github.com/USGS-Astrogeology/PyHAT`
+  - Enter the cloned repo: `cd PyHAT`
   - Pull the `dev` branch: `git fetch && git checkout dev`
   - Install the dependencies: `conda create -f environment.yml`
 
