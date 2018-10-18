@@ -3,12 +3,12 @@
 
 | OS    | Status |
 |-------|--------|
-| OSX   | [![Build Status](https://travis-ci.org/USGS-Astrogeology/PySAT.svg?branch=dev)](https://travis-ci.org/USGS-Astrogeology/CSM-CyCSM) |
-|Linux  | [![Build Status](https://travis-ci.org/USGS-Astrogeology/PySAT.svg?branch=dev)](https://travis-ci.org/USGS-Astrogeology/CSM-CyCSM) |
-|Windows| [![Build status](https://ci.appveyor.com/api/projects/status/orfb1txhicspo7ap/branch/dev?svg=true)](https://ci.appveyor.com/project/jlaura/pysat/branch/dev)|
+| OSX   | [![Build Status](https://travis-ci.org/USGS-Astrogeology/PyHAT.svg?branch=dev)](https://travis-ci.org/USGS-Astrogeology/PyHAT) |
+|Linux  | [![Build Status](https://travis-ci.org/USGS-Astrogeology/PyHAT.svg?branch=dev)](https://travis-ci.org/USGS-Astrogeology/PyHAT) |
+|Windows| [![Build status](https://ci.appveyor.com/api/projects/status/orfb1txhicspo7ap/branch/dev?svg=true)](https://ci.appveyor.com/project/jlaura/pyhat/branch/dev)|
 
 
-[![Coverage Status](https://coveralls.io/repos/github/USGS-Astrogeology/PySAT/badge.svg?branch=dev)](https://coveralls.io/github/USGS-Astrogeology/PySAT?branch=dev)
+[![Coverage Status](https://coveralls.io/repos/github/USGS-Astrogeology/PyHAT/badge.svg?branch=dev)](https://coveralls.io/github/USGS-Astrogeology/PyHAT?branch=dev)
 [![Join the chat at https://gitter.im/USGS-Astrogeology/PySAT](https://badges.gitter.im/USGS-Astrogeology/PySAT.svg)](https://gitter.im/USGS-Astrogeology/PySAT?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Installation - For Users
