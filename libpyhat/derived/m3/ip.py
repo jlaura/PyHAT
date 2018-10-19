@@ -15,10 +15,6 @@ def lscc_maturity(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray

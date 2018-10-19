@@ -14,10 +14,6 @@ def tilt(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -40,10 +36,6 @@ def curvature(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -64,10 +56,6 @@ def luceyc_omat(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------
@@ -90,10 +78,6 @@ def luceyc_amat(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -114,10 +98,6 @@ def mare_omat(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------
@@ -143,11 +123,6 @@ def fe_est(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
-
     Returns
     -------
      : ndarray
@@ -168,10 +143,6 @@ def fe_mare_est(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------

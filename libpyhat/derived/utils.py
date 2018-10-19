@@ -1,4 +1,5 @@
 import inspect
+from functools import wraps
 
 import numpy as np
 import warnings
@@ -186,6 +187,7 @@ def bdi_generic(data, upper_limit, initial_band, step):
     return np.sum(band_list, axis = 0)
 
 def warn_m3(m3_func, *args, **kwargs):
+    @wraps(m3_func)
     def call_warn(*args, **kwargs):
         warnings.warn('Parameters involving some of the visible wavelengths ( < 600 nm) are not recommended for use. Parameters modeled after Clementine data are also not recommended. Original parameter estimates for OH and H2O should NOT be included.')
         return m3_func(*args, **kwargs)

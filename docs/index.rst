@@ -2,15 +2,15 @@
    :alt: Sample Matching
    :align: center
 
-   Caption for some PySAT figure
+   Caption for some PyHAT figure
 
-LibPySAT
+LibPyHAT
 ========
-LibPySAT is an open source library (API) for _____________.  LibPySAT is licensed in `the public domain`_.
+LibPyHAT is an open source library (API) for _____________.  LibPyHAT is licensed in `the public domain`_.
 
-LibPySAT supports:
+LibPyHAT supports:
 
-- What does LibPySAT do?
+- What does LibPyHAT do?
 
 Tutorials
 ---------
@@ -53,6 +53,6 @@ License
 
    license
 
-.. _GitHub: http://github.com/USGS-Astrogeology/PySAT
-.. _issue: https://github.com/USGS-Astrogeology/PySAT/issues?state=open
+.. _GitHub: http://github.com/USGS-Astrogeology/PyHAT
+.. _issue: https://github.com/USGS-Astrogeology/PyHAT/issues?state=open
 .. _the public domain: license.html

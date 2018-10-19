@@ -5,6 +5,6 @@ The :mod:`data.spectrum` module
 
 .. versionadded:: 0.1.0
 
-.. automodule:: libpysat.data.spectrum
+.. automodule:: libpyhat.data.spectrum
    :synopsis:
    :members:

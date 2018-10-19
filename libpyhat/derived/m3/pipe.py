@@ -20,10 +20,6 @@ def r750(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -46,10 +42,6 @@ def uvvis(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------
@@ -74,10 +66,6 @@ def visuv(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -101,10 +89,6 @@ def visnir(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -127,10 +111,6 @@ def r950_750(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------
@@ -157,10 +137,6 @@ def bd620(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -186,10 +162,6 @@ def bd950(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -214,10 +186,6 @@ def bd1050(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------
@@ -245,10 +213,6 @@ def bd1250(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -271,10 +235,6 @@ def r1580(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------
@@ -303,10 +263,6 @@ def bdi1000(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -329,10 +285,6 @@ def oneum_min(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------
@@ -359,10 +311,6 @@ def oneum_sym(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -388,10 +336,6 @@ def bd1umratio(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -415,10 +359,6 @@ def twoum_ratio(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -441,10 +381,6 @@ def bdi2000(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------
@@ -470,10 +406,6 @@ def bd2umratio(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -496,10 +428,6 @@ def thermal_ratio(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------
@@ -526,10 +454,6 @@ def bd3000(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -551,10 +475,6 @@ def r540(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------
@@ -578,10 +498,6 @@ def visslope(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -604,10 +520,6 @@ def oneum_slope(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -629,10 +541,6 @@ def r2780(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------
@@ -660,10 +568,6 @@ def olindex(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -687,10 +591,6 @@ def bd1900(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------
@@ -716,10 +616,6 @@ def bd2300(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -742,10 +638,6 @@ def twoum_slope(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -767,10 +659,6 @@ def thermal_slope(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------
@@ -797,10 +685,6 @@ def nbd1400(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -825,10 +709,6 @@ def nbd1480(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------
@@ -855,10 +735,6 @@ def nbd2300(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -882,10 +758,6 @@ def nbd2700(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------
@@ -911,10 +783,6 @@ def nbd2850(data, **kwargs):
     data : ndarray
            (n,m,p) array
 
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
-
     Returns
     -------
      : ndarray
@@ -936,10 +804,6 @@ def hlnd_isfeo(data, **kwargs):
     ----------
     data : ndarray
            (n,m,p) array
-
-    wv_array : ndarray
-               (n,1) array of wavelengths that correspond to the p
-               dimension of the data array
 
     Returns
     -------

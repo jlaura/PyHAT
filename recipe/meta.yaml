@@ -1,11 +1,11 @@
 {% set version = "0.1.0" %}
 
 package:
-  name: pysat
+  name: pyhat
   version: {{ version }}
 
 source:
-  git_url: https://github.com/USGS-Astrogeology/PySAT
+  git_url: https://github.com/USGS-Astrogeology/PyHAT
   git_rev: dev
 
 build:
@@ -29,8 +29,8 @@ requirements:
 
 test:
   imports:
-    - libpysat
+    - libpyhat
 
 about:
-  home: https://github.com/USGS-Astrogeology/PySAT
+  home: https://github.com/USGS-Astrogeology/PyHAT
   license: Unlicense

@@ -6,8 +6,6 @@ Brief synopsis here
 
 .. toctree::
 
-   development
    supplemental
    new
    pipe
-   
