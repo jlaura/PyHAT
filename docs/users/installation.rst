@@ -45,7 +45,7 @@ Finally, install PyHAT in development mode using::
 
     python setup.py develop
 
-This will soft link the PyHAT directory (that was previously cloned) into the `<conda_home>/envs/libpyhat/lib/python3.x/site-packages` directory.  You are not ready to develop PyHAT.
+This will soft link the PyHAT directory (that was previously cloned) into the `<conda_home>/envs/libpyhat/lib/python3.x/site-packages` directory.  You are now ready to develop PyHAT.
 
 Build Requirements
 ------------------
