@@ -1,8 +1,8 @@
 :mod:`derived.crism` --- CRISM Derived Data Products
 ====================================================
 
-Brief synopsis here
------------------------------------------
+Module for all CRISM specific dervied product generator functions
+-----------------------------------------------------------------
 
 .. toctree::
 

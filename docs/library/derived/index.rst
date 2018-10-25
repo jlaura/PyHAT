@@ -1,8 +1,9 @@
 :mod:`derived` --- Derived Data Products
 ==================================================
 
-Brief synopsis here
------------------------------------------
+Derived product generator functions for both M3 and CRISM data objects
+
+---------------------------------------------------------------------
 
 .. toctree::
 

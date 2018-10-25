@@ -43,6 +43,15 @@ def _spectral_unary_op(this, new, preserve_metadata=True):
     return new
 
 class PyHatBase(object):
+    """
+    PyHAT Base class for other classes to inherit from.
+
+    attributes
+    ----------
+
+    tolerance : int
+                      Search window when looking for wavelengths
+    """
 
     def continuum_correct(self, nodes=[], correction_nodes=[],
                          func=continuum.linear,
