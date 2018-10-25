@@ -1,8 +1,8 @@
 :mod:`derived.m3` --- Moone Minerology Mapper Derived Data Products
 ===================================================================
 
-Brief synopsis here
------------------------------------------
+Module for all M3 specific dervied product generator functions
+--------------------------------------------------------------
 
 .. toctree::
 

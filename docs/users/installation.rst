@@ -1,9 +1,9 @@
 Installation
 ============
 
-We assume that you have a default Python environment that is already configured on your computer and you wish to install PySAT into that environment.  If you would like to create a [virtualenv](https://virtualenv.pypa.io/en/stable/) or [conda environment](https://conda.io/docs/user-guide/tasks/manage-environments.html) to keep PySAT isolated from your main installation, please follow instructions at the linked resources.
+We assume that you have a default Python environment that is already configured on your computer and you wish to install PyHAT into that environment.  If you would like to create a [virtualenv](https://virtualenv.pypa.io/en/stable/) or [conda environment](https://conda.io/docs/user-guide/tasks/manage-environments.html) to keep PySAT isolated from your main installation, please follow instructions at the linked resources.
 
-There are two ways that you can install PySAT into your environment.
+There are two ways that you can install PyHAT into your environment.
 
 1. Using Anaconda Python
 2. Using Development installation
@@ -15,21 +15,21 @@ We suggest using [Anaconda Python](https://conda.io/docs/user-guide/install/inde
 
 To install on Windows (64-bit), Linux (64-bit), and Mac OSX::
 
-   conda install -c usgs-astrogeology pysat
+   conda install -c usgs-astrogeology pyhat
 
 
 Using a Development Installation
 --------------------------------
 
-Install the PySAT development version if either you wish to work at the cutting edge (with the associated risks) or you wish to develop for the PySAT project.
+Install the PyHAT development version if either you wish to work at the cutting edge (with the associated risks) or you wish to develop for the PyHAT project.
 
-Before beginning, uninstall the version of PySAT that you might already have installed::
+Before beginning, uninstall the version of PyHAT that you might already have installed::
 
-   conda uninstall pysat
+   conda uninstall pyhat
 
-Now clone the PySAT repository::
+Now clone the PyHAT repository::
 
-    git clone https://github.com/USGS-Astrogeology/PySAT
+    git clone https://github.com/USGS-Astrogeology/PyHAT
 
 Now checkout the `dev` (development) branch where we actively workon the project::
 
@@ -37,15 +37,15 @@ Now checkout the `dev` (development) branch where we actively workon the project
 
 We use a `dev`/`master` model where active work is performed in the `dev` branch and then merged into the `master` branch at release time.  Next, install the necessary dependencies using conda and our `environment.yml` file.::
 
-    cd PySAT
+    cd PyHAT
     conda env create -f environment.yml
-    source activate libpysat
+    source activate libpyhat
 
-Finally, install PySAT in development mode using::
+Finally, install PyHAT in development mode using::
 
     python setup.py develop
 
-This will soft link the PySAT directory (that was previously cloned) into the `<conda_home>/envs/libpysat/lib/python3.x/site-packages` directory.  You are not ready to develop PySAT.
+This will soft link the PyHAT directory (that was previously cloned) into the `<conda_home>/envs/libpyhat/lib/python3.x/site-packages` directory.  You are now ready to develop PyHAT.
 
 Build Requirements
 ------------------
