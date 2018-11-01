@@ -1,4 +1,7 @@
+import math
+
 import numpy as np
+from pandas import Series
 
 def band_minima(spectrum, low_endmember=None, high_endmember=None):
     """
@@ -31,12 +34,12 @@ def band_minima(spectrum, low_endmember=None, high_endmember=None):
     else:
         high_endmember += 1
 
-    slice = spectrum[low_endmember:high_endmember]
-    minvalue = np.amin(slice)
-    minidx = np.where(slice == minvalue)[0]
+    sub_spectrum = spectrum[low_endmember:high_endmember]
+
+    minvalue = np.amin(sub_spectrum)
+    minidx = np.where(sub_spectrum == minvalue)[0]
 
     return minidx, minvalue
-
 
 def band_center(spectrum, low_endmember=None, high_endmember=None, degree=3):
 
@@ -47,16 +50,15 @@ def band_center(spectrum, low_endmember=None, high_endmember=None, degree=3):
     else:
         high_endmember += 1
 
-    slice = spectrum[low_endmember:high_endmember]
-    slice_indices = np.indices(slice.shape)[0]
+    sub_spectrum = spectrum[low_endmember:high_endmember]
+    sub_spectrum_indices = list(range(len(sub_spectrum)))
 
-    fit = np.polyfit(slice_indices, slice, degree)
+    fit = np.polyfit(sub_spectrum_indices, sub_spectrum, degree)
 
-    center_fit = np.polyval(fit, slice_indices)
-    center = band_minima(center_fit)
+    center_fit = np.polyval(fit, sub_spectrum_indices)
+    center = band_minima(sub_spectrum)
 
     return center, center_fit
-
 
 def band_area(spectrum, low_endmember=None, high_endmember=None):
     """
@@ -70,11 +72,10 @@ def band_area(spectrum, low_endmember=None, high_endmember=None):
     else:
         high_endmember += 1
 
-    slice = spectrum[low_endmember:high_endmember]
-    return np.trapz(np.where(slice <= 1.0))
+    sub_spectrum = spectrum[low_endmember:high_endmember]
+    return np.trapz(np.where(sub_spectrum <= 1.0))
 
-
-def band_asymmetry(spectrum, low_endmember=None, high_endmember=None):
+def band_asymmetry(spectrum, low_endmember=None, high_endmember=None, degree=3):
     """
     Compute the asymmetry of an absorption feature as
     (left_area - right_area) / total_area
@@ -103,10 +104,17 @@ def band_asymmetry(spectrum, low_endmember=None, high_endmember=None):
     else:
         high_endmember += 1
 
-    slice = spectrum[low_endmember:high_endmember]
+    sub_spectrum = spectrum[low_endmember:high_endmember]
 
-    center, _ = band_center(slice, low_endmember, high_endmember)
-    area_left = band_area(slice[:center[0][0]], low_endmember, high_endmember)
-    area_right = band_area(slice[center[0][0]:], low_endmember, high_endmember)
+    center, _ = band_center(sub_spectrum, degree=degree)
+    center_idx = center[0][math.floor(len(center[0])/2)]
+
+    if len(center[0]) % 2:
+        area_left = band_area(sub_spectrum[:center_idx + 1])
+    else:
+        area_left = band_area(sub_spectrum[:center_idx])
+
+    area_right = band_area(sub_spectrum[center_idx:])
+
     asymmetry = abs((area_left - area_right) / (area_left + area_right))
     return asymmetry[0]

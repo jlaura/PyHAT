@@ -1,49 +1,51 @@
-import unittest
+import pytest
 
 import numpy as np
+from numpy.testing import assert_array_equal
 
 from libpyhat.analytics import analytics
 
+@pytest.fixture
+def setUp():
+    np.random.seed(seed=12345)
+    return np.random.random(25)
 
-class Test_Analytics(unittest.TestCase):
-    np.random.seed(12345)
+def test_band_minima(setUp):
+    minidx, minvalue = analytics.band_minima(setUp)
+    print(setUp)
+    assert minidx == 12
+    assert minvalue == pytest.approx(0.008388297)
 
-    def setUp(self):
-        self.arg = np.random.rand(25)
+@pytest.mark.parametrize("lower_bound, upper_bound, expected_idx, expected_val", [
+                                            (0, 7, 2, 0.18391881),
+                                            pytest.param(6, 1, 0, 0, marks=pytest.mark.xfail)]
+)
+def test_band_minima_bounds(lower_bound, upper_bound, expected_idx, expected_val, setUp):
+    minidx, minvalue = analytics.band_minima(setUp, lower_bound, upper_bound)
+    assert minidx == expected_idx
+    assert minvalue == pytest.approx(expected_val)
 
-    def test_band_minima(self):
-        minidx, minvalue = analytics.band_minima(self.arg)
-        self.assertEqual(minidx, 24)
-        self.assertAlmostEqual(minvalue, 0.042715304)
+@pytest.mark.parametrize("spectrum, expected_zero_idx, expected_neg_one_idx, expected_center", [
+                                            (setUp(), 0.56293697, 0.42828491, [12]),
+                                            (np.ones(24), 1, 1, np.array(range(24)))]
+)
+def test_band_center(spectrum, expected_zero_idx, expected_neg_one_idx, expected_center):
+    center, center_fit = analytics.band_center(spectrum)
+    assert center_fit[0] == pytest.approx(expected_zero_idx)
+    assert center_fit[-1] == pytest.approx(expected_neg_one_idx)
+    assert_array_equal(center[0], expected_center)
 
-        minidx, minvalue = analytics.band_minima(self.arg, 0, 7)
-        self.assertEqual(minidx, 0)
-        self.assertAlmostEqual(minvalue, 0.225637606)
+def test_band_area():
+    x = np.arange(-2, 2, 0.1)
+    y = x ** 2
+    parabola = y
+    area = analytics.band_area(parabola)
+    assert area == [370.5]
 
-        with self.assertRaises(ValueError):
-            minidx, minvalue = analytics.band_minima(self.arg, 6, 1)
-
-    def test_band_center(self):
-        center, center_fit = analytics.band_center(self.arg)
-        self.assertEqual(center[0], 6)
-        self.assertAlmostEqual(center[1], 0.506357004)
-        self.assertAlmostEqual(center_fit[0], 0.5674192848)
-        self.assertAlmostEqual(center_fit[12], 0.549810311)
-        self.assertAlmostEqual(center_fit[23], 0.598239935)
-        self.assertAlmostEqual(center_fit.mean(), 0.55942233)
-        self.assertAlmostEqual(np.median(center_fit), 0.56080959)
-        self.assertAlmostEqual(center_fit.std(), 0.03824290)
-
-    def test_band_area(self):
-        x = np.arange(-2, 2, 0.1)
-        y = x ** 2
-        parabola = y
-        area = analytics.band_area(parabola)
-        self.assertEqual(area, [370.5])
-
-    def test_band_asymmetry(self):
-        assymetry = analytics.band_asymmetry(self.arg)
-        self.assertEqual(assymetry, 1)
-
-        assymetry = analytics.band_asymmetry(self.arg, 0, 10)
-        self.assertEqual(assymetry, 0.6)
+@pytest.mark.parametrize("spectrum, expected_val", [
+                                            (setUp(), 0),
+                                            (np.ones(24), 0)]
+)
+def test_band_asymmetry(spectrum, expected_val):
+    assymetry = analytics.band_asymmetry(spectrum)
+    assert assymetry == pytest.approx(expected_val)
