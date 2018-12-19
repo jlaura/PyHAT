@@ -9,7 +9,7 @@ source:
   git_rev: dev
 
 build:
-  number: 2
+  number: {{ GIT_DESCRIBE_NUMBER }}
   skip: True  # [not py3k]
   
 requirements:
