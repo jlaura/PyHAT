@@ -1,4 +1,4 @@
-name: libpyhat
+name: pyhat
 channels:
   - usgs-astrogeology
   - conda-forge

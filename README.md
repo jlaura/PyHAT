@@ -13,10 +13,10 @@
 
 # Installation - For Users
   - Install [Anaconda Python](https://www.continuum.io/downloads).  Be sure to get Python 3.x
-  - Create a conda env for PyHAT: `conda create -n libpyhat`
+  - Create a conda env for PyHAT: `conda create -n pyhat`
   - Add conda forge to your channels list: `conda config --add channels conda-forge`
-  - Activate the PyHAT environment: `source activate libpyhat` (for windows: `activate libpyhat`)
-  - To install: `conda install -c usgs-astrogeology libpyhat`
+  - Activate the PyHAT environment: `conda activate pyhat` (for windows: `conda pyhat`)
+  - To install: `conda install -c usgs-astrogeology pyhat`
 
 # Installation - For Developers
   - Install [Anaconda Python](https://www.continuum.io/downloads).  Be sure to get Python 3.x
