@@ -20,7 +20,7 @@ configuration:
 install:
   - cmd: call %PYTHON%
   - cmd: conda config --set always_yes yes --set changeps1 no
-  - cmd: conda update anaconda
+  - cmd: conda update -q conda
   - cmd: conda clean --packages
   - cmd: conda install conda-build anaconda-client 
   - cmd: conda create -q -n test_env python=%PYTHON_VERSION%
