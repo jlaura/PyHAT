@@ -20,8 +20,8 @@ setup(
     description='The Python Hyperspectral Analysis Toolkit (PyHAT) for planetary spectral data.',
     long_description=long_description,
     url='https://github.com/USGS-Astrogeology/PyHAT',
-    author='J. Laura', 'R.B. Anderson',
-    author_email='jlaura@usgs.gov','rbanderson@usgs.gov',
+    author="J. Laura, R.B. Anderson",
+    author_email="jlaura@usgs.gov, rbanderson@usgs.gov",
 
     license='Unlicense',
     classifiers=[
