@@ -19,7 +19,7 @@ configuration:
 
 install:
   - cmd: call %PYTHON%
-  - cmd: conda config --set always_yes yes --set changeps1 no
+  - cmd: conda config --set always_yes yes --set changeps1 no --add channels default
   - cmd: conda update -q conda
   - cmd: conda clean --all --yes
 
