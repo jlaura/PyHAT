@@ -22,6 +22,7 @@ setup(
     url='https://github.com/USGS-Astrogeology/PyHAT',
     author='J. Laura', 'R.B. Anderson',
     author_email='jlaura@usgs.gov','rbanderson@usgs.gov',
+
     license='Unlicense',
     classifiers=[
         # How mature is this project? Common values are
