@@ -21,11 +21,10 @@ install:
   - cmd: call %PYTHON%
   - cmd: conda -V
   - cmd: conda config --set always_yes yes --set changeps1 no
-  - cmd: conda update conda
+  - cmd: conda config --add channels conda-forge
   - cmd: conda install conda-build anaconda-client 
   - cmd: conda create -q -n test_env python=%PYTHON_VERSION%
   - cmd: activate test_env
-  - cmd: conda config --add channels conda-forge
   - cmd: conda install -c conda-forge numpy scipy pandas gdal scikit-learn multipledispatch
   - cmd: conda install -c usgs-astrogeology plio
   - cmd: conda install pytest-cov
