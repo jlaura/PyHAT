@@ -18,7 +18,7 @@ configuration:
   - Release
 
 install:
-  - set PATH="C:\\Miniconda36-x64\\Scripts\\";%PATH%
+  - set PATH="C:\\Miniconda36-x64\\Scripts\\";"C:\\Miniconda36-x64\\";%PATH%
   - cmd: call %PYTHON%
   - cmd: conda config --set always_yes yes --set changeps1 no
   - cmd: conda update conda
@@ -41,6 +41,6 @@ build_script:
 #  - cmd: pytest libpysat/
 
 on_success:
-  - cmd: deactivate
+  - cmd: conda deactivate
 #  - cmd: conda config --set anaconda_upload yes
 #  - cmd: conda build --token %CONDA_UPLOAD_TOKEN% --channel conda-forge --channel usgs-astrogeology .
