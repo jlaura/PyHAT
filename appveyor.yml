@@ -21,6 +21,8 @@ install:
   - cmd: path
   - cmd: call %PYTHON%
   - cmd: conda -V
+  - cmd: conda update conda
+  - cmd: conda -V
   - cmd: conda config --set always_yes yes --set changeps1 no
   - cmd: conda config --add channels conda-forge
   - cmd: conda install conda-build anaconda-client 
