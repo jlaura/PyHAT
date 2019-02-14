@@ -18,6 +18,7 @@ configuration:
   - Release
 
 install:
+  - cmd: path
   - cmd: call %PYTHON%
   - cmd: conda -V
   - cmd: conda config --set always_yes yes --set changeps1 no
@@ -28,6 +29,7 @@ install:
   - cmd: conda install pytest-cov
   - cmd: conda create -q -n test_env python=%PYTHON_VERSION%
   - cmd: conda activate test_env
+  - cmd: path
   # https://pythonhosted.org/CodeChat/appveyor.yml.html
   - cmd: python -m pip install -U pip
   - cmd: python -m easy_install -U setuptools
