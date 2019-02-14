@@ -18,11 +18,10 @@ configuration:
   - Release
 
 install:
-  - cmd: path
+  - set PATH="C:\\Miniconda36-x64\\Scripts\\";%PATH%
   - cmd: call %PYTHON%
   - cmd: conda config --set always_yes yes --set changeps1 no
   - cmd: conda update conda
-  - cmd: conda -V
   - cmd: conda config --add channels conda-forge
   - cmd: conda install conda-build anaconda-client 
   - cmd: conda install -c conda-forge numpy scipy pandas gdal scikit-learn multipledispatch
@@ -31,7 +30,6 @@ install:
   - cmd: conda create -q -n test_env python=%PYTHON_VERSION%
   - cmd: conda activate test_env
   - cmd: conda -V
-  - cmd: path
   # https://pythonhosted.org/CodeChat/appveyor.yml.html
   - cmd: python -m pip install -U pip
   - cmd: python -m easy_install -U setuptools
