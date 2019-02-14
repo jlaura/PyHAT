@@ -29,6 +29,7 @@ install:
   - cmd: conda install pytest-cov
   - cmd: conda create -q -n test_env python=%PYTHON_VERSION%
   - cmd: conda activate test_env
+  - cmd: conda init cmd.exe
   - cmd: conda -V
   # https://pythonhosted.org/CodeChat/appveyor.yml.html
   - cmd: python -m pip install -U pip
