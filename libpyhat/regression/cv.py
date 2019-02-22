@@ -12,8 +12,8 @@ import warnings
 import numpy as np
 # from sklearn.linear_model import RANSACRegressor as RANSAC
 import pandas as pd
-from libpysat.regression.regression import regression
-
+from libpyhat.regression.regression import regression
+from libpyhat.regression import local_regression
 from sklearn.linear_model import enet_path, lasso_path
 from sklearn.linear_model.base import _pre_fit
 from sklearn.utils.validation import check_X_y, check_array
@@ -145,14 +145,26 @@ class cv:
 
                 else:
                     cvcols = [('predict', '"'+method+'- CV -' + str(self.paramgrid[i]) + '"')]
-                    
-                    #fit the model and predict the held-out data
-                    model = regression([method], [yrange], [self.paramgrid[i]])
-                    model.fit(cv_train[xcols], cv_train[ycol])
-                    if model.goodfit:
-                        y_pred_holdout = model.predict(cv_holdout[xcols])
+
+                    if method == 'Local Regression':
+                        params = self.paramgrid[i]
+                        try:
+                            #on the first pass, pop off the n_neigbors parameter so it can be passed correctly
+                            n_neighbors = params['n_neighbors']
+                            params.pop('n_neighbors')
+                        except:
+                            pass
+
+                        model = local_regression.LocalRegression(params, n_neighbors=n_neighbors)
+                        y_pred_holdout, coeffs, intercepts = model.fit_predict(cv_train[xcols],cv_train[ycol],cv_holdout[xcols])
                     else:
-                        y_pred_holdout = cv_holdout[ycol] * np.nan
+                        #fit the model and predict the held-out data
+                        model = regression([method], [yrange], [self.paramgrid[i]])
+                        model.fit(cv_train[xcols], cv_train[ycol])
+                        if model.goodfit:
+                            y_pred_holdout = model.predict(cv_holdout[xcols])
+                        else:
+                            y_pred_holdout = cv_holdout[ycol] * np.nan
                     #add the predictions to the appropriate column in the training data
                     Train.set_value(Train.index[holdout], cvcols[0], y_pred_holdout)
                     #append the RMSECV to the list

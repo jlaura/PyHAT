@@ -13,7 +13,7 @@ import sklearn.svm as svm
 from sklearn.cross_decomposition.pls_ import PLSRegression
 from sklearn.decomposition import PCA, FastICA
 from sklearn.gaussian_process import GaussianProcess
-
+from sklearn.ensemble.gradient_boosting import GradientBoostingRegressor
 
 class regression:
     def __init__(self, method, yrange, params, i=0):  #TODO: yrange doesn't currently do anything. Remove or do something with it!
@@ -30,6 +30,7 @@ class regression:
                                'LASSO LARS',
                                'SVR',
                                'KRR',
+                               'GBR'
                                ]
         self.method = method
         self.outliers = None
@@ -93,6 +94,8 @@ class regression:
             params_temp.pop('n_components')
             self.model = GaussianProcess(**params_temp)
 
+        if self.method[i] == 'GBR':
+            self.model = GradientBoostingRegressor(**params[i])
 
     def fit(self, x, y, i=0):
         # if gaussian processes are being used, data dimensionality needs to be reduced before fitting

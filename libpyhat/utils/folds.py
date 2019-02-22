@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-from sklearn import cross_validation
+from sklearn import model_selection
 
 #This function assigns spectra to folds randomly, but keeps spectra with the same value in a user-defined column together.
 #This ensures that multiple spectra of the same target end up in the same fold
@@ -11,7 +11,7 @@ def random(df, nfolds=5, seed=10, groupby=None):
     foldslist = np.array(df['Folds'])
     if groupby == None:  # if no column name is listed to group on, just create random folds
         n = len(df.index)
-        folds = cross_validation.KFold(n, nfolds, shuffle=True, random_state=seed)
+        folds = model_selection.KFold(n_splits=nfolds, shuffle=True, random_state=seed)
         i = 1
         for train, test in folds:
             foldslist[test] = 'Fold' + str(i)
