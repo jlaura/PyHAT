@@ -1,8 +1,10 @@
 from functools import reduce
+from functools import singledispatch
+from functools import update_wrapper
 
 import numpy as np
 import pandas as pd
-
+import scipy.stats as ss
 
 def crossform(a):
     """
