@@ -24,19 +24,19 @@ before_install:
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
+  - conda config --add channels usgs-astrogeology
+  - conda config --add channels conda-forge
   - conda update conda
   - conda info -a   # Useful for debugging any issues with conda
+  - conda install pyhat
   # Create the env using the environment.yml
-  - conda env create -n pyhat -f environment.yml
-  - source activate pyhat
+  - conda env create -n pyhat-env -f environment.yml
+  - source activate pyhat-env
 
 install:
   # Install dependencies
   - conda install pip setuptools
-  - conda config --add channels usgs-astrogeology
-  - conda config --add channels conda-forge
   # Development installation
-  - conda install plio pyhat
   - conda install pytest pytest-cov nbsphinx
   - pip install coveralls travis-sphinx
 
@@ -52,6 +52,6 @@ after_success:
   - conda config --set anaconda_upload yes
   - conda build --token $CONDA_UPLOAD_TOKEN --python $PYTHON_VERSION .
   # Docs to gh-pages
-  - source activate test_env  # Reactivate the env to have all deps installed.
+  - source activate pyhat-env  # Reactivate the env to have all deps installed.
   - travis-sphinx build --source=docs --nowarn # The sphinx build script
   - travis-sphinx deploy --branches=dev
