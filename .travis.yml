@@ -33,7 +33,8 @@ before_install:
 install:
   # Install dependencies
   - conda install pip setuptools
-
+  - conda config --add channels usgs-astrogeology
+  - conda config --add channels conda-forge
   # Development installation
   - conda install pytest pytest-cov nbsphinx
   - pip install coveralls travis-sphinx
