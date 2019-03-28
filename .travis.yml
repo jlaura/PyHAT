@@ -24,10 +24,10 @@ before_install:
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
+  - conda update conda
   - conda info -a   # Useful for debugging any issues with conda
   # Create the env using the environment.yml
-  - conda env create -q -n pyhat -f environment.yml
+  - conda env create -n pyhat -f environment.yml
   - source activate pyhat
 
 install:
@@ -35,7 +35,7 @@ install:
   - conda install pip setuptools
 
   # Development installation
-  - conda install --quiet pytest pytest-cov nbsphinx
+  - conda install pytest pytest-cov nbsphinx
   - pip install coveralls travis-sphinx
 
 script:
