@@ -36,7 +36,7 @@ install:
   - conda config --add channels usgs-astrogeology
   - conda config --add channels conda-forge
   # Development installation
-  - conda install plio
+  - conda install plio pyhat
   - conda install pytest pytest-cov nbsphinx
   - pip install coveralls travis-sphinx
 
