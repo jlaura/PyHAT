@@ -492,5 +492,4 @@ def crism_wv():
     99:1178.29}
 
     crism_wv = OrderedDict(sorted(crism_wv.items()))
-
     return crism_wv
