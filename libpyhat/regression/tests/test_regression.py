@@ -23,27 +23,13 @@ def test_OLS():
                          params=[{'fit_intercept': True}])
 
 
-def test_OMP_CV_true():
+def test_OMP():
     regress = regression(method=['OMP'], yrange=[0.0, 100.0], params=[{'fit_intercept': True,
-                                                                       'CV': True,
                                                                        'precompute': True}])
 
-def test_OMP_CV_false():
-    regress = regression(method=['OMP'], yrange=[0.0, 100.0], params=[{'fit_intercept': True,
-                                                                       'CV': False}])
 
 
-def test_LASSO_CV_true():
-    regress = regression(method=['LASSO'], yrange=[0.0, 100.0],
-                         params=[{'alpha': 1.0,
-                                  'fit_intercept': True,
-                                  'max_iter': 1000,
-                                  'tol': 0.0001,
-                                  'positive': False,
-                                  'selection': 'random',
-                                  'CV': True}])
-
-def test_LASSO_CV_none():
+def test_LASSO():
     regress = regression(method=['LASSO'], yrange=[0.0, 100.0],
                          params=[{'alpha': 1.0,
                                   'fit_intercept': True,
@@ -53,7 +39,7 @@ def test_LASSO_CV_none():
                                   'selection': 'random'}])
 
 
-def test_Elastic_Net_CV_none():
+def test_Elastic_Nete():
     regress = regression(method=['Elastic Net'], yrange=[0.0, 100.0],
                          params=[{'alpha': 1.0,
                                   'l1_ratio': 0.5,
@@ -68,22 +54,7 @@ def test_Elastic_Net_CV_none():
                                   'selection': 'cyclic',
                                   'random_state': 'None'}])
 
-def test_Elastic_Net_CV_true():
-    regress = regression(method=['Elastic Net'], yrange=[0.0, 100.0],
-                         params=[{'l1_ratio': 0.5,
-                                  'fit_intercept': True,
-                                  'normalize': False,
-                                  'precompute': 'False',
-                                  'max_iter': 1000,
-                                  'copy_X': True,
-                                  'tol': 0.0001,
-                                  'positive': False,
-                                  'selection': 'cyclic',
-                                  'random_state': 'None',
-                                  'CV': True}])
-
-
-def test_Ridge_CV_none():
+def test_Ridge():
     regress = regression(method=['Ridge'], yrange=[0.0, 100.0],
                          params=[{'alpha': 1.0,
                                   'copy_X': True,
@@ -93,12 +64,6 @@ def test_Ridge_CV_none():
                                   'solver': 'auto',
                                   'tol': 0.0,
                                   'random_state': ''}])
-
-def test_Ridge_CV_true():
-    regress = regression(method=['Ridge'], yrange=[0.0, 100.0],
-                         params=[{'fit_intercept': True,
-                                  'normalize': False,
-                                  'CV': True}])
 
 def test_Bayesian_Ridge():
     regress = regression(method=['Bayesian Ridge'], yrange=[0.0, 100.0],
@@ -131,7 +96,7 @@ def test_ARD():
                                   'verbose': False}])
 
 
-def test_LARS_CV_none():
+def test_LARS():
     regress = regression(method=['LARS'], yrange=[0.0, 100.0],
                          params=[{'n_nonzero_coefs': 500,
                                   'fit_intercept': True,
@@ -142,17 +107,6 @@ def test_LARS_CV_none():
                                   'copy_X': True,
                                   'eps': 2.220445,
                                   'fit_path': True}])
-
-def test_LARS2_CV_true():
-    regress = regression(method=['LARS'], yrange=[0.0, 100.0],
-                         params=[{'fit_intercept': True,
-                                  'positive': False,
-                                  'verbose': False,
-                                  'normalize': False,
-                                  'precompute': True,
-                                  'copy_X': True,
-                                  'eps': 2.220445,
-                                  'CV': True}])
 
 def test_Lasso_LARS_model_0():
     regress = regression(method=['Lasso LARS'], yrange=[0.0, 100.0],
