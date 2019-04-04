@@ -23,7 +23,9 @@ install:
   - cmd: conda config --set always_yes yes --set changeps1 no
   - cmd: conda update -q conda
   - cmd: conda config --add channels conda-forge
-  - cmd: conda install conda-build anaconda-client 
+  - cmd: conda config --add channels usgs-astrogeology
+  - cmd: conda install conda-build
+  - cmd: conda install anaconda-client
   - cmd: conda install -c conda-forge numpy scipy pandas gdal scikit-learn multipledispatch
   - cmd: conda install -c usgs-astrogeology plio
   - cmd: conda install -c conda-forge pytest pytest-cov
