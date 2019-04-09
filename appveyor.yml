@@ -26,11 +26,11 @@ install:
   - cmd: conda config --add channels usgs-astrogeology
   - cmd: conda install conda-build
   - cmd: conda install anaconda-client
+  - cmd: conda create -q -n test_env python=%PYTHON_VERSION%
+  - cmd: conda activate test_env
   - cmd: conda install -c conda-forge numpy scipy pandas gdal scikit-learn multipledispatch
   - cmd: conda install -c usgs-astrogeology plio
   - cmd: conda install -c conda-forge pytest pytest-cov
-  - cmd: conda create -q -n test_env python=%PYTHON_VERSION%
-  - cmd: conda activate test_env
   - cmd: python -m pip install -U pip
   - cmd: python -m easy_install -U setuptools
 
