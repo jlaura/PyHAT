@@ -20,6 +20,7 @@ configuration:
 install:
   - set PATH="C:\\Miniconda36-x64\\Scripts\\";"C:\\Miniconda36-x64\\";%PATH%
   - cmd: call %PYTHON%
+  - cmd: conda init
   - cmd: conda config --set always_yes yes --set changeps1 no
   - cmd: conda update -q conda
   - cmd: conda config --add channels conda-forge
