@@ -36,7 +36,7 @@ class regression:
         self.outliers = None
         self.ransac = False
 
-        print(params)
+        #print(params)
         if self.method[i] == 'PLS':
             self.model = PLSRegression(**params[i])
 
@@ -114,7 +114,7 @@ class regression:
         try:
             self.model.fit(x, y)
             self.goodfit = True
-            print(self.model)
+            #print(self.model)
         except:
             self.goodfit = False
             if self.method[i] == 'GP':
