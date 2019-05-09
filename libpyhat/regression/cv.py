@@ -22,6 +22,7 @@ import time
 import copy
 import itertools
 
+
 def RMSE(ypred, y):
     return np.sqrt(np.mean((np.squeeze(ypred) - np.squeeze(y)) ** 2))
 
@@ -81,13 +82,15 @@ def path_calc(X, y, X_holdout, y_holdout, alphas, paramgrid, colname = 'CV', yna
     return path_alphas, path_coefs, intercepts, path_iters, y_pred_holdouts, rmses, cvcols
 
 
-
 class cv:
     def __init__(self, paramgrid,progressbar = None):
+        self.paramgrid = paramgrid
         if progressbar is not None:
             self.progress = progressbar
-        self.paramgrid = paramgrid
-        #self.paramgrid = ParameterGrid(params).param_grid
+            self.progress.setMaximum(len(self.paramgrid))
+            self.progress.text = 'Cross validation progress:'
+
+
     def do_cv(self, Train, cv_iterator, xcols='wvl', ycol=('comp', 'SiO2'), method='PLS',
               yrange=[0, 100], calc_path = False, alphas = None, n_folds = 3):
 
@@ -96,8 +99,15 @@ class cv:
         predictkeys = []
         cv_iterators = itertools.tee(cv_iterator,len(self.paramgrid))  #need to duplicate the cv_iterator so it can be used for each permutation in paramgrid
 
+        try:
+            self.progress.show()
+        except:
+            pass
+
         for i in list(range(len(self.paramgrid))):
+            print('Cross validating permutation '+str(i+1)+' of '+str(len(self.paramgrid)))
             print(self.paramgrid[i])
+
             # create an empty output data frame to serve as template
             output_tmp = pd.DataFrame()
             # add columns for RMSEC, RMSECV, and RMSE for the folds
@@ -237,8 +247,13 @@ class cv:
                 output = pd.concat((output, output_tmp))
             except:
                 output = output_tmp
-            pass
 
+            try:
+                self.progress.setValue(i+1)
+                QGuiApplication.processEvents()
+                pass
+            except:
+                pass
 
         #make the columns of the output data drame multi-indexed
         cols = output.columns.values
