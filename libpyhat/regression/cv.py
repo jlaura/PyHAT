@@ -21,6 +21,7 @@ warnings.filterwarnings('ignore')
 import time
 import copy
 import itertools
+from PyQt5.QtGui import QGuiApplication
 
 
 def RMSE(ypred, y):
@@ -57,7 +58,7 @@ def path_calc(X, y, X_holdout, y_holdout, alphas, paramgrid, colname = 'CV', yna
         path_alphas, path_coefs, path_gaps, path_iters = lasso_path(X, y, alphas=alphas, return_n_iter=True,
                                                                    **copy_params)
     dt = time.time() - start_t
-    print('Took ' + str(dt) + ' seconds')
+    print('Took ' + str(round(dt,2)) + ' seconds')
 
     #create some empty arrays to store the result
     y_pred_holdouts = np.empty(shape=(len(alphas),len(y_holdout)))
@@ -88,7 +89,8 @@ class cv:
         if progressbar is not None:
             self.progress = progressbar
             self.progress.setMaximum(len(self.paramgrid))
-            self.progress.text = 'Cross validation progress:'
+            self.progress.show()
+
 
 
     def do_cv(self, Train, cv_iterator, xcols='wvl', ycol=('comp', 'SiO2'), method='PLS',
@@ -99,15 +101,9 @@ class cv:
         predictkeys = []
         cv_iterators = itertools.tee(cv_iterator,len(self.paramgrid))  #need to duplicate the cv_iterator so it can be used for each permutation in paramgrid
 
-        try:
-            self.progress.show()
-        except:
-            pass
-
         for i in list(range(len(self.paramgrid))):
             print('Cross validating permutation '+str(i+1)+' of '+str(len(self.paramgrid)))
             print(self.paramgrid[i])
-
             # create an empty output data frame to serve as template
             output_tmp = pd.DataFrame()
             # add columns for RMSEC, RMSECV, and RMSE for the folds
@@ -251,7 +247,7 @@ class cv:
             try:
                 self.progress.setValue(i+1)
                 QGuiApplication.processEvents()
-                pass
+
             except:
                 pass
 
