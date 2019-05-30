@@ -10,6 +10,8 @@ environment:
       PYTHON_VERSION: 3.5
     - PYTHON: "C:\\Miniconda36-x64\\Scripts\\activate.bat"
       PYTHON_VERSION: 3.6
+    - PYTHON: "C:\\Miniconda36-x64\\Scripts\\activate.bat"
+      PYTHON_VERSION: 3.7
 
 platform:
   - x64
@@ -20,16 +22,15 @@ configuration:
 install:
   - set PATH="C:\\Miniconda36-x64\\Scripts\\";"C:\\Miniconda36-x64\\";%PATH%
   - cmd: call %PYTHON%
-  - cmd: conda init bash
   - cmd: conda config --set always_yes yes --set changeps1 no
   - cmd: conda update -q conda
-  - cmd: conda config --add channels conda-forge
-  - cmd: conda config --add channels usgs-astrogeology
-  - cmd: conda install conda-build
-  - cmd: conda install anaconda-client
+  - cmd: conda install conda-build anaconda-client
   - cmd: conda create -q -n test_env python=%PYTHON_VERSION%
   - cmd: conda activate test_env
-  - cmd: conda install -c conda-forge numpy scipy pandas gdal scikit-learn multipledispatch
+  - cmd: conda config --add channels conda-forge
+  - cmd: conda config --add channels usgs-astrogeology
+  - cmd: conda config --set ssl_verify false
+  - cmd: conda install -c conda-forge numpy scipy pandas gdal scikit-learn multipledispatch pvl
   - cmd: conda install -c usgs-astrogeology plio
   - cmd: conda install -c conda-forge pytest pytest-cov
   - cmd: python -m pip install -U pip
