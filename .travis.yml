@@ -36,16 +36,17 @@ install:
   - conda config --add channels conda-forge
   # - conda install --quiet -c conda-forge numpy scipy pandas gdal libgdal scikit-learn multipledispatch
   # - conda install --quiet -c usgs-astrogeology plio
-  - conda env update -n test_env -f environment.yml
   # https://github.com/GoogleCloudPlatform/google-cloud-python/issues/2990
   - conda install pip setuptools
 
   # Development installation
   - conda install --quiet pytest pytest-cov nbsphinx
   - pip install coveralls travis-sphinx
+  - conda env update -n test_env -f environment.yml
+
 
 script:
-  - pytest --cov=pyhat
+  - pytest --cov=libpyhat
 
 after_success:
   # Code Coverage
@@ -53,8 +54,13 @@ after_success:
   # Anaconda Upload
   - source deactivate
   - conda install conda-build anaconda-client
-  - conda config --set anaconda_upload yes
-  - conda build --token $CONDA_UPLOAD_TOKEN --python $PYTHON_VERSION .
+  - conda config --set anaconda_upload no
+  - conda build recipe -q
+  - builddir=(`conda build recipe --output`)
+  - |
+    if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+      anaconda -t="$CONDA_UPLOAD_TOKEN" upload $builddir --force;
+    fi
   # Docs to gh-pages
   - source activate test_env  # Reactivate the env to have all deps installed.
   - travis-sphinx build --source=docs --nowarn # The sphinx build script

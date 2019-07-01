@@ -5,14 +5,14 @@ import pytest
 import libpyhat
 from libpyhat import Spectra, Spectrum
 
-@pytest.fixture
+# Fixtures were fixed according to: https://docs.pytest.org/en/latest/deprecations.html#calling-fixtures-directly
+
 def spectra():
     return Spectra(np.arange(1,17).reshape(4,4),
                    index=[2.22221, 3.33331, 4.400001, 5.500001],
                    wavelengths=[2.22221, 3.33331, 4.400001, 5.500001],
                    columns=['a', 'b', 'c', 'd'])
 
-@pytest.fixture
 def spectra_multiindex():
     multi = [(0, 'a'), (0, 'b'), (1, 'a'), (1, 'b')]
     cols = MultiIndex.from_tuples(multi, names=['observationid', 'wv'])
@@ -21,10 +21,6 @@ def spectra_multiindex():
                    wavelengths=[2.22221, 3.33331, 4.400001, 5.500001, 6.6],
                    columns=cols)
 
-#@pytest.fixture
-#def spectra_multiindex_metadata():
-
-@pytest.fixture
 def spectra_metadata():
         return Spectra([[1,2,3,4],
                         [1,2,3,4],
@@ -37,6 +33,20 @@ def spectra_metadata():
                    wavelengths=[2.22221, 3.33331, 4.400001, 5.500001],
                    metadata=['foo', 'bar', 'bat'] ,
                    columns=['a', 'b', 'c', 'd'])
+
+
+@pytest.fixture(name="spectra")
+def spectra_fixture():
+    return spectra()
+
+@pytest.fixture(name="spectra_multiindex")
+def spectra_multiindex_fixture():
+    return spectra_multiindex()
+
+@pytest.fixture(name="spectra_metadata")
+def spectra_metadata_fixture():
+    return spectra_metadata()
+
 
 @pytest.mark.parametrize("spectra, cols, cls",
                          [(spectra(), 'a', Spectrum),
