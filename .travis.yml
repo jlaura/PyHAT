@@ -24,21 +24,26 @@ before_install:
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
-  - conda config --add channels usgs-astrogeology
-  - conda config --add channels conda-forge
-  - conda update conda
+  - conda update -q conda
   - conda info -a   # Useful for debugging any issues with conda
-  - conda install pyhat
-  # Create the env using the environment.yml
-  - conda env create -n pyhat-env -f environment.yml
-  - source activate pyhat-env
+  # Create the env
+  - conda create -q -n test_env python=$PYTHON_VERSION
+  - source activate test_env
 
 install:
   # Install dependencies
+  - conda config --add channels usgs-astrogeology
+  - conda config --add channels conda-forge
+  # - conda install --quiet -c conda-forge numpy scipy pandas gdal libgdal scikit-learn multipledispatch
+  # - conda install --quiet -c usgs-astrogeology plio
+  # https://github.com/GoogleCloudPlatform/google-cloud-python/issues/2990
   - conda install pip setuptools
+
   # Development installation
-  - conda install pytest pytest-cov nbsphinx
+  - conda install --quiet pytest pytest-cov nbsphinx
   - pip install coveralls travis-sphinx
+  - conda env update -n test_env -f environment.yml
+
 
 script:
   - pytest --cov=libpyhat
@@ -49,9 +54,14 @@ after_success:
   # Anaconda Upload
   - source deactivate
   - conda install conda-build anaconda-client
-  - conda config --set anaconda_upload yes
-  - conda build --token $CONDA_UPLOAD_TOKEN --python $PYTHON_VERSION .
+  - conda config --set anaconda_upload no
+  - conda build recipe -q
+  - builddir=(`conda build recipe --output`)
+  - |
+    if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+      anaconda -t="$CONDA_UPLOAD_TOKEN" upload $builddir --force;
+    fi
   # Docs to gh-pages
-  - source activate pyhat-env  # Reactivate the env to have all deps installed.
+  - source activate test_env  # Reactivate the env to have all deps installed.
   - travis-sphinx build --source=docs --nowarn # The sphinx build script
-  - travis-sphinx deploy --branches=dev
+- travis-sphinx deploy --branches=dev

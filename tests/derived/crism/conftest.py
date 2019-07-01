@@ -1,8 +1,9 @@
 from unittest import mock
-import numpy as np
-from plio.io import io_crism as icsm
 import pytest
-from crism_wv import crism_wv
+import numpy as np
+
+from libpyhat.io import io_crism as icsm
+from . crism_wv import crism_wv
 
 @pytest.fixture
 def crism_img():
@@ -18,8 +19,7 @@ def crism_img():
     crism.loc.__getitem__ = mock.MagicMock(side_effect=create)
     crism.iloc.__getitem__ = mock.MagicMock(side_effect=create)
     crism.__getitem__ = mock.MagicMock(side_effect=create_dense)
-    wv = crism_wv()
-    wv = np.asarray(list(wv.values()))
+    wv = np.asarray(list(crism_wv.values()))
     type(crism).wavelengths = mock.PropertyMock(return_value=wv)
 
     return crism

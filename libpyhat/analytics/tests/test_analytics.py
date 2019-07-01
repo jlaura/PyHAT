@@ -7,14 +7,12 @@ import libpyhat as phat
 from libpyhat.analytics import analytics
 from libpyhat.examples import get_path
 
+@pytest.fixture
+def random_vector():
+    return np.random.RandomState(seed=12345).random_sample(25)
 
-def setUp():
-    np.random.seed(seed=12345)
-    return np.random.random(25)
-
-def test_band_minima():
-    set_up = setUp()
-    minidx, minvalue = analytics.band_minima(set_up)
+def test_band_minima(random_vector):
+    minidx, minvalue = analytics.band_minima(random_vector)
     assert minidx == 12
     assert minvalue == pytest.approx(0.008388297)
 
@@ -22,13 +20,13 @@ def test_band_minima():
                                             (0, 7, 2, 0.18391881),
                                             pytest.param(6, 1, 0, 0, marks=pytest.mark.xfail)]
 )
-def test_band_minima_bounds(lower_bound, upper_bound, expected_idx, expected_val):
-    minidx, minvalue = analytics.band_minima(setUp(), lower_bound, upper_bound)
+def test_band_minima_bounds(random_vector, lower_bound, upper_bound, expected_idx, expected_val):
+    minidx, minvalue = analytics.band_minima(random_vector, lower_bound, upper_bound)
     assert minidx == expected_idx
     assert minvalue == pytest.approx(expected_val)
 
 @pytest.mark.parametrize("spectrum, expected_zero_idx, expected_neg_one_idx, expected_center", [
-                                            (setUp(), 0.56293697, 0.42828491, [12]),
+                                            (np.random.RandomState(seed=12345).random_sample(25), 0.56293697, 0.42828491, [12]),
                                             (np.ones(24), 1, 1, np.array(range(24)))]
 )
 def test_band_center(spectrum, expected_zero_idx, expected_neg_one_idx, expected_center):
@@ -45,7 +43,7 @@ def test_band_area():
     assert area == [370.5]
 
 @pytest.mark.parametrize("spectrum, expected_val", [
-                                            (setUp(), 0),
+                                            (np.random.RandomState(seed=12345).random_sample(25), 0),
                                             (np.ones(24), 0)]
 )
 def test_band_asymmetry(spectrum, expected_val):
@@ -117,4 +115,4 @@ def test_run_analytics_band_area_spectrum(expected_values):
     spectra = phat.Spectra.from_file(get_path('SP_2C_02_02358_S138_E3586.spc'))
     spectrum = spectra[spectra.columns[1]]
     asymmetry = analytics.run_analytics(spectrum, analytics.band_area, 512.6, 2587.9)
-    assert asymmetry == pytest.approx(expected_values)
+assert asymmetry == pytest.approx(expected_values)

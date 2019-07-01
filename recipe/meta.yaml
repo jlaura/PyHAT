@@ -9,9 +9,9 @@ source:
   git_rev: dev
 
 build:
-  number: {{ GIT_DESCRIBE_NUMBER }}
+  number: {{ environ.get('GIT_DESCRIBE_NUMBER', 0) }}
   skip: True  # [not py3k]
-  
+
 requirements:
   build:
     - python
