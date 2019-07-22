@@ -115,4 +115,4 @@ def test_run_analytics_band_area_spectrum(expected_values):
     spectra = phat.Spectra.from_file(get_path('SP_2C_02_02358_S138_E3586.spc'))
     spectrum = spectra[spectra.columns[1]]
     asymmetry = analytics.run_analytics(spectrum, analytics.band_area, 512.6, 2587.9)
-assert asymmetry == pytest.approx(expected_values)
+    assert asymmetry == pytest.approx(expected_values)
