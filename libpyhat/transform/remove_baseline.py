@@ -1,7 +1,7 @@
 
 from libpyhat.transform.baseline_code.airpls import AirPLS
 from libpyhat.transform.baseline_code.als import ALS
-from libpyhat.transform.baseline_code.ccam_remove_continuum import ccam_br
+from libpyhat.transform.baseline_code.swt import swt
 from libpyhat.transform.baseline_code.dietrich import Dietrich
 from libpyhat.transform.baseline_code.fabc import FABC
 from libpyhat.transform.baseline_code.kajfosz_kwiatek import KajfoszKwiatek as KK
@@ -36,7 +36,7 @@ def remove_baseline(df, method='ALS', segment=True, params=None):
     elif method == 'Rubberband':
         br = Rubberband()
     elif method == 'Stationary Wavelets':
-        br = ccam_br()
+        br = swt()
         # if method == 'wavelet':
         #   br=Wavelet()
     else:
