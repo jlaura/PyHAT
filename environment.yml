@@ -9,8 +9,8 @@ dependencies:
   - scipy
   - scikit-learn
   - multipledispatch
-  - ncurses
   - yaml
   - pvl
   - plio
   - matplotlib
+  - pywavelets
