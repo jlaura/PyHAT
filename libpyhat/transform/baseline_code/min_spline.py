@@ -13,7 +13,7 @@ import scipy.signal as signal
 import scipy.interpolate as interp
 import matplotlib.pyplot as plot
 import copy
-def min_spline(wvl, spectrum, window = 50):
+def min_interp(wvl, spectrum, window = 50,kind='cubic'):
     nbands = len(wvl)
     n_windows = np.int(nbands/window)
 
@@ -38,7 +38,7 @@ def min_spline(wvl, spectrum, window = 50):
 
     # fit a cubic spline to the points
     if len(s_minima) > 3:
-        spline = interp.interp1d(wvl[s_minima], spectrum[s_minima], kind='cubic')
+        spline = interp.interp1d(wvl[s_minima], spectrum[s_minima], kind=kind)
         baseline = spline(wvl)
     else:
         # if there aren't enough minima, make the baseline zero
@@ -47,8 +47,9 @@ def min_spline(wvl, spectrum, window = 50):
 
     return baseline
 
-class minimum_spline(Baseline):
-    def __init__(self, window = 50):
+class minimum_interp(Baseline):
+    def __init__(self, window = 50,kind = 'cubic'):
         self.window = window
+        self.kind = kind
     def _fit_one(self, x, y):
-        return min_spline(x, y, window = self.window)
+        return min_interp(x, y, window = self.window, kind = self.kind)

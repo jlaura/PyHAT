@@ -9,7 +9,7 @@ from libpyhat.transform.baseline_code.median import MedianFilter
 from libpyhat.transform.baseline_code.polyfit import PolyFit
 from libpyhat.transform.baseline_code.rubberband import Rubberband
 from libpyhat.transform.baseline_code.wavelet_spline import wavelet_spline
-from libpyhat.transform.baseline_code.min_spline import minimum_spline
+from libpyhat.transform.baseline_code.min_spline import minimum_interp
 import numpy as np
 
 # This function applies baseline removal to the data
@@ -38,8 +38,8 @@ def remove_baseline(df, method='ALS', segment=True, params=None):
         br = Rubberband()
     elif method == 'Wavelet a Trous + Spline':
         br = wavelet_spline()
-    elif method == 'Min + Spline':
-        br = minimum_spline()
+    elif method == 'Min + Interpolate':
+        br = minimum_interp()
 
 
     else:
