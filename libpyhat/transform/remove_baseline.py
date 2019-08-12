@@ -1,14 +1,15 @@
 
-from libpysat.transform.baseline_code.airpls import AirPLS
-from libpysat.transform.baseline_code.als import ALS
-from libpysat.transform.baseline_code.ccam_remove_continuum import ccam_br
-from libpysat.transform.baseline_code.dietrich import Dietrich
-from libpysat.transform.baseline_code.fabc import FABC
-from libpysat.transform.baseline_code.kajfosz_kwiatek import KajfoszKwiatek as KK
-from libpysat.transform.baseline_code.mario import Mario
-from libpysat.transform.baseline_code.median import MedianFilter
-from libpysat.transform.baseline_code.polyfit import PolyFit
-from libpysat.transform.baseline_code.rubberband import Rubberband
+from libpyhat.transform.baseline_code.airpls import AirPLS
+from libpyhat.transform.baseline_code.als import ALS
+from libpyhat.transform.baseline_code.dietrich import Dietrich
+from libpyhat.transform.baseline_code.fabc import FABC
+from libpyhat.transform.baseline_code.kajfosz_kwiatek import KajfoszKwiatek as KK
+from libpyhat.transform.baseline_code.mario import Mario
+from libpyhat.transform.baseline_code.median import MedianFilter
+from libpyhat.transform.baseline_code.polyfit import PolyFit
+from libpyhat.transform.baseline_code.rubberband import Rubberband
+from libpyhat.transform.baseline_code.wavelet_spline import wavelet_spline
+from libpyhat.transform.baseline_code.min_spline import minimum_interp
 import numpy as np
 
 # This function applies baseline removal to the data
@@ -35,10 +36,12 @@ def remove_baseline(df, method='ALS', segment=True, params=None):
         br = MedianFilter()
     elif method == 'Rubberband':
         br = Rubberband()
-    elif method == 'Stationary Wavelets':
-        br = ccam_br()
-        # if method == 'wavelet':
-        #   br=Wavelet()
+    elif method == 'Wavelet a Trous + Spline':
+        br = wavelet_spline()
+    elif method == 'Min + Interpolate':
+        br = minimum_interp()
+
+
     else:
         print(method + ' is not recognized!')
 

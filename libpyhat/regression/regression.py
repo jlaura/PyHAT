@@ -12,8 +12,8 @@ import sklearn.linear_model as linear
 import sklearn.svm as svm
 from sklearn.cross_decomposition.pls_ import PLSRegression
 from sklearn.decomposition import PCA, FastICA
-from sklearn.gaussian_process import GaussianProcess
 from sklearn.ensemble.gradient_boosting import GradientBoostingRegressor
+from sklearn.gaussian_process import GaussianProcessRegressor
 
 class regression:
     def __init__(self, method, yrange, params, i=0):  #TODO: yrange doesn't currently do anything. Remove or do something with it!
@@ -36,7 +36,7 @@ class regression:
         self.outliers = None
         self.ransac = False
 
-        print(params)
+        #print(params)
         if self.method[i] == 'PLS':
             self.model = PLSRegression(**params[i])
 
@@ -51,7 +51,6 @@ class regression:
         if self.method[i] == 'LASSO':
             # create a temporary set of parameters
             params_temp = copy.copy(params[i])
-
             self.model = linear.Lasso(**params_temp)
 
         if self.method[i] == 'Elastic Net':
@@ -92,7 +91,7 @@ class regression:
             # Remove parameters not accepted by Gaussian Process
             params_temp.pop('reduce_dim')
             params_temp.pop('n_components')
-            self.model = GaussianProcess(**params_temp)
+            self.model = GaussianProcessRegressor(**params_temp)
 
         if self.method[i] == 'GBR':
             self.model = GradientBoostingRegressor(**params[i])
@@ -115,7 +114,7 @@ class regression:
         try:
             self.model.fit(x, y)
             self.goodfit = True
-            print(self.model)
+            #print(self.model)
         except:
             self.goodfit = False
             if self.method[i] == 'GP':
@@ -134,7 +133,6 @@ class regression:
     def predict(self, x, i=0):
         if self.method[i] == 'GP':
             x = self.do_reduce_dim.transform(x)
-        print(len(x))
         return self.model.predict(x)
 
 

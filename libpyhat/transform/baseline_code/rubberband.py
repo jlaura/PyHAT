@@ -1,5 +1,5 @@
 import numpy as np
-from libpysat.transform.baseline_code.common import Baseline
+from libpyhat.transform.baseline_code.common import Baseline
 from scipy.spatial import ConvexHull
 
 
