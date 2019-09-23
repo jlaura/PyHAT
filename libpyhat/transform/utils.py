@@ -26,7 +26,6 @@ def meancenter(df, col, previous_mean=None):
     Returns
     -------
     df : mean-centered data frame
-
     mean_vect : mean spectrum
     """
     if previous_mean is not None:
