@@ -2,6 +2,7 @@ from libpyhat.regression.regression import regression
 
 
 def test_PLS():
+
     regress = regression(method=['PLS'], yrange=[0.0, 100.0],
                          params=[{'n_components': 0,'scale': False}])
 
@@ -40,8 +41,7 @@ def test_LASSO_CV_true():
                                   'max_iter': 1000,
                                   'tol': 0.0001,
                                   'positive': False,
-                                  'selection': 'random',
-                                  'CV': True}])
+                                  'selection': 'random'}])
 
 def test_LASSO_CV_none():
     regress = regression(method=['LASSO'], yrange=[0.0, 100.0],
@@ -226,3 +226,16 @@ def test_KRR():
                                   'degree': 3.0,
                                   'coef0': 1.0,
                                   'kernel_params': 'None'}])
+test_PLS()
+test_GP()
+test_OLS()
+test_OMP()
+test_Lasso()
+test_Elastic_Net()
+test_Ridge()
+test_Bayesian_Ridge()
+test_ARD()
+test_LARS()
+test_Lasso_LARS()
+test_SVR()
+test_KRR()
