@@ -1,7 +1,7 @@
 import unittest
 
-from libpysat.fileio import io_json
-from libpysat.fileio import io_yaml
+from libpyhat.fileio import io_json
+from libpyhat.fileio import io_yaml
 
 try:
     import yaml
@@ -10,7 +10,7 @@ try:
 except ImportError:
     missing = True
 
-from libpysat.examples import get_path
+from libpyhat.examples import get_path
 
 
 class TestYAML(unittest.TestCase):

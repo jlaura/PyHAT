@@ -1,5 +1,5 @@
 import pandas as pd
-from libpysat.transform.interp import interp
+from libpyhat.transform.interp import interp
 
 def shift_spect(df,shift):
     """This function takes a data frame containing spectra and shifts them by a specified amount.

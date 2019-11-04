@@ -1,5 +1,5 @@
 import scipy.signal
-from libpysat.spectral.baseline_code.common import WhittakerSmoother, iterative_threshold, Baseline
+from libpyhat.transform.baseline_code.common import WhittakerSmoother, iterative_threshold, Baseline
 
 
 def fabc_baseline(intensities, dilation_param=50, smoothness_param=1e3):

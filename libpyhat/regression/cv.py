@@ -12,15 +12,9 @@ import warnings
 import numpy as np
 # from sklearn.linear_model import RANSACRegressor as RANSAC
 import pandas as pd
-<<<<<<< HEAD:libpyhat/regression/cv.py
 from libpyhat.regression.regression import regression
 from sklearn.cross_validation import LeaveOneLabelOut
 from sklearn.grid_search import ParameterGrid
-warnings.filterwarnings('ignore')
-=======
-from libpysat.regression.regression import regression
->>>>>>> master:libpysat/regression/cv.py
-
 from sklearn.linear_model import enet_path, lasso_path
 from sklearn.linear_model.base import _pre_fit
 from sklearn.utils.validation import check_X_y, check_array
@@ -152,7 +146,7 @@ class cv:
 
                 else:
                     cvcols = [('predict', '"'+method+'- CV -' + str(self.paramgrid[i]) + '"')]
-                    
+
                     #fit the model and predict the held-out data
                     model = regression([method], [yrange], [self.paramgrid[i]])
                     model.fit(cv_train[xcols], cv_train[ycol])

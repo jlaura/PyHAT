@@ -4,7 +4,7 @@ except ImportError:
     import warnings
 
     warnings.warn('Failed to import pywavelets(pywt). wavelet_baseline will fail')
-from libpysat.spectral.baseline_code.common import Baseline
+from libpyhat.transform.baseline_code.common import Baseline
 
 
 def wavelet_baseline(intensities, filter_len=4, level=9):
