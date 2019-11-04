@@ -5,7 +5,7 @@ Created on Thu Sep  1 13:09:21 2016
 @author: rbanderson
 """
 import numpy as np
-import libpysat.plotting.colormaps as colormaps
+import libpyhat.plotting.colormaps as colormaps
 from matplotlib import pyplot as plot
 
 

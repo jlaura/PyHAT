@@ -1,4 +1,4 @@
-from libpysat.transform.lra import low_rank_align as LRA
+from libpyhat.transform.lra import low_rank_align as LRA
 import numpy as np
 #apply calibration transfer to a data set to transform it to match a different data set.
 

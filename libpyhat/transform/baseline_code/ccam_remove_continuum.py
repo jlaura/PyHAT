@@ -52,14 +52,14 @@ Translation to Python begun on Tue Nov 04 16:31:33 2014 by Ryan Anderson
 
 """
 import numpy
-import libpysat.spectral.baseline_code.spl_init as spl_init
-import libpysat.spectral.baseline_code.spl_interp as spl_interp
-import libpysat.spectral.baseline_code.watrous as watrous
+import libpyhat.transform.baseline_code.spl_init as spl_init
+import libpyhat.transform.baseline_code.spl_interp as spl_interp
+import libpyhat.transform.baseline_code.watrous as watrous
 import scipy
-from libpysat.spectral.baseline_code.common import Baseline
+from libpyhat.transform.baseline_code.common import Baseline
 
 
-# import pywt <- this needs to be fixed, it doesn't exist in and outside libpysat
+# import pywt <- this needs to be fixed, it doesn't exist in and outside libpyhat
 
 def chemcam_continuum(x, sp, int_flag, lvmin=-9999):
     n = len(sp)

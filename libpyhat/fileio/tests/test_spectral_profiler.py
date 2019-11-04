@@ -1,6 +1,6 @@
 import unittest
-from libpysat.examples import get_path
-from libpysat.fileio import io_spectral_profiler as sp
+from libpyhat.examples import get_path
+from libpyhat.fileio import io_spectral_profiler as sp
 
 
 class Test_Spectral_Profiler_IO(unittest.TestCase):

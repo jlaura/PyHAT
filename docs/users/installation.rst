@@ -1,7 +1,7 @@
 Installation
 ============
 
-We assume that you have a default Python environment that is already configured on your computer and you wish to install PyHAT into that environment.  If you would like to create a [virtualenv](https://virtualenv.pypa.io/en/stable/) or [conda environment](https://conda.io/docs/user-guide/tasks/manage-environments.html) to keep PySAT isolated from your main installation, please follow instructions at the linked resources.
+We assume that you have a default Python environment that is already configured on your computer and you wish to install PyHAT into that environment.  If you would like to create a [virtualenv](https://virtualenv.pypa.io/en/stable/) or [conda environment](https://conda.io/docs/user-guide/tasks/manage-environments.html) to keep PyHAT isolated from your main installation, please follow instructions at the linked resources.
 
 There are two ways that you can install PyHAT into your environment.
 
@@ -11,7 +11,7 @@ There are two ways that you can install PyHAT into your environment.
 1. Using Anaconda Python
 ------------------------
 
-We suggest using [Anaconda Python](https://conda.io/docs/user-guide/install/index.html) and the Anaconda package management system for PySAT.  This installation method lets the Anaconda package manager handle all dependencies (installation of GDAL manually or via `pip` can be challenging).
+We suggest using [Anaconda Python](https://conda.io/docs/user-guide/install/index.html) and the Anaconda package management system for PyHAT.  This installation method lets the Anaconda package manager handle all dependencies (installation of GDAL manually or via `pip` can be challenging).
 
 To install on Windows (64-bit), Linux (64-bit), and Mac OSX::
 
