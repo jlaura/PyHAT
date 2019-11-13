@@ -43,7 +43,7 @@ install:
   # Development installation
   - conda install --quiet pytest pytest-cov nbsphinx
   - pip install coveralls travis-sphinx
-  - conda env update -n test_env -f environment.yml
+  - conda env update -f environment.yml
 
 
 script:
