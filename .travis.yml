@@ -44,7 +44,7 @@ install:
   - conda install --quiet pytest pytest-cov nbsphinx
   - pip install coveralls travis-sphinx
   - conda env update -n test_env -f environment.yml
-  - source activate test_env
+  - conda activate test_env
 
 
 script:
@@ -54,7 +54,7 @@ after_success:
   # Code Coverage
   - coveralls
   # Anaconda Upload
-  - source deactivate
+  - conda deactivate
   - conda install conda-build anaconda-client
   - conda config --set anaconda_upload no
   - conda build recipe -q
