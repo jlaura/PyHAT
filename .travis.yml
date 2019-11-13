@@ -28,7 +28,8 @@ before_install:
   - conda update -q conda
   - conda info -a   # Useful for debugging any issues with conda
   # Create the env
-  - conda create -q -n test_env python=$PYTHON_VERSION
+  - conda create -q -n test_env python=$PYTHON_VERSION -f environment.yml
+  - source activate test_env
 
 
 install:
@@ -43,8 +44,8 @@ install:
   # Development installation
   - conda install --quiet pytest pytest-cov nbsphinx
   - pip install coveralls travis-sphinx
-  - conda env update -n test_env -f environment.yml
-  - conda activate test_env
+  # conda env update -n test_env -f environment.yml
+
 
 
 script:
