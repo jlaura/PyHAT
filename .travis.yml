@@ -28,8 +28,8 @@ before_install:
   - conda update -q conda
   - conda info -a   # Useful for debugging any issues with conda
   # Create the env
-  - conda create -q -n test_env python=$PYTHON_VERSION -f environment.yml
-  - source activate test_env
+  - conda env create -q -f environment.yml python=$PYTHON_VERSION
+  - source activate pyhat
 
 
 install:
