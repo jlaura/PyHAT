@@ -12,3 +12,4 @@ dependencies:
   - yaml
   - pvl
   - plio
+  - matplotlib
