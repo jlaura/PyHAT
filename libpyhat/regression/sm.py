@@ -6,7 +6,7 @@ Created on Sat Mar 26 20:15:46 2016
 """
 import numpy as np
 import scipy.optimize as opt
-
+import copy
 
 class sm:
     def __init__(self, blendranges):
@@ -29,20 +29,31 @@ class sm:
                 self.toblend.append([i, i + 1])
 
         # If the true compositions are provided, then optimize the ranges over which the results are blended to minimize the RMSEC
-        # get the ranges that are not the reference model (assumed to be the last model)
-        catchall = self.blendranges[-1]
-        ranges_sub = self.blendranges[:-1]
-        blendranges = np.array(ranges_sub).flatten()  # squash them to be a 1d array
+        blendranges = np.array(self.blendranges).flatten()  # squash the ranges to be a 1d array
         blendranges.sort()  # sort the entries. These will be used by submodels_blend to decide how to combine the predictions
-
         if truevals is not None:
-            print('Optimizing blending ranges')
-            truevals = np.squeeze(np.array(truevals))
-            result = opt.minimize(self.get_rmse, blendranges, (predictions, truevals))
-            self.blendranges = result.x
+            self.rmse = 99999999
+            n_opt = 5
+            i=0
+            while i < n_opt:
+                #print('Optimizing blending ranges, round #'+str(i))
+                truevals = np.squeeze(np.array(truevals))
+                result = opt.minimize(self.get_rmse, blendranges, (predictions, truevals))
+
+                if result.fun < self.rmse:
+                    # ranges_temp = np.hstack((result.x, result.x[1:-1]))
+                    # ranges_temp.sort()
+                    # ranges_temp = np.reshape(ranges_temp, (int(len(ranges_temp) / 2), int(2)))
+                    self.blendranges = result.x
+                    self.rmse = result.fun
+                    print(self.blendranges.sort())
+                    print('RMSE ='+str(self.rmse))
+                else:
+                    pass
+                i=i+1
         else:
             self.blendranges = blendranges
-
+       # print(self.blendranges)
         # calculate the blended results
         blended = self.submodels_blend(predictions, self.blendranges, overwrite=False)
         return blended
@@ -52,10 +63,10 @@ class sm:
         blendranges[1:-1][blendranges[1:-1] > rangemax] = rangemax  # ensure range boundaries don't drift above max
         blendranges.sort()  # ensure range boundaries stay in order
 
-        print('Blend ranges: ' + str(blendranges))  # show the blendranges being used for the current calculation
         blended = self.submodels_blend(predictions, blendranges, overwrite=False)
         RMSE = np.sqrt(np.mean((blended - truevals) ** 2))  # calculate the RMSE
-        print('RMSE=' + str(RMSE))
+        print('RMSE = '+str(RMSE))
+        print(blendranges)
         return RMSE
         
     def submodels_blend(self,predictions,blendranges, overwrite=False):
@@ -67,31 +78,35 @@ class sm:
         blendranges=np.reshape(blendranges,(int(len(blendranges)/2),int(2)))  #turn the vector back into a 2d array (one pair of values for each submodel)
         self.toblend.append([len(predictions)-1,len(predictions)-1])
         blendranges=np.vstack((blendranges,[-9999999,999999]))
-
+        #print(blendranges)
         for i in range(len(blendranges)): #loop over each composition range
             for j in range(len(predictions[0])): #loop over each spectrum
                 ref_tmp=predictions[-1][j]   #get the reference model predicted value
-                #check whether the prediction for the reference spectrum is within the current range            
+                #check whether the prediction for the reference spectrum is within the current range
                 inrangecheck=(ref_tmp>blendranges[i][0])&(ref_tmp<blendranges[i][1])
      
                 if inrangecheck: 
-                    if self.toblend[i][0]==self.toblend[i][1]: #if the results being blended are identical, no blending necessary!
-                        blendval=predictions[self.toblend[i][0]][j]
+                    try:
+                        if self.toblend[i][0]==self.toblend[i][1]: #if the results being blended are identical, no blending necessary!
+                            blendval=predictions[self.toblend[i][0]][j]
 
-                    else:
-                        weight1 = 1 - (ref_tmp - blendranges[i][0]) / (
-                            blendranges[i][1] - blendranges[i][0])  # define the weight applied to the lower model
-                        weight2 = (ref_tmp - blendranges[i][0]) / (
-                            blendranges[i][1] - blendranges[i][0])  # define the weight applied to the higher model
-                        # calculated the blended value (weighted sum)
-                        blendval = weight1 * predictions[self.toblend[i][0]][j] + weight2 * \
-                                                                                  predictions[self.toblend[i][1]][j]
+                        else:
+                            weight1 = 1 - (ref_tmp - blendranges[i][0]) / (
+                                blendranges[i][1] - blendranges[i][0])  # define the weight applied to the lower model
+                            weight2 = (ref_tmp - blendranges[i][0]) / (
+                                blendranges[i][1] - blendranges[i][0])  # define the weight applied to the higher model
+                            # calculated the blended value (weighted sum)
+                            blendval = weight1 * predictions[self.toblend[i][0]][j] + weight2 * \
+                                                                                      predictions[self.toblend[i][1]][j]
+                    except:
+                        pass
                     if overwrite:
                         blended[j] = blendval  # If overwrite is true, write the blended result no matter what
                     else:
                         # If overwrite is false, only write the blended result if there is not already a result there
                         if blended[j] == 0:
                             blended[j] = blendval
+
 
         return blended
 

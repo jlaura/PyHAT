@@ -30,12 +30,14 @@ setup(
         #   5 - Production/Stable
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: Unlicense',
+        #'License :: OSI Approved :: Unlicense',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
+
     packages=find_packages(),
     install_requires=['numpy', 'pandas', 'scipy', 'gdal', 'plio'],
+
     extras_require={
         'dev': [],
         'test': ['coverage', 'pytest-cov', 'coveralls'],
