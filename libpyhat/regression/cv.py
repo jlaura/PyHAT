@@ -21,7 +21,6 @@ warnings.filterwarnings('ignore')
 import time
 import copy
 import itertools
-from PyQt5.QtGui import QGuiApplication
 
 
 def RMSE(ypred, y):
@@ -246,8 +245,6 @@ class cv:
 
             try:
                 self.progress.setValue(i+1)
-                QGuiApplication.processEvents()
-
             except:
                 pass
 
