@@ -59,10 +59,12 @@ after_success:
   - builddir=(`conda build recipe --output`)
   - |
     if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+      echo $TRAVIS_BRANCH
       if ["$TRAVIS_BRANCH" == "dev"]; then
-        anaconda --label="dev" -t="$CONDA_UPLOAD_TOKEN" upload $builddir --force;
+        anaconda --label dev -t="$CONDA_UPLOAD_TOKEN" upload $builddir --force;
       else
-        anaconda --label="master" -t="$CONDA_UPLOAD_TOKEN" upload $builddir --force;
+        anaconda --label master -t="$CONDA_UPLOAD_TOKEN" upload $builddir --force;
+      fi
     fi
   # Docs to gh-pages
   - source activate test_env  # Reactivate the env to have all deps installed.
