@@ -13,8 +13,7 @@ import numpy as np
 # from sklearn.linear_model import RANSACRegressor as RANSAC
 import pandas as pd
 from libpyhat.regression.regression import regression
-from sklearn.cross_validation import LeaveOneLabelOut
-from sklearn.grid_search import ParameterGrid
+from libpyhat.regression import local_regression
 from sklearn.linear_model import enet_path, lasso_path
 from sklearn.linear_model.base import _pre_fit
 from sklearn.utils.validation import check_X_y, check_array
@@ -22,6 +21,8 @@ warnings.filterwarnings('ignore')
 import time
 import copy
 import itertools
+from PyQt5.QtGui import QGuiApplication
+
 
 def RMSE(ypred, y):
     return np.sqrt(np.mean((np.squeeze(ypred) - np.squeeze(y)) ** 2))
@@ -57,7 +58,7 @@ def path_calc(X, y, X_holdout, y_holdout, alphas, paramgrid, colname = 'CV', yna
         path_alphas, path_coefs, path_gaps, path_iters = lasso_path(X, y, alphas=alphas, return_n_iter=True,
                                                                    **copy_params)
     dt = time.time() - start_t
-    print('Took ' + str(dt) + ' seconds')
+    print('Took ' + str(round(dt,2)) + ' seconds')
 
     #create some empty arrays to store the result
     y_pred_holdouts = np.empty(shape=(len(alphas),len(y_holdout)))
@@ -82,13 +83,16 @@ def path_calc(X, y, X_holdout, y_holdout, alphas, paramgrid, colname = 'CV', yna
     return path_alphas, path_coefs, intercepts, path_iters, y_pred_holdouts, rmses, cvcols
 
 
-
 class cv:
     def __init__(self, paramgrid,progressbar = None):
+        self.paramgrid = paramgrid
         if progressbar is not None:
             self.progress = progressbar
-        self.paramgrid = paramgrid
-        #self.paramgrid = ParameterGrid(params).param_grid
+            self.progress.setMaximum(len(self.paramgrid))
+            self.progress.show()
+
+
+
     def do_cv(self, Train, cv_iterator, xcols='wvl', ycol=('comp', 'SiO2'), method='PLS',
               yrange=[0, 100], calc_path = False, alphas = None, n_folds = 3):
 
@@ -98,6 +102,7 @@ class cv:
         cv_iterators = itertools.tee(cv_iterator,len(self.paramgrid))  #need to duplicate the cv_iterator so it can be used for each permutation in paramgrid
 
         for i in list(range(len(self.paramgrid))):
+            print('Cross validating permutation '+str(i+1)+' of '+str(len(self.paramgrid)))
             print(self.paramgrid[i])
             # create an empty output data frame to serve as template
             output_tmp = pd.DataFrame()
@@ -147,13 +152,25 @@ class cv:
                 else:
                     cvcols = [('predict', '"'+method+'- CV -' + str(self.paramgrid[i]) + '"')]
 
-                    #fit the model and predict the held-out data
-                    model = regression([method], [yrange], [self.paramgrid[i]])
-                    model.fit(cv_train[xcols], cv_train[ycol])
-                    if model.goodfit:
-                        y_pred_holdout = model.predict(cv_holdout[xcols])
+                    if method == 'Local Regression':
+                        params = self.paramgrid[i]
+                        try:
+                            #on the first pass, pop off the n_neigbors parameter so it can be passed correctly
+                            n_neighbors = params['n_neighbors']
+                            params.pop('n_neighbors')
+                        except:
+                            pass
+
+                        model = local_regression.LocalRegression(params, n_neighbors=n_neighbors)
+                        y_pred_holdout, coeffs, intercepts = model.fit_predict(cv_train[xcols],cv_train[ycol],cv_holdout[xcols])
                     else:
-                        y_pred_holdout = cv_holdout[ycol] * np.nan
+                        #fit the model and predict the held-out data
+                        model = regression([method], [yrange], [self.paramgrid[i]])
+                        model.fit(cv_train[xcols], cv_train[ycol])
+                        if model.goodfit:
+                            y_pred_holdout = model.predict(cv_holdout[xcols])
+                        else:
+                            y_pred_holdout = cv_holdout[ycol] * np.nan
                     #add the predictions to the appropriate column in the training data
                     Train.set_value(Train.index[holdout], cvcols[0], y_pred_holdout)
                     #append the RMSECV to the list
@@ -226,8 +243,13 @@ class cv:
                 output = pd.concat((output, output_tmp))
             except:
                 output = output_tmp
-            pass
 
+            try:
+                self.progress.setValue(i+1)
+                QGuiApplication.processEvents()
+
+            except:
+                pass
 
         #make the columns of the output data drame multi-indexed
         cols = output.columns.values
