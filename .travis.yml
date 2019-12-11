@@ -46,15 +46,20 @@ script:
 #  - pytest --cov=libpysat
 
 after_success:
-#  - coveralls
-  - source deactivate
-#  - conda install conda-build anaconda-client
-#  - conda config --set anaconda_upload yes
-#  - conda build --token $CONDA_UPLOAD_TOKEN --python $PYTHON_VERSION .
-deploy:
-  provider: pypi
-  user: tisaconundrum
-  password: $PYPI_PASSWORD
-  distributions: sdist bdist_wheel
-  on:
-    branch: master
+  # Code Coverage
+  - coveralls
+  # Anaconda Upload
+  - conda deactivate
+  - conda install conda-build anaconda-client
+  - conda config --set anaconda_upload no
+  - conda build recipe -q
+  - builddir=(`conda build recipe --output`)
+  - |
+    if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
+        anaconda -t="$CONDA_UPLOAD_TOKEN" upload $builddir --force;
+      fi
+    fi
+  # Docs to gh-pages
+  - source activate test_env  # Reactivate the env to have all deps installed.
+  - travis-sphinx build --source=docs --nowarn # The sphinx build script
+  - travis-sphinx deploy --branches=master
