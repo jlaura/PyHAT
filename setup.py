@@ -1,4 +1,4 @@
-import libpyhat
+import libpysat
 from setuptools import setup, find_packages
 
 from os import path
@@ -10,16 +10,16 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='libpyhat',
+    name='libpysat',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version=libpyhat.__version__,
+    version=libpysat.__version__,
 
-    description='The Python Hyperspectral Analysis Toolkit (PyHAT) for planetary spectral data.',
+    description='The Python Spectral Analysis Toolkit (PySAT) for planetary spectral data.',
     long_description=long_description,
-    url='https://github.com/USGS-Astrogeology/PyHAT',
+    url='https://github.com/USGS-Astrogeology/PySAT',
     author='J. Laura',
     author_email='jlaura@usgs.gov',
     license='Unlicense',
@@ -34,10 +34,8 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
-
-    packages=find_packages(),
-    install_requires=['numpy', 'pandas', 'scipy', 'gdal', 'plio'],
-
+    packages=find_packages(exclude=['tests']),
+    install_requires=['numpy', 'pandas', 'scipy'],
     extras_require={
         'dev': [],
         'test': ['coverage', 'pytest-cov', 'coveralls'],

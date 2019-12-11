@@ -1,15 +1,13 @@
-name: pyhat
-channels:
-  - usgs-astrogeology
-  - conda-forge
+name: libpysat
 dependencies:
   - python=3
+  - jupyter
+  - matplotlib
   - numpy
   - pandas
   - scipy
   - scikit-learn
-  - multipledispatch
   - yaml
-  - pvl
-  - plio
-  - matplotlib
+  - pip
+  - pip:
+    - pvl
