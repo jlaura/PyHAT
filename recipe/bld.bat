@@ -1,3 +1,3 @@
-python setup.py install --single-version-externally-managed --record=record.txt
+python setup.py install
 
 if errorlevel 1 exit 1
