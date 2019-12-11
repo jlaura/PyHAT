@@ -57,8 +57,7 @@ after_success:
   - conda build recipe -q
   - builddir=(`conda build recipe --output`)
   - |
-    if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-      if ["$TRAVIS_BRANCH" == "master"]; then
+    if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
         anaconda -t="$CONDA_UPLOAD_TOKEN" upload $builddir --force;
       fi
     fi
