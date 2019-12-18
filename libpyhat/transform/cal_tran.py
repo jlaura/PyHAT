@@ -10,34 +10,31 @@ from sklearn.preprocessing import normalize
 from scipy.linalg import cho_factor, cho_solve, svdvals
 from numpy.linalg import norm
 import libpyhat.transform.caltran_utils as ct
-import scipy as sp
+
 #apply calibration transfer to a data set to transform it to match a different data set.
 
 class cal_tran:
     def __init__(self, params):
 
         self.algorithm_list = ['None',
-                               'PDS - Piecewise Direct Standardization',
+                               'PDS - Piecewise DS',
                                'DS - Direct Standardization',
-                               'PDS-PLS - PDS using Partial Least Squares',
                                'LASSO DS',
                                'Ratio',
                                'Ridge DS',
                                'Sparse Low Rank DS',
                                'CCA - Canonical Correlation Analysis',
                                'New CCA',
-                               'IPD DS - Incremental Proximal Descent DS',
+                               'Incremental Proximal Descent DS',
                                'Forward Backward DS']
         self.method = params.pop('method')
 
         self.ct_obj = None
 
-        if self.method == 'PDS - Piecewise Direct Standardization':
+        if self.method == 'PDS - Piecewise DS':
             self.ct_obj = piecewise_ds(**params)
         if self.method == 'None':
             self.ct_obj = no_transform()
-        if self.method == 'PDS-PLS - PDS using Partial Least Squares':
-            self.ct_obj = piecewise_ds(**params)
         if self.method == 'DS - Direct Standardization':
             self.ct_obj = ds(**params)
         if self.method == 'LASSO DS':
@@ -82,7 +79,8 @@ class ratio:
         self.ratio_vect = B_mean/A_mean
 
     def apply_transform(self,C):
-        return np.multiply(C,self.ratio_vect)
+        C_transformed = C.multiply(self.ratio_vect, axis=1)
+        return C_transformed
 
 
 class piecewise_ds:
@@ -94,8 +92,8 @@ class piecewise_ds:
         self.padding = (win_size - 1) / 2
 
     def derive_transform(self, A, B):
-        A = np.array(A)
-        B = np.array(B)
+        A = np.array(A, dtype='float')
+        B = np.array(B, dtype='float')
         assert A.shape==B.shape, "Input matrices must be the same shape."
         self.B_shape = B.shape
         n_feats = B.shape[1]
