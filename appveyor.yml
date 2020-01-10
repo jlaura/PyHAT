@@ -35,8 +35,8 @@ install:
   - cmd: python -m pip install -U pip
   - cmd: python -m easy_install -U setuptools
 
-build_script:
-  - cmd: python setup.py install
+# build_script:
+#   - cmd: python setup.py install
 
 test_script:
   - cmd: pytest libpyhat/
