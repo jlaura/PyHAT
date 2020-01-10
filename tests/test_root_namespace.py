@@ -1,5 +1,5 @@
-import libpysat
+import libpyhat
 
 def test_version():
     # Dopey test for getting travis up and running
-    assert libpysat.__version__ == '0.1.0'
+    assert libpyhat.__version__ == '0.1.0'
