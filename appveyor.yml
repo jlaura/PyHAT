@@ -39,7 +39,7 @@ build_script:
   - cmd: python setup.py install
 
 test_script:
-  - cmd: pytest --cov=libpyhat
+  - cmd: pytest libpyhat/
 
 on_success:
   - cmd: activate base	    #- cmd: conda deactivate
