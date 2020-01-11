@@ -39,24 +39,22 @@ build_script:
   - cmd: python setup.py install
 
 test_script:
-  - cmd: pytest libpyhat/
+  - cmd: pytest --cov=libpyhat
 
 on_success:
   - cmd: activate base	    #- cmd: conda deactivate
   - cmd: conda config --set anaconda_upload yes	    #- cmd: conda config --set anaconda_upload yes
-  - cmd: conda build --token %CONDA_UPLOAD_TOKEN% .
-  # - cmd: activate base
-  # - ps:
-  #     if ($env:APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
-  #       $tar_glob = conda build recipe --output;
-  #       Write-Host "tar_glob $tar_glob";
-  #       if ($env:APPVEYOR_REPO_BRANCH -eq "dev") {
-  #         $anaconda_label = "dev"
-  #       } else {
-  #         $anaconda_label = "main"
-  #       };
-  #       Write-Host "anaconda_label $anaconda_label";
-  #       $parameters = '-t', "$env:CONDA_UPLOAD_TOKEN", 'upload', "$tar_glob", '-l',
-  #                     "$anaconda_label", '--force', '--no-progress';
-  #       & cmd /c 'anaconda 2>&1' $parameters;
-  #     };
+  - ps:
+      if ($env:APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
+        $tar_glob = conda build recipe --output;
+        Write-Host "tar_glob $tar_glob";
+        if ($env:APPVEYOR_REPO_BRANCH -eq "dev") {
+          $anaconda_label = "dev"
+        } else {
+          $anaconda_label = "main"
+        };
+        Write-Host "anaconda_label $anaconda_label";
+        $parameters = '-t', "$env:CONDA_UPLOAD_TOKEN", 'upload', "$tar_glob", '-l',
+                      "$anaconda_label", '--force', '--no-progress';
+        & cmd /c 'anaconda 2>&1' $parameters;
+      };
