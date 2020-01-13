@@ -3,6 +3,7 @@ branches:
   - master
   - dev
   - dev_master_merge
+
 version: '0.1.0.{build}'
 
 environment:
