@@ -139,19 +139,6 @@ class HCube(object):
         """
         Parameters
         ----------
-<<<<<<< HEAD
-        x : tuple
-            Lower and upper bound along the x axis for clipping
-        y : tuple
-            Lower and upper bound along the y axis for clipping
-        band : tuple
-               Lower and upper band along the z axis for clipping
-        tolerance : int
-                    Tolerance given for trying to find wavelengths
-                    between the upper and lower bound
-        Returns
-        -------
-=======
 
         x : tuple
             Lower and upper bound along the x axis for clipping
@@ -169,7 +156,6 @@ class HCube(object):
         Returns
         -------
 
->>>>>>> 305d87c39d855ad1c028f939a258ef0d2abd0558
         new_hcube : Object
                     A new hcube object with the clipped dataset
         """
