@@ -22,6 +22,7 @@ import time
 import copy
 import itertools
 from sklearn.model_selection import LeaveOneGroupOut
+from PyQt5.QtGui import QGuiApplication
 
 def RMSE(ypred, y):
     return np.sqrt(np.mean((np.squeeze(ypred) - np.squeeze(y)) ** 2))
@@ -259,6 +260,7 @@ class cv:
 
             try:
                 self.progress.setValue(i+1)
+                QGuiApplication.processEvents()
             except:
                 pass
 

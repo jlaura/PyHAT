@@ -1,56 +1,19 @@
-import pandas as pd
-import numpy as np
-import os
-import fnmatch
-from plio.io import io_spectral_profiler
-
-import libpyhat
-
-
-def spectral_profiler(f, **kwargs):
-        """
-        Generate DataFrame from spectral profiler data.
-
-        parameters
-        ----------
-        f : str
-            file path to spectral profiler file
-
-        tolerance : Real
-                    Tolerance for floating point index
-        """
-        geo_data = io_spectral_profiler.Spectral_Profiler(f)
-        meta = geo_data.ancillary_data
-        meta.index.names = ['id']
-        df = geo_data.spectra.transpose()
-        df.index.names = ['id', 'minor']
-        joined = df.join(meta, how='inner').transpose()
-
-        return libpyhat.Spectra(joined, wavelengths=geo_data.wavelengths,
-                                        metadata=meta.columns,
-                                        index=joined.index,
-                                        columns=joined.columns,
-                                        **kwargs)
-
-
-DRIVERS = [spectral_profiler]
-
-def read_file(filename, **kwargs):
-    #try:
-    for d in DRIVERS:
-        return d(filename, **kwargs)
-    #except:
-    #    return
-
+# -*- coding: utf-8 -*-
 """
+Created on Mon Nov 30 09:51:51 2015
+
+@author: rbanderson
+
 This function uses the pandas merge ability to look up metadata for an existing dataframe in a csv file
 If lookupfile is a list, then each file will be read and concatenated together. Alternatively, a dataframe can be provided directly.
 The default settings are for looking up ChemCam CCS csv data in the ChemCam master list files, matching on sclock value
 """
-
+import pandas as pd
 def lookup(df,lookupfile=None,lookupdf=None,sep=',',skiprows=1,left_on='sclock',right_on='Spacecraft Clock'):
+#TODO: automatically determine the number of rows to skip to handle ccam internal master list and PDS "official" master list formats
     if lookupfile is not None:
         # this loop concatenates together multiple lookup files if provided
+        # (mostly to handle the three different master lists for chemcam)
         for x in lookupfile:
             try:
                 tmp = pd.read_csv(x, sep=sep, skiprows=skiprows, error_bad_lines=False)
@@ -73,12 +36,3 @@ def lookup(df,lookupfile=None,lookupdf=None,sep=',',skiprows=1,left_on='sclock',
     # combine the df and the new metadata
     df = pd.concat([metadata, df], axis=1)
     return df
-
-def file_search(searchdir, searchstring):
-    # Recursively search for files in the specified directory
-    filelist = []
-    for root, dirnames, filenames in os.walk(searchdir):
-        for filename in fnmatch.filter(filenames, searchstring):
-            filelist.append(os.path.join(root, filename))
-    filelist = np.array(filelist)
-    return filelist

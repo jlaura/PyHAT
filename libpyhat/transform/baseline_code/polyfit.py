@@ -2,7 +2,7 @@ import numpy as np
 from libpyhat.transform.baseline_code.common import Baseline
 
 
-def polyfit_baseline(bands, intensities, poly_order=5, num_stdv=3.0,
+def polyfit_baseline(bands, intensities, poly_order=5, num_stdv=3.,
                      max_iter=200):
     '''Iteratively fits a polynomial, discarding far away points as peaks.
     Similar in spirit to ALS and related methods.
@@ -28,16 +28,14 @@ def polyfit_baseline(bands, intensities, poly_order=5, num_stdv=3.0,
 
 
 class PolyFit(Baseline):
-    def __init__(self, max_iter = 200, poly_order=5, num_stdv=3.0):
+    def __init__(self, poly_order=5, num_stdv=3.):
         self.poly_order_ = poly_order
         self.stdv_ = num_stdv
-        self.max_iter_ = max_iter
 
     def _fit_many(self, bands, intensities):
         return polyfit_baseline(bands, intensities,
                                 poly_order=self.poly_order_,
-                                num_stdv=self.stdv_,
-                                max_iter=self.max_iter_)
+                                num_stdv=self.stdv_)
 
     def param_ranges(self):
         return {

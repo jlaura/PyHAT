@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import numpy as np
 from sklearn import model_selection
 
@@ -40,5 +38,4 @@ def stratified_folds(df, nfolds=5, sortby=None):
 
     # sort by index to return the df to its original order
     df.sort_index(inplace=True)
-
     return df

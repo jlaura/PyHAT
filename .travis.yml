@@ -27,15 +27,14 @@ before_install:
   - conda update -q conda
   - conda info -a   # Useful for debugging any issues with conda
   # Create the env
-  - conda create -q -n test_env python=$PYTHON_VERSION
+  - conda env create -q -f environment.yml -n test_env python=$PYTHON_VERSION
   - source activate test_env
+
 
 install:
   # Install dependencies
   - conda config --add channels usgs-astrogeology
   - conda config --add channels conda-forge
-  # - conda install --quiet -c conda-forge numpy scipy pandas gdal libgdal scikit-learn multipledispatch
-  # - conda install --quiet -c usgs-astrogeology plio
   # https://github.com/GoogleCloudPlatform/google-cloud-python/issues/2990
   - conda install pip setuptools
 
@@ -52,16 +51,17 @@ after_success:
   # Code Coverage
   - coveralls
   # Anaconda Upload
-  - source deactivate
+  - conda deactivate
   - conda install conda-build anaconda-client
   - conda config --set anaconda_upload no
   - conda build recipe -q
   - builddir=(`conda build recipe --output`)
   - |
-    if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-      anaconda -t="$CONDA_UPLOAD_TOKEN" upload $builddir --force;
+    if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
+        anaconda -t="$CONDA_UPLOAD_TOKEN" upload $builddir --force;
+      fi
     fi
   # Docs to gh-pages
   - source activate test_env  # Reactivate the env to have all deps installed.
   - travis-sphinx build --source=docs --nowarn # The sphinx build script
-- travis-sphinx deploy --branches=dev
+  - travis-sphinx deploy --branches=master

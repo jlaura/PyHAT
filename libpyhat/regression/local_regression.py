@@ -45,7 +45,6 @@ class LocalRegression:
             foo, ind = self.neighbors.kneighbors([x_temp])
             x_train_local = np.squeeze(np.array(x_train)[ind])
             y_train_local = np.squeeze(np.array(y_train)[ind])
-
             cv = GroupKFold(n_splits=3)
             cv = cv.split(x_train_local, y_train_local,
                           groups=y_train_local)
