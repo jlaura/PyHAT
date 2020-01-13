@@ -48,6 +48,8 @@ class cal_tran:
             self.ct_obj = forward_backward_ds(**params)
         if self.method == 'Ratio':
             self.ct_obj = ratio()
+        if self.method == 'PDS-PLS - PDS using Partial Least Squares':
+            self.ct_obj = piecewise_ds(**params)
 
 
         if self.ct_obj==None:
