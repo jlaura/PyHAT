@@ -34,7 +34,7 @@ def peak_area(df, peaks_mins_file=None):
         except:
             high = mins[-1]
 
-        peak_indices = np.all((wvls > low, wvls < high), axis=0)
+        peak_indices = np.all((wvls >= low, wvls < high), axis=0)
         # plot.plot(wvls,ave_spect)
         # plot.plot(wvls[peak_indices],ave_spect[peak_indices])
         # plot.show()

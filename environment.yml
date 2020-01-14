@@ -13,3 +13,4 @@ dependencies:
   - pvl
   - plio
   - matplotlib
+  - pywavelets

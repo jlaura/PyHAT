@@ -10,6 +10,6 @@ def cluster(df, col, method, params, kws):
         do_cluster = SpectralClustering(*params, **kws)
 
     do_cluster.fit(df[col])
-    df[(method, 'Cluster')] = do_cluster.labels_
+    df[(method, method+'-Cluster')] = do_cluster.labels_+1
 
     return df
