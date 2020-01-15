@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue May 10 16:11:37 2016
-
-@author: rbanderson
-"""
 import numpy as np
 from pandas import Series
 from scipy import signal
@@ -108,16 +103,6 @@ def sigma_clip(data, sigma_clip=3.0, n_iter=2.0):
     return sig, mean
 
 
-"""
-Created on Tue Nov 11 18:29:29 2014
-This function is used to denoise a chemcam spectrum.
-Based on the function "denoise_spectrum.pro" in IDL
-Translated to Python by Ryan Anderson Nov 2014. Modified so that the denoised
-spectrum, and the removed noise are returned.
-@author: rbanderson
-"""
-
-
 def ccam_denoise(sp_in, sig = 3, n_iter = 4):
     """
     Denoises a chemcam spectrum. Based on the function "denoise_spectrum.pro" in IDL
@@ -161,30 +146,25 @@ def ccam_denoise(sp_in, sig = 3, n_iter = 4):
     return numpy.sum(ws1, axis=1), sp_in - numpy.sum(ws1, axis=1)
 
 
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Mar 27 13:07:07 2016
-
-@author: rbanderson
-"""
 
 def meancenter(df, col, previous_mean=None):
     """
-    Caution: mystery function
+    This function subtracts the mean spectrum from a data frame containing multiple spectra.
 
     Parameters
     ----------
-    df : object
+    df : Data frame containing spectra, in the format used by the PyHAT Point Spectra GUI
 
-    col : object
+    col : Top-level column label used to isolate the spectra from metadata (typically 'wvl')
 
-    previous_mean : object
+    previous_mean : Iptional vector containing a mean spectrum. This is used to apply the same
+                    mean centering to multiple data frames.
 
     Returns
     -------
-    df : object
+    df : mean-centered data frame
 
-    mean_vect : object
+    mean_vect : mean spectrum
     """
     if previous_mean is not None:
         mean_vect = previous_mean
