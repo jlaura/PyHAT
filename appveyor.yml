@@ -1,8 +1,6 @@
 branches:
   only:
   - master
-  - dev
-  - dev_master_merge
 
 version: '0.1.0.{build}'
 
@@ -25,12 +23,9 @@ install:
   - cmd: conda config --set always_yes yes --set changeps1 no
   - cmd: conda update -q conda
   - cmd: conda install conda-build anaconda-client
-  - cmd: conda create -q -n test_env python=%PYTHON_VERSION%
-  - cmd: conda activate test_env
-  - cmd: conda config --add channels conda-forge
   - cmd: conda config --set ssl_verify false
-  - cmd: conda install -c conda-forge numpy scipy pandas gdal scikit-learn multipledispatch pvl
-  - cmd: conda install -c usgs-astrogeology plio
+  - cmd: conda env create -q -f environment.yml -n test_env python=$PYTHON_VERSION
+  - cmd: conda activate test_env
   - cmd: conda install pytest-cov
   # https://pythonhosted.org/CodeChat/appveyor.yml.html
   - cmd: python -m pip install -U pip
@@ -44,6 +39,8 @@ test_script:
 
 on_success:
   - cmd: activate base
+  - cmd: conda config --set anaconda_upload yes	    #- cmd: conda config --set anaconda_upload yes
+  - cmd: conda build -c conda-forge -c usgs-astrogeology --token %CONDA_UPLOAD_TOKEN% .
   - ps:
       if ($env:APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
         $tar_glob = conda build recipe --output;
