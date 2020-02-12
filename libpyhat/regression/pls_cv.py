@@ -47,7 +47,7 @@ def pls_cv(Train, Test=None, nc=20, nfolds=5, ycol='SiO2', doplot=True, outpath=
             pls = PLSRegression(n_components=i, scale=False)
             pls.fit(cv_train_centered['wvl'], cv_train_centered['meta'][ycol])
             y_pred_holdout = pls.predict(cv_holdout_centered['wvl'])
-            Train.set_value(Train.index[holdout], ('meta', ycol + '_cv_PLS_nc' + str(i)), y_pred_holdout)
+            Train.at[Train.index[holdout], ('meta', ycol + '_cv_PLS_nc' + str(i))] = y_pred_holdout
 
         pls_rmsecv[i - 1] = np.sqrt(
             np.mean(np.subtract(Train[('meta', ycol)], Train[('meta', ycol + '_cv_PLS_nc' + str(i))]) ** 2, axis=0))
@@ -58,14 +58,14 @@ def pls_cv(Train, Test=None, nc=20, nfolds=5, ycol='SiO2', doplot=True, outpath=
         pls.fit(Train_centered['wvl'], Train_centered['meta'][ycol])
 
         y_pred = pls.predict(Train_centered['wvl'])
-        Train.set_value(Train.index, ('meta', ycol + '_PLS_nc' + str(i)), y_pred)
+        Train.at[Train.index, ('meta', ycol + '_PLS_nc' + str(i))] = y_pred
         pls_rmsec[i - 1] = np.sqrt(
             np.mean(np.subtract(Train[('meta', ycol)], Train[('meta', ycol + '_PLS_nc' + str(i))]) ** 2, axis=0))
 
         if Test is not None:
             Test_centered, Train_mean_vect = meancenter(Test, previous_mean=Train_mean_vect)
             y_pred = pls.predict(Test_centered['wvl'])
-            Test.set_value(Test.index, ('meta', ycol + '_PLS_nc' + str(i)), y_pred)
+            Test.at[Test.index, ('meta', ycol + '_PLS_nc' + str(i))] = y_pred
             pls_rmsep[i - 1] = np.sqrt(
                 np.mean(np.subtract(Test[('meta', ycol)], Test[('meta', ycol + '_PLS_nc' + str(i))]) ** 2, axis=0))
 
