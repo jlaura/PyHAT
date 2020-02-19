@@ -100,7 +100,7 @@ class cv:
         modelkeys = []
         predictkeys = []
 
-        for i in list(range(len(self.paramgrid))):
+        def run_cv():
             print('Permutation '+str(i+1)+' of '+str(len(self.paramgrid)))
             #print(self.paramgrid[i])
             paramstring=''
@@ -263,6 +263,20 @@ class cv:
                 QGuiApplication.processEvents()
             except:
                 pass
+        # We can use a with statement to ensure threads are cleaned up promptly
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            # Start the load operations and mark each future with its URL
+            future_to_url = {executor.submit(run_cv): url for i in list(range(len(self.paramgrid)))}
+            for future in concurrent.futures.as_completed(future_to_url):
+                url = future_to_url[future]
+                try:
+                    data = future.result()
+                except Exception as exc:
+                    print('%r generated an exception: %s' % (url, exc))
+                else:
+                    print('%r page is %d bytes' % (url, len(data)))
+        for i in list(range(len(self.paramgrid))):
+
 
         #make the columns of the output data drame multi-indexed
         cols = output.columns.values
