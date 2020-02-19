@@ -30,7 +30,7 @@ def stratified_folds(df, nfolds=5, sortby=None):
     fold_num = 1
     for i in uniqvals:
         ind = df[sortby] == i  # find where the data frame matches the unique value
-        df.set_value(df.index[ind], ('meta', 'Folds'), fold_num)
+        df.at[df.index[ind], ('meta', 'Folds')] = fold_num
         # Inrement the fold number, reset to 1 if it is greater than the desired number of folds
         fold_num = fold_num + 1
         if fold_num > nfolds:
