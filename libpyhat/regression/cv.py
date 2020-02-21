@@ -100,7 +100,7 @@ class cv:
         modelkeys = []
         predictkeys = []
 
-        def run_cv():
+        for i in list(range(len(self.paramgrid))):
             print('Permutation '+str(i+1)+' of '+str(len(self.paramgrid)))
             #print(self.paramgrid[i])
             paramstring=''
@@ -161,7 +161,7 @@ class cv:
 
                     output_tmp['Fold '+str(foldcount)] = fold_rmses
                     for n in list(range(len(path_alphas))):
-                        Train.at[Train.index[holdout], cvcols[n]] = y_pred_holdouts[n]
+                        Train.set_value(Train.index[holdout], cvcols[n], y_pred_holdouts[n])
 
                 else:
                     cvcols = [('predict', '"'+method+'- CV -' + str(self.paramgrid[i]) + '"')]
@@ -186,7 +186,7 @@ class cv:
                         else:
                             y_pred_holdout = cv_holdout[ycol] * np.nan
                     #add the predictions to the appropriate column in the training data
-                    Train.at[Train.index[holdout], cvcols[0]] =  y_pred_holdout
+                    Train.set_value(Train.index[holdout], cvcols[0], y_pred_holdout)
                     #append the RMSECV to the list
                     output_tmp['Fold '+str(foldcount)]=RMSE(y_pred_holdout, cv_holdout[ycol])
                     pass
@@ -263,20 +263,6 @@ class cv:
                 QGuiApplication.processEvents()
             except:
                 pass
-        # We can use a with statement to ensure threads are cleaned up promptly
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            # Start the load operations and mark each future with its URL
-            future_to_url = {executor.submit(run_cv): url for i in list(range(len(self.paramgrid)))}
-            for future in concurrent.futures.as_completed(future_to_url):
-                url = future_to_url[future]
-                try:
-                    data = future.result()
-                except Exception as exc:
-                    print('%r generated an exception: %s' % (url, exc))
-                else:
-                    print('%r page is %d bytes' % (url, len(data)))
-        for i in list(range(len(self.paramgrid))):
-
 
         #make the columns of the output data drame multi-indexed
         cols = output.columns.values
