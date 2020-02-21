@@ -53,6 +53,8 @@ class sm:
                 i=i+1
         else:
             self.blendranges = blendranges
+
+
        # print(self.blendranges)
         # calculate the blended results
         blended = self.submodels_blend(predictions, self.blendranges, overwrite=False)
@@ -66,7 +68,15 @@ class sm:
         blended = self.submodels_blend(predictions, blendranges, overwrite=False)
         RMSE = np.sqrt(np.mean((blended - truevals) ** 2))  # calculate the RMSE
         print('RMSE = '+str(RMSE))
-        print(blendranges)
+        print('Low model: '+str(round(blendranges[0],2))+' to '+str(round(blendranges[2],2)))
+        i=1
+        m=2
+        while i+3<len(blendranges)-1:
+            print('Submodel '+str(m)+': '+str(round(blendranges[i],2))+' to '+str(round(blendranges[i+3],2)))
+            i=i+2
+            m=m+1
+        print('High model: '+str(round(blendranges[-3],2)) + ' to ' + str(round(blendranges[-1],2)))
+
         return RMSE
         
     def submodels_blend(self,predictions,blendranges, overwrite=False):

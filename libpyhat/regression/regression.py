@@ -12,8 +12,8 @@ import sklearn.linear_model as linear
 import sklearn.svm as svm
 from sklearn.cross_decomposition.pls_ import PLSRegression
 from sklearn.decomposition import PCA, FastICA
+from sklearn.ensemble.gradient_boosting import GradientBoostingRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
-
 
 class regression:
     def __init__(self, method, yrange, params, i=0):  #TODO: yrange doesn't currently do anything. Remove or do something with it!
@@ -30,12 +30,13 @@ class regression:
                                'LASSO LARS',
                                'SVR',
                                'KRR',
+                               'GBR'
                                ]
         self.method = method
         self.outliers = None
         self.ransac = False
 
-        print(params)
+        #print(params)
         if self.method[i] == 'PLS':
             self.model = PLSRegression(**params[i])
 
@@ -50,19 +51,7 @@ class regression:
         if self.method[i] == 'LASSO':
             # create a temporary set of parameters
             params_temp = copy.copy(params[i])
-            # check whether to do CV or not
-            try:
-                self.do_cv = params[i]['CV']
-                # Remove CV parameter
-                params_temp.pop('CV')
-            except:
-                self.do_cv = False
-
-            if self.do_cv is False:
-                self.model = linear.Lasso(**params_temp)
-            else:
-                params_temp.pop('alpha')
-                self.model = linear.LassoCV(**params_temp)
+            self.model = linear.Lasso(**params_temp)
 
         if self.method[i] == 'Elastic Net':
             params_temp = copy.copy(params[i])
@@ -104,6 +93,8 @@ class regression:
             params_temp.pop('n_components')
             self.model = GaussianProcessRegressor(**params_temp)
 
+        if self.method[i] == 'GBR':
+            self.model = GradientBoostingRegressor(**params[i])
 
     def fit(self, x, y, i=0):
         # if gaussian processes are being used, data dimensionality needs to be reduced before fitting
@@ -123,7 +114,7 @@ class regression:
         try:
             self.model.fit(x, y)
             self.goodfit = True
-            print(self.model)
+            #print(self.model)
         except:
             self.goodfit = False
             if self.method[i] == 'GP':
