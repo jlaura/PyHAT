@@ -4,7 +4,6 @@ channels:
   - conda-forge
 dependencies:
   - python=3
-  - plio
   - numpy
   - pandas
   - scipy
@@ -12,5 +11,6 @@ dependencies:
   - multipledispatch
   - yaml
   - pvl
+  - plio
   - matplotlib
   - pywavelets
