@@ -1,16 +1,16 @@
 language: generic
 
 env:
-  - PYTHON_VERSION=3.5
   - PYTHON_VERSION=3.6
+  - PYTHON_VERSION=3.7
 os:
   - linux
   - osx
 
 branches:
-only:
-  - dev
-  - master
+  only:
+    - dev
+    - master
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
