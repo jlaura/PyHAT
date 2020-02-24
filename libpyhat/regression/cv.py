@@ -161,7 +161,7 @@ class cv:
 
                     output_tmp['Fold '+str(foldcount)] = fold_rmses
                     for n in list(range(len(path_alphas))):
-                        Train.set_value(Train.index[holdout], cvcols[n], y_pred_holdouts[n])
+                        Train.at[Train.index[holdout], cvcols[n]] = y_pred_holdouts[n]
 
                 else:
                     cvcols = [('predict', '"'+method+'- CV -' + str(self.paramgrid[i]) + '"')]
@@ -186,7 +186,7 @@ class cv:
                         else:
                             y_pred_holdout = cv_holdout[ycol] * np.nan
                     #add the predictions to the appropriate column in the training data
-                    Train.set_value(Train.index[holdout], cvcols[0], y_pred_holdout)
+                    Train.at[Train.index[holdout], cvcols[0]] =  y_pred_holdout
                     #append the RMSECV to the list
                     output_tmp['Fold '+str(foldcount)]=RMSE(y_pred_holdout, cv_holdout[ycol])
                     pass
