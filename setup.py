@@ -20,8 +20,8 @@ setup(
     description='The Python Hyperspectral Analysis Toolkit (PyHAT) for planetary spectral data.',
     long_description=long_description,
     url='https://github.com/USGS-Astrogeology/PyHAT',
-    author='J. Laura',
-    author_email='jlaura@usgs.gov',
+    author="J. Laura, R.B. Anderson",
+    author_email="jlaura@usgs.gov, rbanderson@usgs.gov",
     license='Unlicense',
     classifiers=[
         # How mature is this project? Common values are
@@ -34,10 +34,8 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
-
     packages=find_packages(),
     install_requires=['numpy', 'pandas', 'scipy', 'gdal', 'plio'],
-
     extras_require={
         'dev': [],
         'test': ['coverage', 'pytest-cov', 'coveralls'],

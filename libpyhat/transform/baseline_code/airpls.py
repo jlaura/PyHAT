@@ -1,7 +1,6 @@
 import numpy as np
 from libpyhat.transform.baseline_code.common import WhittakerSmoother, Baseline
 
-
 def airpls_baseline(intensities, smoothness_param=100, max_iters=10,
                     conv_thresh=0.001, verbose=False):
     '''
@@ -14,6 +13,7 @@ def airpls_baseline(intensities, smoothness_param=100, max_iters=10,
     smoother = WhittakerSmoother(intensities, smoothness_param)
     total_intensity = np.abs(intensities).sum()
     w = np.ones(intensities.shape[0])
+
     for i in range(1, int(max_iters + 1)):
         baseline = smoother.smooth(w)
         # Compute error (sum of distances below the baseline).
@@ -30,7 +30,7 @@ def airpls_baseline(intensities, smoothness_param=100, max_iters=10,
         # Set peak weights to zero.
         w[~mask] = 0
         # Set baseline weights.
-        baseline_error /= total_error
+        baseline_error = baseline_error / total_error
         w[mask] = np.exp(i * baseline_error)
         w[0] = np.exp(i * baseline_error.min())
         w[-1] = w[0]

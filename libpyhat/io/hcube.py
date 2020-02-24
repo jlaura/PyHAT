@@ -100,6 +100,7 @@ class HCube(object):
         Parameters
         ----------
 
+
         nodes : list
                 A list of wavelengths for the continuum to be corrected along
 
@@ -121,7 +122,6 @@ class HCube(object):
 
         Returns
         -------
-
         new_hcube : Object
                     A new hcube object with the corrected dataset
         """

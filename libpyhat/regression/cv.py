@@ -21,8 +21,8 @@ warnings.filterwarnings('ignore')
 import time
 import copy
 import itertools
+from sklearn.model_selection import LeaveOneGroupOut
 from PyQt5.QtGui import QGuiApplication
-
 
 def RMSE(ypred, y):
     return np.sqrt(np.mean((np.squeeze(ypred) - np.squeeze(y)) ** 2))
@@ -86,29 +86,42 @@ def path_calc(X, y, X_holdout, y_holdout, alphas, paramgrid, colname = 'CV', yna
 class cv:
     def __init__(self, paramgrid,progressbar = None):
         self.paramgrid = paramgrid
-        if progressbar is not None:
-            self.progress = progressbar
-            self.progress.setMaximum(len(self.paramgrid))
-            self.progress.show()
+        # if progressbar is not None:
+        #     self.progress = progressbar
+        #     self.progress.setMaximum(len(self.paramgrid))
+        #     self.progress.show()
 
 
 
-    def do_cv(self, Train, cv_iterator, xcols='wvl', ycol=('comp', 'SiO2'), method='PLS',
-              yrange=[0, 100], calc_path = False, alphas = None, n_folds = 3):
+    def do_cv(self, Train, xcols='wvl', ycol=('comp', 'SiO2'), method='PLS',
+              yrange=[0, 100], calc_path = False, alphas = None):
 
         models = []
         modelkeys = []
         predictkeys = []
-        cv_iterators = itertools.tee(cv_iterator,len(self.paramgrid))  #need to duplicate the cv_iterator so it can be used for each permutation in paramgrid
 
         for i in list(range(len(self.paramgrid))):
-            print('Cross validating permutation '+str(i+1)+' of '+str(len(self.paramgrid)))
-            print(self.paramgrid[i])
+            print('Permutation '+str(i+1)+' of '+str(len(self.paramgrid)))
+            #print(self.paramgrid[i])
+            paramstring=''
+            for key in self.paramgrid[i].keys():
+                paramstring=paramstring+key+': '+str(self.paramgrid[i][key])+'; '
+            print(paramstring[:-2])
+
+            try:
+                # create an iterator for cross validation based on the predefined folds
+                cv_iterator = LeaveOneGroupOut().split(Train[xcols], Train[ycol], Train[('meta', 'Folds')])
+                n_folds = LeaveOneGroupOut().get_n_splits(groups=Train[('meta', 'Folds')])
+
+            except:
+                print('***No folds found! Did you remember to define folds before running cross validation?***')
+
             # create an empty output data frame to serve as template
             output_tmp = pd.DataFrame()
             # add columns for RMSEC, RMSECV, and RMSE for the folds
             output_tmp['RMSEC'] = 0
             output_tmp['RMSECV'] = 0
+
             #for f in np.array(range(n_folds)) + 1:
             for f in np.array(range(n_folds)) + 1:
                 output_tmp['Fold ' + str(f)] = 0
@@ -119,6 +132,7 @@ class cv:
                 output_tmp = pd.concat([output_tmp]*len(alphas))
                 output_tmp['alphas'] = alphas
 
+            output_tmp['Method'] = method
 
             rmsecv_folds_tmp = np.empty(shape=(0))  # Create empty array to hold RMSECV for each fold
             alphas_out = np.empty(shape=(0))
@@ -126,7 +140,7 @@ class cv:
 
             foldcount = 1
 
-            for train, holdout in cv_iterators[i]:  # Iterate through each of the folds in the training set
+            for train, holdout in cv_iterator:  # Iterate through each of the folds in the training set
 
                 cv_train = Train.iloc[train]  # extract the data to be used to create the model
                 cv_holdout = Train.iloc[holdout]  # extract the data that will be held out of the model
@@ -147,7 +161,7 @@ class cv:
 
                     output_tmp['Fold '+str(foldcount)] = fold_rmses
                     for n in list(range(len(path_alphas))):
-                        Train.set_value(Train.index[holdout], cvcols[n], y_pred_holdouts[n])
+                        Train.at[Train.index[holdout], cvcols[n]] = y_pred_holdouts[n]
 
                 else:
                     cvcols = [('predict', '"'+method+'- CV -' + str(self.paramgrid[i]) + '"')]
@@ -172,7 +186,7 @@ class cv:
                         else:
                             y_pred_holdout = cv_holdout[ycol] * np.nan
                     #add the predictions to the appropriate column in the training data
-                    Train.set_value(Train.index[holdout], cvcols[0], y_pred_holdout)
+                    Train.at[Train.index[holdout], cvcols[0]] =  y_pred_holdout
                     #append the RMSECV to the list
                     output_tmp['Fold '+str(foldcount)]=RMSE(y_pred_holdout, cv_holdout[ycol])
                     pass
@@ -247,7 +261,6 @@ class cv:
             try:
                 self.progress.setValue(i+1)
                 QGuiApplication.processEvents()
-
             except:
                 pass
 

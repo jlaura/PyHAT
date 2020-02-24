@@ -39,7 +39,7 @@ test_script:
 
 on_success:
   - cmd: activate base
-  - cmd: conda config --set anaconda_upload yes	    #- cmd: conda config --set anaconda_upload yes
+  # - cmd: conda config --set anaconda_upload yes	    #- cmd: conda config --set anaconda_upload yes
   # - cmd: conda build -c conda-forge -c usgs-astrogeology --token %CONDA_UPLOAD_TOKEN% .
   - ps:
       if ($env:APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
