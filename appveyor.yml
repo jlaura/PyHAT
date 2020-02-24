@@ -22,7 +22,7 @@ install:
   # - set PATH="C:\\Miniconda36-x64\\Scripts\\";"C:\\Miniconda36-x64\\";%PATH%
   - cmd: call %PYTHON%
   - cmd: conda config --set always_yes yes --set changeps1 no
-  - cmd: conda update -q conda
+  - cmd: conda update conda
   - cmd: conda install conda-build anaconda-client
   - cmd: conda config --set ssl_verify false
   - cmd: conda env create -f environment.yml -n test_env python=$PYTHON_VERSION
