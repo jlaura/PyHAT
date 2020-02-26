@@ -1,6 +1,7 @@
 branches:
   only:
-  - master
+    - master
+    - dev
 
 version: '0.1.0.{build}'
 
@@ -18,13 +19,13 @@ configuration:
   - Release
 
 install:
-  - set PATH="C:\\Miniconda36-x64\\Scripts\\";"C:\\Miniconda36-x64\\";%PATH%
+  - cmd: set PATH="C:\\Miniconda36-x64\\Scripts\\";"C:\\Miniconda36-x64\\";%PATH%
   - cmd: call %PYTHON%
   - cmd: conda config --set always_yes yes --set changeps1 no
-  - cmd: conda update -q conda
+  - cmd: conda install -n base conda=4.8.2
   - cmd: conda install conda-build anaconda-client
   - cmd: conda config --set ssl_verify false
-  - cmd: conda env create -q -f environment.yml -n test_env python=$PYTHON_VERSION
+  - cmd: conda env create -f environment.yml -n test_env python=$PYTHON_VERSION
   - cmd: conda activate test_env
   - cmd: conda install pytest-cov
   # https://pythonhosted.org/CodeChat/appveyor.yml.html
@@ -39,19 +40,16 @@ test_script:
 
 on_success:
   - cmd: activate base
-  - cmd: conda config --set anaconda_upload yes	    #- cmd: conda config --set anaconda_upload yes
-  - cmd: conda build -c conda-forge -c usgs-astrogeology --token %CONDA_UPLOAD_TOKEN% RECIPEPATH .
+  # - cmd: conda config --set anaconda_upload yes	    #- cmd: conda config --set anaconda_upload yes
+  # - cmd: conda build -c conda-forge -c usgs-astrogeology --token %CONDA_UPLOAD_TOKEN% RECIPEPATH .
+
   - ps:
       if ($env:APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
         $tar_glob = conda build recipe --output;
         Write-Host "tar_glob $tar_glob";
-        if ($env:APPVEYOR_REPO_BRANCH -eq "dev") {
-          $anaconda_label = "dev"
-        } else {
-          $anaconda_label = "main"
-        };
-        Write-Host "anaconda_label $anaconda_label";
-        $parameters = '-t', "$env:CONDA_UPLOAD_TOKEN", 'upload', "$tar_glob", '-l',
-                      "$anaconda_label", '--force', '--no-progress';
-        & cmd /c 'anaconda 2>&1' $parameters;
+        if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
+                $parameters = '-t', "$env:CONDA_UPLOAD_TOKEN", 'upload', "$tar_glob", '--force', '--no-progress';
+                & cmd /c 'anaconda 2>&1' $parameters;
+          };
+
       };
