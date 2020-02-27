@@ -46,8 +46,8 @@ on_success:
   - cmd: set builddir = conda build recipe --output;
   - cmd: echo %builddir%
   - ps:
-      if (%APPVEYOR_PULL_REQUEST_NUMBER% -eq "") {
-        if (%APPVEYOR_REPO_BRANCH% -eq "master") {
-            anaconda -t="%CONDA_UPLOAD_TOKEN%" upload %builddir% --force;
+      if ($env:APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
+        if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
+            anaconda -t="$env:CONDA_UPLOAD_TOKEN" upload $builddir --force;
           };
       };
