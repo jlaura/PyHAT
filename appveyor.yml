@@ -42,14 +42,12 @@ on_success:
   - cmd: activate base
   # - cmd: conda config --set anaconda_upload yes	    #- cmd: conda config --set anaconda_upload yes
   # - cmd: conda build -c conda-forge -c usgs-astrogeology --token %CONDA_UPLOAD_TOKEN% RECIPEPATH .
-
+  - cmd: echo %APPVEYOR_PULL_REQUEST_NUMBER%
+  - cmd: set builddir = conda build recipe --output;
+  - cmd: echo %builddir%
   - ps:
       if ($env:APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
-        $tar_glob = conda build recipe --output;
-        Write-Host "tar_glob $tar_glob";
         if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
-                $parameters = '-t', "$env:CONDA_UPLOAD_TOKEN", 'upload', "$tar_glob", '--force', '--no-progress';
-                & cmd /c 'anaconda 2>&1' $parameters;
+            anaconda -t="$env:CONDA_UPLOAD_TOKEN" upload $builddir --force;
           };
-
       };
