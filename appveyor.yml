@@ -43,9 +43,10 @@ on_success:
   # - cmd: conda config --set anaconda_upload yes	    #- cmd: conda config --set anaconda_upload yes
   # - cmd: conda build -c conda-forge -c usgs-astrogeology --token %CONDA_UPLOAD_TOKEN% RECIPEPATH .
   - cmd: echo $APPVEYOR_PULL_REQUEST_NUMBER
+  - cmd: $builddir = conda build recipe --output;
+  - cmd: echo $builddir
   - ps:
       if ($APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
-        $builddir = conda build recipe --output;
         if ($APPVEYOR_REPO_BRANCH -eq "master") {
             anaconda -t="$CONDA_UPLOAD_TOKEN" upload $builddir --force;
           };
