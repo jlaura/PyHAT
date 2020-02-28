@@ -40,14 +40,15 @@ test_script:
 
 on_success:
   - cmd: activate base
-  # - cmd: conda config --set anaconda_upload yes	    #- cmd: conda config --set anaconda_upload yes
+  # - cmd: conda config --set anaconda_upload yes
   # - cmd: conda build -c conda-forge -c usgs-astrogeology --token %CONDA_UPLOAD_TOKEN% RECIPEPATH .
-  - cmd: echo %APPVEYOR_PULL_REQUEST_NUMBER%
-  - cmd: set builddir = conda build recipe --output;
-  - cmd: echo %builddir%
+  # - cmd: set builddir = conda build recipe --output;
   - ps:
       if ($env:APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
+        echo "Not a PR"
         if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
-            anaconda -t="$env:CONDA_UPLOAD_TOKEN" upload $builddir --force;
+            echo "master branch"
+            conda config --set anaconda_upload yes;
+            conda build -c conda-forge -c usgs-astrogeology --token %CONDA_UPLOAD_TOKEN% RECIPEPATH .
           };
       };
