@@ -45,7 +45,7 @@ on_success:
   # - cmd: set builddir = conda build recipe --output;
   - ps:
       echo $env:APPVEYOR_PULL_REQUEST_NUMBER;
-      if ($env:APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
+      if (-not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
         echo "Not a PR"
         if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
             echo "master branch"
