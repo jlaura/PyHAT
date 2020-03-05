@@ -3,10 +3,10 @@ import numpy as np
 import argparse
 
 from unittest import mock
-from plio.io import io_moon_minerology_mapper as iomm
+from plio.io import io_moon_mineralogy_mapper as iomm
 from plio.io.io_gdal import array_to_raster
 from libpyhat.derived import pipe, supplemental, new, crism
-from plio.io.io_moon_minerology_mapper import open as m3_open
+from plio.io.io_moon_mineralogy_mapper import open as m3_open
 from plio.io.io_crism import open as crism_open
 import os
 
