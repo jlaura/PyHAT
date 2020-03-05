@@ -1,16 +1,16 @@
 language: generic
 
 env:
-  - PYTHON_VERSION=3.5
   - PYTHON_VERSION=3.6
+  - PYTHON_VERSION=3.7
 os:
   - linux
   - osx
 
 branches:
-only:
-  - dev
-  - master
+  only:
+    - dev
+    - master
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
@@ -27,7 +27,7 @@ before_install:
   - conda update -q conda
   - conda info -a   # Useful for debugging any issues with conda
   # Create the env
-  - conda env create -q -f environment.yml -n test_env python=$PYTHON_VERSION
+  - conda env create -f environment.yml -n test_env python=$PYTHON_VERSION
   - source activate test_env
 
 
@@ -59,7 +59,6 @@ after_success:
   - |
     if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
         anaconda -t="$CONDA_UPLOAD_TOKEN" upload $builddir --force;
-      fi
     fi
   # Docs to gh-pages
   - source activate test_env  # Reactivate the env to have all deps installed.
