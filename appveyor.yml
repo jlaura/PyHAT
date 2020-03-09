@@ -7,9 +7,9 @@ version: '0.1.0.{build}'
 
 environment:
   matrix:
-    - PYTHON: "C:\\Miniconda36-x64\\Scripts\\activate.bat"
+    - PYTHON: "C:\\Miniconda3-x64\\Scripts\\activate.bat"
       PYTHON_VERSION: 3.6
-    - PYTHON: "C:\\Miniconda37-x64\\Scripts\\activate.bat"
+    - PYTHON: "C:\\Miniconda3-x64\\Scripts\\activate.bat"
       PYTHON_VERSION: 3.7
 
 platform:
@@ -19,7 +19,7 @@ configuration:
   - Release
 
 install:
-  - cmd: set PATH="C:\\Miniconda36-x64\\Scripts\\";"C:\\Miniconda36-x64\\";%PATH%
+  - cmd: set PATH="C:\\Miniconda3-x64\\Scripts\\";"C:\\Miniconda3-x64\\";%PATH%
   - cmd: call %PYTHON%
   - cmd: conda config --set always_yes yes --set changeps1 no
   - cmd: conda install -n base conda=4.8.2

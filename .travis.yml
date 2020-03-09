@@ -29,6 +29,7 @@ before_install:
   # Create the env
   - conda env create -f environment.yml -n test_env python=$PYTHON_VERSION
   - source activate test_env
+  - conda install python=$PYTHON_VERSION
 
 
 install:
@@ -54,7 +55,7 @@ after_success:
   - conda deactivate
   - conda install conda-build anaconda-client
   - conda config --set anaconda_upload no
-  - conda build recipe -q
+  - conda build recipe
   - builddir=(`conda build recipe --output`)
   - |
     if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
