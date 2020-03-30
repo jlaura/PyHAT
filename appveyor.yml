@@ -28,7 +28,7 @@ install:
   - cmd: conda config --set ssl_verify false
   - cmd: conda env create -n test_env python=$PYTHON_VERSION
   - cmd: source activate test_env
-  - cmd: conda install --file requirements.txt
+  - cmd: conda update --file environment.yml
   - cmd: conda install pytest-cov
   # https://pythonhosted.org/CodeChat/appveyor.yml.html
   - cmd: python -m pip install -U pip

@@ -29,7 +29,7 @@ before_install:
   # Create the env
   - conda env create -n test_env python=$PYTHON_VERSION
   - source activate test_env
-  - conda update --file enviorment.yml
+  - conda update --file environment.yml
 
 install:
   # Install dependencies
