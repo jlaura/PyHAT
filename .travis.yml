@@ -1,8 +1,8 @@
 language: generic
 
 env:
-  - PYTHON_VERSION=3.6
   - PYTHON_VERSION=3.7
+  - PYTHON_VERSION=3.8
 os:
   - linux
   - osx
@@ -42,8 +42,6 @@ install:
   # Development installation
   - conda install --quiet pytest pytest-cov nbsphinx
   - pip install coveralls travis-sphinx
-
-
 
 script:
   - pytest --cov=libpyhat
