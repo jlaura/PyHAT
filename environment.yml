@@ -1,7 +1,7 @@
 name: pyhat
 channels:
-  - usgs-astrogeology
   - conda-forge
+  - usgs-astrogeology
 dependencies:
   - python>=3
   - numpy
