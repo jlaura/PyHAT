@@ -26,8 +26,8 @@ install:
   - cmd: conda install -n base conda=4.8.2
   - cmd: conda install conda-build anaconda-client
   - cmd: conda config --set ssl_verify false
-  - cmd: conda env create -n test_env python=$PYTHON_VERSION
-  - cmd: source activate test_env
+  - cmd: conda env create -n pyhat python=$PYTHON_VERSION
+  - cmd: source activate pyhat
   - cmd: conda update --file environment.yml
   - cmd: conda install pytest-cov
   # https://pythonhosted.org/CodeChat/appveyor.yml.html
