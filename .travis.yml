@@ -28,8 +28,8 @@ before_install:
   - conda info -a   # Useful for debugging any issues with conda
   # Create the env
   - conda env create -n test_env python=$PYTHON_VERSION
-  - conda env update --name test_env --file enviorment.yml
   - source activate test_env
+  - conda install --file requirements.txt
 
 install:
   # Install dependencies
