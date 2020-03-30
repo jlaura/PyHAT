@@ -52,6 +52,6 @@ on_success:
         if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
             echo "master branch"
             conda config --set anaconda_upload yes;
-            conda build -c conda-forge -c usgs-astrogeology --token %CONDA_UPLOAD_TOKEN% RECIPEPATH .
+            conda build -c conda-forge -c usgs-astrogeology --python $PYTHON_VERSION --token %CONDA_UPLOAD_TOKEN% RECIPEPATH .
           };
       };
