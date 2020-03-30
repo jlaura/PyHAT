@@ -1,5 +1,10 @@
-pyqt
 numpy
 pandas
 scipy
 scikit-learn
+multipledispatch
+yaml
+pvl
+plio
+matplotlib
+pywavelets
