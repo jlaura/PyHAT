@@ -1,8 +1,8 @@
 language: generic
 
 env:
-  - PYTHON_VERSION=3.6
   - PYTHON_VERSION=3.7
+  - PYTHON_VERSION=3.8
 os:
   - linux
   - osx
@@ -30,7 +30,6 @@ before_install:
   - conda env create -f environment.yml -n test_env python=$PYTHON_VERSION
   - source activate test_env
 
-
 install:
   # Install dependencies
   - conda config --add channels usgs-astrogeology
@@ -42,25 +41,30 @@ install:
   - conda install --quiet pytest pytest-cov nbsphinx
   - pip install coveralls travis-sphinx
 
-
-
 script:
   - pytest --cov=libpyhat
 
 after_success:
   # Code Coverage
   - coveralls
-  # Anaconda Upload
-  - conda deactivate
-  - conda install conda-build anaconda-client
-  - conda config --set anaconda_upload no
-  - conda build recipe -q
-  - builddir=(`conda build recipe --output`)
-  - |
-    if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
-        anaconda -t="$CONDA_UPLOAD_TOKEN" upload $builddir --force;
-    fi
-  # Docs to gh-pages
-  - source activate test_env  # Reactivate the env to have all deps installed.
-  - travis-sphinx build --source=docs --nowarn # The sphinx build script
-  - travis-sphinx deploy --branches=master
+  # # Anaconda Upload
+  # - conda deactivate
+  # - conda install conda-build anaconda-client
+  # - conda config --set anaconda_upload no
+  # - conda build recipe
+  # - builddir=(`conda build recipe --output`)
+  # - |
+  #   if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
+  #       anaconda -t="$CONDA_UPLOAD_TOKEN" upload $builddir --force;
+  #   fi
+  # # Docs to gh-pages
+  # - source activate test_env  # Reactivate the env to have all deps installed.
+  # - travis-sphinx build --source=docs --nowarn # The sphinx build script
+  # - travis-sphinx deploy --branches=master
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: bash deploy.sh
+  on:
+    branch: master
