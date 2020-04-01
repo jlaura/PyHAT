@@ -22,4 +22,4 @@ def outlier_removal(df, col, method, params):
         is_outlier = do_outlier_removal.fit_predict(np.array(df[col]))
         df[('meta', 'Outliers - ' + method + str(params))] = is_outlier
         df[('meta', 'Outlier Factor - ' + method + str(params))] = do_outlier_removal.negative_outlier_factor_
-    return df, do_outlier_removal
+    return df

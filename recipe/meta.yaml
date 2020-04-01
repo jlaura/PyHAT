@@ -1,4 +1,4 @@
-{% set version = "0.1.2" %}
+{% set version = "0.1.3" %}
 
 package:
   name: pyhat
@@ -14,18 +14,18 @@ build:
 
 requirements:
   build:
-    - python
+    - python=3
     - setuptools
-    - numpy >=1.10
+    - numpy
+    - pandas
     - scipy
     - plio
-    - pandas
   run:
-    - python
-    - numpy >=1.10
+    - python=3
+    - numpy
+    - pandas
     - scipy
     - plio
-    - pandas
 
 test:
   imports:
