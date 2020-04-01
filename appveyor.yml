@@ -21,7 +21,6 @@ configuration:
 
 install:
   - cmd: set PATH="C:\\Miniconda3-x64\\Scripts\\";"C:\\Miniconda3-x64\\";%PATH%
-  - cmd: call %PYTHON%
   - cmd: conda config --set always_yes yes --set changeps1 no
   - cmd: conda install -n base conda=4.8.2
   - cmd: conda install conda-build anaconda-client
@@ -47,9 +46,8 @@ on_success:
   - ps:
       echo $env:APPVEYOR_PULL_REQUEST_NUMBER;
       if (-not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
-        echo "Not a PR";
         if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
-            echo "master branch";
+            echo "Uploading Package";
             conda config --set anaconda_upload yes;
             conda build --token %CONDA_UPLOAD_TOKEN% --python %PYTHON_VERSION% -c usgs-astrogeology recipe;
           };

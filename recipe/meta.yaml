@@ -14,18 +14,18 @@ build:
 
 requirements:
   build:
-    - python >=3
+    - python=3
     - setuptools
-    - numpy >=1.10
+    - numpy
+    - pandas
     - scipy
     - plio
-    - pandas
   run:
-    - python >=3
-    - numpy >=1.10
+    - python=3
+    - numpy
+    - pandas
     - scipy
     - plio
-    - pandas
 
 test:
   imports:
