@@ -47,7 +47,6 @@ script:
 after_success:
   # Code Coverage
   - coveralls
-  - conda deactivate
   # # Anaconda Upload
   # - conda deactivate
   # - conda install conda-build anaconda-client
