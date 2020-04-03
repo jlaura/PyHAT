@@ -14,14 +14,14 @@ build:
 
 requirements:
   build:
-    - python=3
+    - python x.x
     - setuptools
     - numpy
     - pandas
     - scipy
     - plio
   run:
-    - python=3
+    - python x.x
     - numpy
     - pandas
     - scipy
