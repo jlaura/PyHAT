@@ -25,7 +25,7 @@ install:
   - cmd: conda update -q conda
   - cmd: conda install conda-build anaconda-client
   - cmd: conda config --set ssl_verify false
-  - cmd: conda env create -f environment.yml -n test_env python=$PYTHON_VERSION
+  - cmd: conda env create -f environment.yml -n test_env python=%PYTHON_VERSION%
   - cmd: activate test_env
   - cmd: conda install pytest-cov
   # https://pythonhosted.org/CodeChat/appveyor.yml.html
@@ -39,16 +39,11 @@ test_script:
   - cmd: pytest libpyhat/
 
 on_success:
-  - cmd: activate base
+  # - cmd: coveralls
+  # - cmd: conda deactivate
   # - cmd: conda config --set anaconda_upload yes
   # - cmd: conda build -c conda-forge -c usgs-astrogeology --token %CONDA_UPLOAD_TOKEN% RECIPEPATH .
   # - cmd: set builddir = conda build recipe --output;
-  - ps:
-      echo $env:APPVEYOR_PULL_REQUEST_NUMBER;
-      if (-not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
-        if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
-            echo "Uploading Package";
-            conda config --set anaconda_upload yes;
-            conda build --token %CONDA_UPLOAD_TOKEN% --python %PYTHON_VERSION% -c usgs-astrogeology recipe;
-          };
-      };
+
+deploy_script:
+  ps: deployment/deploy.ps1 %PYTHON_VERSION%
