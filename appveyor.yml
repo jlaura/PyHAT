@@ -39,7 +39,7 @@ test_script:
   - cmd: pytest libpyhat/
 
 on_success:
-  - cmd: coveralls
+  # - cmd: coveralls
   # - cmd: conda deactivate
   # - cmd: conda config --set anaconda_upload yes
   # - cmd: conda build -c conda-forge -c usgs-astrogeology --token %CONDA_UPLOAD_TOKEN% RECIPEPATH .
