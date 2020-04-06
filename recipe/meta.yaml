@@ -19,13 +19,25 @@ requirements:
     - numpy
     - pandas
     - scipy
+    - scikit-learn
+    - multipledispatch
+    - yaml
+    - pvl
     - plio
+    - matplotlib
+    - pywavelets
   run:
     - python x.x
     - numpy
     - pandas
     - scipy
+    - scikit-learn
+    - multipledispatch
+    - yaml
+    - pvl
     - plio
+    - matplotlib
+    - pywavelets
 
 test:
   imports:
