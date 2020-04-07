@@ -68,16 +68,14 @@ class no_transform:
         return C
 
 class ratio:
-    def __init__(self):
+    def derive_transform(self, A, B):
+        A_mean = np.mean(A, axis=0)
+        B_mean = np.mean(B, axis=0)
+        self.ratio_vect = B_mean / A_mean
 
-        def derive_transform(self, A, B):
-            A_mean = np.mean(A, axis=0)
-            B_mean = np.mean(B, axis=0)
-            self.ratio_vect = B_mean / A_mean
-
-        def apply_transform(self, C):
-            C_transformed = C.multiply(self.ratio_vect, axis=1)
-            return C_transformed
+    def apply_transform(self, C):
+        C_transformed = np.multiply(C,self.ratio_vect)
+        return C_transformed
 
 class piecewise_ds:
     def __init__(self, win_size=5, pls=False, nc=5):
@@ -127,7 +125,7 @@ class ds:
             working = np.hstack((data, np.ones((data.shape[0], 1))))
         else:
             working = np.copy(data)
-        return working
+        return np.array(working,dtype=float)
 
     def derive_transform(self, A, B):
         assert A.shape[0] == B.shape[0], (
