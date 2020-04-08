@@ -42,10 +42,9 @@ on_success:
   - ps:
         # if ($env:APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
           if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
-              echo "Master Branch";
               conda deactivate;
               conda install conda-build anaconda-client;
               conda config --set anaconda_upload yes;
-              conda build -c conda-forge -c usgs-astrogeology --python $env:PYTHON_VERSION --token %CONDA_UPLOAD_TOKEN% recipe;
+              conda build recipe -c usgs-astrogeology --python $env:PYTHON_VERSION --token %CONDA_UPLOAD_TOKEN%;
           };
         # };
