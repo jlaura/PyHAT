@@ -25,7 +25,7 @@ install:
   - cmd: conda update -q conda
   - cmd: conda config --set ssl_verify false
   - cmd: conda env create -f environment.yml -n test_env python=$env:PYTHON_VERSION
-  - cmd: CALL conda.bat activate test_env
+  - cmd: activate test_env
   - cmd: conda install pytest-cov
   # https://pythonhosted.org/CodeChat/appveyor.yml.html
   - cmd: python -m pip install -U pip
@@ -39,7 +39,7 @@ test_script:
 
 on_success:
   # - cmd: coveralls
-  - cmd: activate base
+  - cmd: deactivate
   # - cmd: conda config --set anaconda_upload yes
   # - cmd: conda build -c conda-forge -c usgs-astrogeology --token %CONDA_UPLOAD_TOKEN% RECIPEPATH .
   # - cmd: set builddir = conda build recipe --output;
