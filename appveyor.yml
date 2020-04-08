@@ -39,14 +39,11 @@ test_script:
 
 on_success:
   - ps:
-        if ($env:APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
+        # if ($env:APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
           if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
-              deactivate;
+              conda deactivate;
               conda install conda-build anaconda-client;
               conda config --set anaconda_upload yes;
               conda build -c conda-forge -c usgs-astrogeology --python $env:PYTHON_VERSION --token %CONDA_UPLOAD_TOKEN% recipe;
           };
-        };
-
-deploy_script:
-  ps: deployment/deploy.ps1 $env:PYTHON_VERSION
+        # };
