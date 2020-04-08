@@ -38,9 +38,11 @@ test_script:
   - cmd: pytest libpyhat/
 
 on_success:
+  - cmd: deactivate
   - ps:
         # if ($env:APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
           if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
+              echo "Master Branch"
               conda deactivate;
               conda install conda-build anaconda-client;
               conda config --set anaconda_upload yes;
