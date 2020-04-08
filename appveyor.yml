@@ -38,11 +38,15 @@ test_script:
   - cmd: pytest libpyhat/
 
 on_success:
-  # - cmd: coveralls
-  - cmd: deactivate
-  # - cmd: conda config --set anaconda_upload yes
-  # - cmd: conda build -c conda-forge -c usgs-astrogeology --token %CONDA_UPLOAD_TOKEN% RECIPEPATH .
-  # - cmd: set builddir = conda build recipe --output;
+  - ps:
+        if ($env:APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
+          if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
+              deactivate;
+              conda install conda-build anaconda-client;
+              conda config --set anaconda_upload yes;
+              conda build -c conda-forge -c usgs-astrogeology --python $env:PYTHON_VERSION --token %CONDA_UPLOAD_TOKEN% recipe;
+          };
+        };
 
 deploy_script:
   ps: deployment/deploy.ps1 $env:PYTHON_VERSION
