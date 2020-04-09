@@ -198,3 +198,8 @@ def test_ALS():
     br_obj = als.ALS()
     assert br_obj.param_ranges() == expected_ranges
 
+def test_not_recognized():
+    df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
+    result = remove_baseline(df, 'foo', params=None)
+    assert result==None
+
