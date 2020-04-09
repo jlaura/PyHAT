@@ -26,15 +26,20 @@ def test_min_interp():
 
 def test_wavelet_spline():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
-    methodParameters = {'level': 6, 'levelmin': 2}
+    methodParameters = {'level': 6, 'levelmin': 5}
+    result, result_baseline = remove_baseline(df, 'Wavelet a Trous + Spline', params=methodParameters)
+    expected = [1210.06, 1552.06, 1866.06, 1163.06,  920.06]
+    expected_baseline = [0., 0., 0., 0., 0.]
+    np.testing.assert_array_almost_equal(expected, np.array(result['wvl'].iloc[5, 0:5]))
+    np.testing.assert_array_almost_equal(expected_baseline, np.array(result_baseline['wvl'].iloc[5, 0:5]))
 
+    methodParameters = {'level': 6, 'levelmin': 2}
     result, result_baseline = remove_baseline(df, 'Wavelet a Trous + Spline', params=methodParameters)
 
     expected = [0., 463.585425, 863.017414, 214.440695, 0.]
     expected_baseline = [1210.06, 1088.474575, 1003.042586, 948.619305, 920.06]
     np.testing.assert_array_almost_equal(expected, np.array(result['wvl'].iloc[5, 0:5]))
     np.testing.assert_array_almost_equal(expected_baseline, np.array(result_baseline['wvl'].iloc[5, 0:5]))
-
 
 def test_Rubberband():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
@@ -193,4 +198,3 @@ def test_ALS():
     br_obj = als.ALS()
     assert br_obj.param_ranges() == expected_ranges
 
-test_KK()
