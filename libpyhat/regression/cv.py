@@ -115,6 +115,7 @@ class cv:
 
             except:
                 print('***No folds found! Did you remember to define folds before running cross validation?***')
+                return
 
             # create an empty output data frame to serve as template
             output_tmp = pd.DataFrame()
@@ -164,7 +165,6 @@ class cv:
                         Train.at[Train.index[holdout], cvcols[n]] = y_pred_holdouts[n]
 
                 else:
-                    cvcols = [('predict', '"'+method+'- CV -' + str(self.paramgrid[i]) + '"')]
 
                     if method == 'Local Regression':
                         params = self.paramgrid[i]
@@ -174,10 +174,13 @@ class cv:
                             params.pop('n_neighbors')
                         except:
                             pass
-
+                        cvcols = [('predict', '"' + method + '- CV -' + str(self.paramgrid[i]) + ' n_neighbors: ' + str(
+                            n_neighbors) + '"')]
                         model = local_regression.LocalRegression(params, n_neighbors=n_neighbors)
                         y_pred_holdout, coeffs, intercepts = model.fit_predict(cv_train[xcols],cv_train[ycol],cv_holdout[xcols])
                     else:
+                        cvcols = [('predict', '"' + method + '- CV -' + str(self.paramgrid[i]) + '"')]
+
                         #fit the model and predict the held-out data
                         model = regression([method], [yrange], [self.paramgrid[i]])
                         model.fit(cv_train[xcols], cv_train[ycol])
@@ -232,21 +235,32 @@ class cv:
 
                 output_tmp['RMSEC'] = rmsec_train
             else:
-                model = regression([method], [yrange], [self.paramgrid[i]])
-                modelkey = "{} - {} - ({}, {}) {}".format(method, ycol[0][-1], yrange[0], yrange[1], self.paramgrid[i])
+                if method == 'Local Regression':
+                    model = local_regression.LocalRegression(self.paramgrid[i], n_neighbors=n_neighbors)
+                    modelkey = "{} - {} - ({}, {}) {} n_neighbors: {}".format(method, ycol[0][-1], yrange[0], yrange[1],
+                                                              self.paramgrid[i],n_neighbors)
+                else:
+                    model = regression([method], [yrange], [self.paramgrid[i]])
+                    modelkey = "{} - {} - ({}, {}) {}".format(method, ycol[0][-1], yrange[0], yrange[1], self.paramgrid[i])
                 models.append(model)
                 modelkeys.append(modelkey)
                 ypred_train = Train[ycol] * np.nan
-                model.fit(Train[xcols], Train[ycol])
-                #if the fit is good, then predict the training set
-                if model.goodfit:
-                    ypred_train = model.predict(Train[xcols])
+                if method == 'Local Regression':
+                    ypred_train, coeffs, intercepts = model.fit_predict(Train[xcols],Train[ycol],Train[xcols])
                 else:
-                    models = models[:-1]
-                    modelkeys = modelkeys[:-1]
+                    model.fit(Train[xcols], Train[ycol])
+                    #if the fit is good, then predict the training set
+                    if model.goodfit:
+                        ypred_train = model.predict(Train[xcols])
+                    else:
+                        models = models[:-1]
+                        modelkeys = modelkeys[:-1]
 
                 #add the calibration predictions to the appropriate column
-                calcol = ('predict', '"'+method + '- Cal -' + str(self.paramgrid[i])+'"')
+                if method == 'Local Regression':
+                    calcol = ('predict', '"' + method + '- Cal -' + str(self.paramgrid[i]) + ' n_neighbors: '+str(n_neighbors)+'"')
+                else:
+                    calcol = ('predict', '"'+method + '- Cal -' + str(self.paramgrid[i])+'"')
                 predictkeys.append(calcol[-1])
                 Train[calcol] = ypred_train
                 #append the RMSEC for the current settings to the cllection of all RMSECs
