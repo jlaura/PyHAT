@@ -108,11 +108,8 @@ def kajfosz_kwiatek_baseline(bands, intensities, top_width=0,
 
 def _kk_lookup_table(spectrum, width, exponent, slope, ref_ampl):
     nchans = len(spectrum)
-    if width == 0:
-        denom = 1e-20
-    else:
-        chan_width = width / (2. * slope)
-        denom = chan_width ** exponent
+    chan_width = width / (2. * slope)
+    denom = chan_width ** exponent
     indices = np.arange(-nchans, nchans + 1)
     power_funct = indices ** exponent * (ref_ampl / denom)
     power_funct = power_funct[power_funct <= 1]
@@ -128,9 +125,13 @@ class KajfoszKwiatek(Baseline):
         self.tangent_ = tangent
 
     def _fit_one(self, bands, intensities):
-        return kajfosz_kwiatek_baseline(bands, intensities, self.top_width_,
+        if self.bottom_width_>0:
+            return kajfosz_kwiatek_baseline(bands, intensities, self.top_width_,
                                         self.bottom_width_, self.exponent_,
                                         self.tangent_)
+        else:
+            print('Bottom width must be >0')
+            return
 
     def param_ranges(self):
         return {
