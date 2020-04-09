@@ -85,13 +85,14 @@ def test_cv_calc_path():
 
 def test_cv_local_regression():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
+    df = df.iloc[0:20,:]  #make data set smaller so this test runs faster
     df = stratified_folds(df, nfolds=3, sortby=('comp', 'SiO2'))
 
-    params = {'n_neighbors': [5, 10],
+    params = {'n_neighbors': [5, 6],
               'fit_intercept': [True],
               'positive': [False],
               'random_state': [1],
-              'tol': [1e-3]
+              'tol': [1e-2]
               }
     paramgrid = list(ParameterGrid(params))
 
@@ -100,8 +101,8 @@ def test_cv_local_regression():
                                                                   method='Local Regression', yrange=[0, 100],
                                                                   calc_path=False, alphas=None)
 
-    expected_predicts = [56.55745582, 54.58317522, 53.22166429, 54.77540639]
-    expected_output_rmsec = [5.47049138, 3.71669361]
+    expected_predicts = [51.30212, 54.25293063, 48.54834655, 54.18676067]
+    expected_output_rmsec = [10.32151211, 10.89018268]
 
     np.testing.assert_array_almost_equal(expected_predicts, np.array(df_out['predict'].iloc[5, :]))
     np.testing.assert_array_almost_equal(expected_output_rmsec, np.array(output[('cv', 'RMSEC')]))
@@ -109,6 +110,7 @@ def test_cv_local_regression():
     assert len(models) == 2
     assert len(modelkeys) == 2
     assert modelkeys[
-               0] == 'Local Regression - SiO2 - (0, 100) {\'fit_intercept\': True, \'positive\': False, \'random_state\': 1, \'tol\': 0.001} n_neighbors: 5'
+               0] == 'Local Regression - SiO2 - (0, 100) {\'fit_intercept\': True, \'positive\': False, \'random_state\': 1, \'tol\': 0.01} n_neighbors: 5'
     assert len(predictkeys) == 4
-    assert predictkeys[0] == '"Local Regression- CV -{\'fit_intercept\': True, \'positive\': False, \'random_state\': 1, \'tol\': 0.001} n_neighbors: 5"'
+    assert predictkeys[0] == '"Local Regression- CV -{\'fit_intercept\': True, \'positive\': False, \'random_state\': 1, \'tol\': 0.01} n_neighbors: 5"'
+
