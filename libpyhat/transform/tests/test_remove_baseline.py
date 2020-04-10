@@ -3,7 +3,6 @@ import pandas as pd
 from libpyhat.examples import get_path
 from libpyhat.transform.remove_baseline import remove_baseline
 from libpyhat.transform.baseline_code import airpls, als, dietrich,polyfit, kajfosz_kwiatek, median, fabc, rubberband, common
-import pytest
 
 def br_caller(df, method, params, expected, expected_baseline):
     result, result_baseline = remove_baseline(df, method, params=params)
