@@ -8,6 +8,7 @@ data1 = pd.read_csv(get_path('caltran_test1.csv'),header=[0,1])
 data2 = pd.read_csv(get_path('caltran_test2.csv'),header=[0,1])
 data1, data2 = prepare_data(data1,data2,'Target','Target')
 
+
 def cal_tran_helper(data1,data2,params, expected, single_spect = False):
     ct = cal_tran.cal_tran(params)
     ct.derive_transform(data1['wvl'], data2['wvl'])
@@ -137,3 +138,8 @@ def test_forward_backward_ds():
     expected = [3249297.3595255464, 159194775.40413117, 129173821.12988204, 118581703.09505463, 30645501.99455126,
                 94605059.37954581, 75735758.32418025]
     cal_tran_helper(data1, data2, params, expected)
+
+def test_prepare_data_no_repeats():
+    a,b = prepare_data(data1, data2, 'Target', 'Target')
+    pd.testing.assert_frame_equal(a,data1)
+    pd.testing.assert_frame_equal(b, data2)
