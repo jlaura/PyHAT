@@ -15,7 +15,7 @@ build:
 requirements:
   build:
     - python x.x
-    - numpy
+    - numpy>=1.18
     - pandas
     - scipy
     - scikit-learn
@@ -27,7 +27,7 @@ requirements:
     - pywavelets
   run:
     - python x.x
-    - numpy
+    - numpy>=1.18
     - pandas
     - scipy
     - scikit-learn

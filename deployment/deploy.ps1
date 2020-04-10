@@ -1,4 +1,4 @@
-activate base;
+conda deactivate;
 conda install conda-build anaconda-client;
 conda config --set anaconda_upload yes;
 Write-Host "Python Version: $args";
