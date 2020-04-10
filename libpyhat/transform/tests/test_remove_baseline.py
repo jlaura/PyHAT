@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 from libpyhat.examples import get_path
 from libpyhat.transform.remove_baseline import remove_baseline
-from libpyhat.transform.baseline_code import airpls, als, dietrich,polyfit, kajfosz_kwiatek, median, fabc, rubberband
+from libpyhat.transform.baseline_code import airpls, als, dietrich,polyfit, kajfosz_kwiatek, median, fabc, rubberband, common
+import pytest
 
 def br_caller(df, method, params, expected, expected_baseline):
     result, result_baseline = remove_baseline(df, method, params=params)
@@ -175,3 +176,29 @@ def test_not_recognized():
     result = remove_baseline(df, 'foo', params=None)
     assert result==None
 
+def test_common():
+    #this test hits parts of the common baseline code not covered above
+    df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
+    wvls = np.array(df['wvl'].columns.values, dtype='float')
+    spectra = np.array(df['wvl'], dtype='float')
+
+    #test fit_transform
+    br_obj = als.ALS()
+    result = br_obj.fit_transform(wvls,spectra)
+    expected = [-151.88026557, 200.84238645, 525.56518276, -166.71174241, -398.98828107]
+    np.testing.assert_array_almost_equal(expected,result[5,0:5])
+
+    #test fit on single spectrum
+    result = br_obj.fit(wvls, spectra[0,:])
+    expected = [1063.366517, 1059.53780945, 1055.70887361, 1051.87920998, 1048.0481028 ]
+    np.testing.assert_array_almost_equal(expected, result.baseline[0:5])
+
+    #test segmenting
+    wvls = np.array(df['wvl'].columns.values,dtype=float)
+    wvls[20:]= wvls[20:]+10
+
+    result = [i for i in common._segment(wvls, np.array(df['wvl']))]
+    assert result[0][0][0] == 585.149
+    assert result[1][0][0] == 599.644
+
+test_common()
