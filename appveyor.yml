@@ -41,7 +41,7 @@ before_deploy:
 
 deploy_script:
   ps:
-    if ($env:APPVEYOR_PULL_REQUEST_NUMBER -eq "") {
+    if (-not ($env:APPVEYOR_PULL_REQUEST_NUMBER)) {
       if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
           conda deactivate;
           conda install conda-build anaconda-client;
