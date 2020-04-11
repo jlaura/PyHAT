@@ -33,3 +33,4 @@ def test_peak_area_from_file():
     np.testing.assert_array_almost_equal(expected_peaks,peaks_result)
     np.testing.assert_array_almost_equal(expected_mins,mins_result)
     np.testing.assert_array_almost_equal(expected_areas, np.array(df_result['peak_area'])[0,:])
+
