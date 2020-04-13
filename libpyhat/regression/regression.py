@@ -8,13 +8,12 @@ import copy
 import traceback
 import numpy as np
 import sklearn.kernel_ridge as kernel_ridge
-import sklearn.linear_model.base as linear
+import sklearn.linear_model as linear
 import sklearn.svm as svm
 from sklearn.cross_decomposition import PLSRegression
-from sklearn.decomposition import PCA, FastICA
 
 class regression:
-    def __init__(self, method, yrange, params, i=0):  #TODO: yrange doesn't currently do anything. Remove or do something with it!
+    def __init__(self, method, params, i=0):
         self.algorithm_list = ['PLS',
                                'GP',
                                'OLS',
