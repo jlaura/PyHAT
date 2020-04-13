@@ -17,9 +17,9 @@ def cal_tran_helper(data1,data2,params, expected, single_spect = False):
     else:
         result = ct.apply_transform(data1['wvl'])
     if len(result.shape)>1:
-        np.testing.assert_allclose(np.array(result,dtype=float)[:, 4], expected)
+        np.testing.assert_allclose(np.array(result,dtype=float)[:, 4], expected, rtol=1e-6)
     else:
-        np.testing.assert_allclose(np.array(result,dtype=float)[4], expected)
+        np.testing.assert_allclose(np.array(result,dtype=float)[4], expected, rtol=1e-6)
 
 def test_no_transform():
     params = {'method':'None'}

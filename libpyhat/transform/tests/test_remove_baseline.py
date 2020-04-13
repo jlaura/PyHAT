@@ -6,8 +6,8 @@ from libpyhat.transform.baseline_code import airpls, als, dietrich,polyfit, kajf
 
 def br_caller(df, method, params, expected, expected_baseline):
     result, result_baseline = remove_baseline(df, method, params=params)
-    np.testing.assert_allclose(expected,np.array(result['wvl'].iloc[5,0:5]))
-    np.testing.assert_allclose(expected_baseline,np.array(result_baseline['wvl'].iloc[5,0:5]))
+    np.testing.assert_allclose(expected,np.array(result['wvl'].iloc[5,0:5]), rtol=1e-4)
+    np.testing.assert_allclose(expected_baseline,np.array(result_baseline['wvl'].iloc[5,0:5]), rtol=1e-4)
 
 def test_min_interp():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])

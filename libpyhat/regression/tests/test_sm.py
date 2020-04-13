@@ -33,4 +33,4 @@ def test_sm_blend():
     rmse = np.sqrt(np.average((blended_predictions-df[('comp','SiO2')])**2))
     expected_blendranges = [-9999., 36.5198746, 47.98157746, 56.2537253, 118.94036468, 9999.]
     np.testing.assert_almost_equal(rmse, 9.954065920454982, decimal=5)
-    np.testing.assert_array_almost_equal(expected_blendranges,sm_obj.blendranges)
+    np.testing.assert_allclose(expected_blendranges,sm_obj.blendranges)

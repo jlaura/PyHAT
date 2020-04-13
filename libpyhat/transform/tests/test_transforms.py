@@ -100,7 +100,7 @@ def test_dimred_LLE():
 
     assert df['LLE'].shape == (103, 3)
     np.testing.assert_almost_equal(expected_err, dimred_obj.reconstruction_error_)
-    np.testing.assert_array_almost_equal(expected_scores, np.array(df['LLE'].iloc[0, :]),decimal=4)
+    np.testing.assert_array_almost_equal(np.abs(expected_scores), np.abs(np.array(df['LLE'].iloc[0, :])),decimal=4)
 
 def test_dimred_tSNE():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
