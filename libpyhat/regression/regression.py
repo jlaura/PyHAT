@@ -8,9 +8,9 @@ import copy
 import traceback
 import numpy as np
 import sklearn.kernel_ridge as kernel_ridge
-import sklearn.linear_model as linear
+import sklearn.linear_model.base as linear
 import sklearn.svm as svm
-from sklearn.cross_decomposition.pls_ import PLSRegression
+from sklearn.cross_decomposition import PLSRegression
 from sklearn.decomposition import PCA, FastICA
 
 class regression:
