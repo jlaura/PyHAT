@@ -16,7 +16,7 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
       wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
     else
-      curl -o miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh;
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh;
     fi
 
   # More conda setup to get miniconda in and a virtual env. setup
@@ -34,10 +34,8 @@ install:
   # Install dependencies
   - conda config --add channels usgs-astrogeology
   - conda config --add channels conda-forge
-  # https://github.com/GoogleCloudPlatform/google-cloud-python/issues/2990
-  - conda install pip setuptools
-
   # Development installation
+  - conda install pip setuptools
   - conda install --quiet pytest pytest-cov nbsphinx
   - pip install coveralls travis-sphinx
 
@@ -47,24 +45,10 @@ script:
 after_success:
   # Code Coverage
   - coveralls
-  # # Anaconda Upload
-  # - conda deactivate
-  # - conda install conda-build anaconda-client
-  # - conda config --set anaconda_upload no
-  # - conda build recipe
-  # - builddir=(`conda build recipe --output`)
-  # - |
-  #   if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
-  #       anaconda -t="$CONDA_UPLOAD_TOKEN" upload $builddir --force;
-  #   fi
-  # # Docs to gh-pages
-  # - source activate test_env  # Reactivate the env to have all deps installed.
-  # - travis-sphinx build --source=docs --nowarn # The sphinx build script
-  # - travis-sphinx deploy --branches=master
 
 deploy:
   provider: script
-  skip_cleanup: true
+  cleanup: false
   script: bash deployment/deploy.sh $PYTHON_VERSION
   on:
     branch: master

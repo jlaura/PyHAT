@@ -12,7 +12,6 @@ environment:
     - PYTHON: "C:\\Miniconda3-x64\\Scripts\\activate.bat"
       PYTHON_VERSION: 3.8
 
-
 platform:
   - x64
 
@@ -37,12 +36,19 @@ build_script:
 test_script:
   - cmd: pytest libpyhat/
 
-on_success:
-  # - cmd: coveralls
+before_deploy:
   - cmd: activate base
-  # - cmd: conda config --set anaconda_upload yes
-  # - cmd: conda build -c conda-forge -c usgs-astrogeology --token %CONDA_UPLOAD_TOKEN% RECIPEPATH .
-  # - cmd: set builddir = conda build recipe --output;
 
 deploy_script:
-  ps: deployment/deploy.ps1 $env:PYTHON_VERSION
+  ps:
+    if (-not ($env:APPVEYOR_PULL_REQUEST_NUMBER)) {
+      if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
+          conda install conda-build anaconda-client;
+          conda config --set anaconda_upload yes;
+          conda build -c conda-forge -c usgs-astrogeology --python $env:PYTHON_VERSION --token %CONDA_UPLOAD_TOKEN% RECIPE_PATH recipe;
+          conda build purge;
+      };
+    };
+
+on_success:
+  - ps: echo "Success!"
