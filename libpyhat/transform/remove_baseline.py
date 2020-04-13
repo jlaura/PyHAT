@@ -37,7 +37,7 @@ def remove_baseline(df, method='ALS', segment=True, params=None):
     elif method == 'Min + Interpolate':
         br = minimum_interp(**params)
     else:
-        print(method + ' is not recognized!')
+        print(f'{method} is not recognized!')
         return 0
 
 

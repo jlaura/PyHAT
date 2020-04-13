@@ -14,7 +14,7 @@ def test_spectral():
                 'coef0': 1,
                 'random_state':1}
     result = cluster.cluster(df, 'wvl', 'Spectral', [], kws)
-    expected = [2, 1, 1, 2, 2, 2, 2, 1, 2, 1]
+    expected = [2, 2, 1, 1, 2, 3, 2, 1, 1, 1]
     np.testing.assert_array_almost_equal(expected, np.squeeze(np.array(result['Spectral'].iloc[0:10])))
 
 

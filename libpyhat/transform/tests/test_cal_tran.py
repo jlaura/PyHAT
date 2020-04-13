@@ -46,8 +46,7 @@ def test_ratio():
 
 def test_piecewise_ds():
     params = {'method': 'PDS - Piecewise DS', 'win_size':5,'pls':False}
-    expected = [2518296750.7669373, 22939818289.340088, 133837284646.25781, 143969630699.28076, 131001824154.48917,
-                141823720448.1682, 165079532503.75415]
+    expected = [2.518297e+09, 2.293982e+10, 1.338373e+11, 1.439696e+11, 1.310018e+11, 1.418237e+11, 1.650795e+11]
     cal_tran_helper(data1, data2, params, expected)
 
 def test_piecewise_ds_pls():

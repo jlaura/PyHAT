@@ -111,7 +111,7 @@ class cv:
                 cv_iterator = LeaveOneGroupOut().split(Train[xcols], Train[ycol], Train[('meta', 'Folds')])
                 n_folds = LeaveOneGroupOut().get_n_splits(groups=Train[('meta', 'Folds')])
 
-            except:
+            except KeyError:
                 print('***No folds found! Did you remember to define folds before running cross validation?***')
                 return 0
 

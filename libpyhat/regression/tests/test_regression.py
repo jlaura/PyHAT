@@ -7,12 +7,6 @@ df = pd.read_csv(get_path('test_data.csv'),header=[0,1])
 x = df['wvl']
 y = df[('comp','SiO2')]
 
-regress = regression(method=['PLS'],
-                     params=[{'n_components': 300, 'scale': False}])
-regress.fit(x, y)
-assert regress.goodfit==False
-pass
-
 def test_PLS():
     regress = regression(method=['PLS'],
                          params=[{'n_components': 3, 'scale': False}])
@@ -29,6 +23,7 @@ def test_PLS():
     leverage_expected = [0.01854551, 0.04063431, 0.02558205, 0.10486388, 0.03121949, 0.0393575, 0.0084857, 0.01386892,
                          0.01066457, 0.06845841]
     np.testing.assert_array_almost_equal(regress.leverage[0:10], leverage_expected)
+
 
 def test_badfit():
     regress = regression(method=['PLS'],
