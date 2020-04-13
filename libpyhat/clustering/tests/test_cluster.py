@@ -13,7 +13,7 @@ def test_spectral():
                 'degree': 3,
                 'coef0': 1,
                 'random_state':1,
-                'njobs':1}
+                'n_jobs':1}
     result = cluster.cluster(df, 'wvl', 'Spectral', [], kws)
     expected = [2, 2, 1, 1, 2, 3, 2, 1, 1, 1]
     np.testing.assert_array_almost_equal(expected, np.squeeze(np.array(result['Spectral'].iloc[0:10])))
@@ -26,7 +26,7 @@ def test_kmeans():
               'max_iter': 100,
               'tol': 0.01,
               'random_state':1,
-              'njobs':1}
+              'n_jobs':1}
     result = cluster.cluster(df,'wvl','K-Means',[],kws)
     expected = [2, 1, 1, 1, 1, 2, 2, 3, 2, 1]
     np.testing.assert_array_almost_equal(expected,np.squeeze(np.array(result['K-Means'].iloc[0:10])))
