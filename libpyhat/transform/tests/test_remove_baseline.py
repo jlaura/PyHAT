@@ -6,8 +6,8 @@ from libpyhat.transform.baseline_code import airpls, als, dietrich,polyfit, kajf
 
 def br_caller(df, method, params, expected, expected_baseline):
     result, result_baseline = remove_baseline(df, method, params=params)
-    np.testing.assert_array_almost_equal(expected,np.array(result['wvl'].iloc[5,0:5]),decimal=4)
-    np.testing.assert_array_almost_equal(expected_baseline,np.array(result_baseline['wvl'].iloc[5,0:5]),decimal=4)
+    np.testing.assert_allclose(expected,np.array(result['wvl'].iloc[5,0:5]))
+    np.testing.assert_allclose(expected_baseline,np.array(result_baseline['wvl'].iloc[5,0:5]))
 
 def test_min_interp():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
@@ -113,7 +113,7 @@ def test_FABC():
 def test_Polyfit():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
     methodParameters = {'poly_order': 5, 'num_stdv': 3.}
-    expected = [-2968.315, 1.06, 1927.81, 2016.185, 1920.06]
+    expected = [-2.9726e+03, -9.4000e-01,  1.9258e+03,  2.0166e+03,  1.9223e+03]
     expected_baseline = [4178.375, 1551., -61.75, -853.125, -1000.]
     br_caller(df,'Polyfit',methodParameters,expected,expected_baseline)
 
@@ -199,5 +199,3 @@ def test_common():
     result = [i for i in common._segment(wvls, np.array(df['wvl']))]
     assert result[0][0][0] == 585.149
     assert result[1][0][0] == 599.644
-
-test_common()

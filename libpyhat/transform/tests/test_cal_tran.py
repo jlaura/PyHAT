@@ -99,7 +99,7 @@ def test_rank():
     result = ct.apply_transform(data1['wvl'])
     expected = [2983729459.6655235, 58395418330.43097, 53338740816.48527, 44792462932.167305, 9963178402.018112,
                 35001553532.792885, 32994432752.733253]
-    np.testing.assert_array_almost_equal(np.array(result)[:, 4], expected)
+    np.testing.assert_allclose(np.array(result)[:, 4], expected)
 
 def test_ridge():
     params = {'method': 'Ridge DS', 'reg': 'ridge'}
@@ -115,7 +115,7 @@ def test_sp_lr():
 
 def test_cca():
     params = {'method': 'CCA - Canonical Correlation Analysis'}
-    expected = [92044557972.7028, 105920435813.84615, 114193459070.33023, 108757580896.19865, 109998305126.70969, 108690052718.79832, 103826292706.91415]
+    expected = [2.993871e+10, 1.094273e+11, 1.752389e+11, 1.461424e+11, 4.768937e+10, 1.261856e+11, 1.088084e+11]
     cal_tran_helper(data1, data2, params, expected)
 
     params = {'method': 'CCA - Canonical Correlation Analysis'}
@@ -124,8 +124,8 @@ def test_cca():
 
 def test_cca_new():
     params = {'method': 'New CCA', 'ccatype':'new'}
-    expected = [-79330279537.80644, 9324121672.360352, 62181312503.680176, 27450931471.487793, 35378045343.64673,
-                27019487046.79834, -4055572594.114502]
+    expected = [-1.828968e+10,  4.657155e+10,  1.002726e+11,  7.653041e+10,
+                -3.805466e+09,  6.024602e+10,  4.606649e+10]
     cal_tran_helper(data1, data2, params, expected)
 
 def test_ipd_ds():
