@@ -27,10 +27,10 @@ def test_sm_blend():
     sm_obj = sm.sm(blendranges)
     blended_predictions = sm_obj.do_blend(np.array(predictions)) #without optimization
     rmse = np.sqrt(np.average((blended_predictions - df[('comp', 'SiO2')]) ** 2))
-    np.testing.assert_almost_equal(rmse,12.703434300128926)
+    np.testing.assert_almost_equal(rmse, 12.703434300128926, decimal=5)
 
     blended_predictions = sm_obj.do_blend(np.array(predictions),truevals=np.array(df[('comp','SiO2')])) #with optimization
     rmse = np.sqrt(np.average((blended_predictions-df[('comp','SiO2')])**2))
     expected_blendranges = [-9999., 36.5198746, 47.98157746, 56.2537253, 118.94036468, 9999.]
-    np.testing.assert_almost_equal(rmse,9.954065130533083)
+    np.testing.assert_almost_equal(rmse, 9.954065920454982, decimal=5)
     np.testing.assert_array_almost_equal(expected_blendranges,sm_obj.blendranges)

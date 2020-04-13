@@ -17,9 +17,9 @@ def cal_tran_helper(data1,data2,params, expected, single_spect = False):
     else:
         result = ct.apply_transform(data1['wvl'])
     if len(result.shape)>1:
-        np.testing.assert_array_almost_equal(np.array(result)[:, 4], expected)
+        np.testing.assert_allclose(np.array(result,dtype=float)[:, 4], expected)
     else:
-        np.testing.assert_array_almost_equal(np.array(result)[4], expected)
+        np.testing.assert_allclose(np.array(result,dtype=float)[4], expected)
 
 def test_no_transform():
     params = {'method':'None'}
@@ -46,19 +46,20 @@ def test_ratio():
 
 def test_piecewise_ds():
     params = {'method': 'PDS - Piecewise DS', 'win_size':5,'pls':False}
-    expected = [2.518297e+09, 2.293982e+10, 1.338373e+11, 1.439696e+11, 1.310018e+11, 1.418237e+11, 1.650795e+11]
+    expected = [2518296750.766693, 22939818289.340332, 133837284646.2583, 143969630699.28076, 131001824154.48923,
+                141823720448.16846, 165079532503.7539]
     cal_tran_helper(data1, data2, params, expected)
 
 def test_piecewise_ds_pls():
     params = {'method':  'PDS-PLS - PDS using Partial Least Squares', 'win_size': 5, 'pls': True}
-    expected = [-267781865648.5343, -247623829267.95703, -123176082646.5293, -124548787498.16602, -125447616089.96704,
-                -139565106866.63477, -116198982744.31836]
+    expected = [-267781865648.52594, -247623829267.9502, -123176082646.52051, -124548787498.1582, -125447616089.95984,
+                -139565106866.62744, -116198982744.3086]
     cal_tran_helper(data1, data2, params, expected)
 
 def test_ds():
     params = {'method': 'DS - Direct Standardization', 'fit_intercept':False}
-    expected = [14390389678.999939, 3040294626.501465, 159500000000.00146, 155500000000.0, 129000000000.00037,
-                154500000000.00098, 127500000000.00073]
+    expected = [14390389679.000084, 3040294626.495117, 159499999999.9973,
+                155499999999.99756, 128999999999.99963, 154499999999.99902, 127499999999.99866]
     cal_tran_helper(data1, data2, params, expected)
 
     #test fit intercept
@@ -87,9 +88,10 @@ def test_fused():
     ct = cal_tran.admm_ds(reg='fused')
     ct.derive_transform(data1['wvl'], data2['wvl'])
     result = ct.apply_transform(data1['wvl'])
-    expected = [2849243131.0724015, 62747825214.21766, 57476877313.03153, 48012638532.69881, 10315037639.60446,
-                37285141026.96995, 35276208169.25773]
-    np.testing.assert_array_almost_equal(np.array(result)[:, 4], expected)
+    expected = [2849243131.072401, 62747825214.21765, 57476877313.0315,
+              48012638532.6988, 10315037639.60447, 37285141026.96994,
+              35276208169.25771]
+    np.testing.assert_allclose(np.array(result,dtype=float)[:, 4], expected)
 
 def test_rank():
     ct = cal_tran.admm_ds(reg='rank')
@@ -142,3 +144,6 @@ def test_prepare_data_no_repeats():
     a,b = prepare_data(data1, data2, 'Target', 'Target')
     pd.testing.assert_frame_equal(a,data1)
     pd.testing.assert_frame_equal(b, data2)
+
+
+test_ds()
