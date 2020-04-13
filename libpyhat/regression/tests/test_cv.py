@@ -18,8 +18,7 @@ def test_cv_nofolds():
                                                                   method='PLS', yrange=[0, 100], calc_path=False,
                                                                   alphas=None)
     print(results)
-    assert results == None
-#test_cv_nofolds()
+    assert results == 0
 
 
 def test_cv():

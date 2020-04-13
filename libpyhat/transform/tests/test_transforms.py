@@ -29,7 +29,7 @@ def test_multiply_vector():
     np.testing.assert_array_almost_equal(expected, np.array(result['wvl'].iloc[0,0:5]))
 
     result = multiply_vector.multiply_vector(df, get_path('bad_vector.csv'))
-    assert result == None
+    assert result == 0
 
 def test_meancenter():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
@@ -50,7 +50,7 @@ def test_meancenter():
     #test mismatched wvls
     mean_vect.index = np.array(mean_vect.index,dtype=float) + 1.0
     result = meancenter.meancenter(df, 'wvl', previous_mean=mean_vect)
-    assert result == None
+    assert result == 0
 
 
 def test_mask():

@@ -20,7 +20,6 @@ from sklearn.utils.validation import check_X_y, check_array
 warnings.filterwarnings('ignore')
 import time
 import copy
-import itertools
 from sklearn.model_selection import LeaveOneGroupOut
 from PyQt5.QtGui import QGuiApplication
 
@@ -84,12 +83,9 @@ def path_calc(X, y, X_holdout, y_holdout, alphas, paramgrid, colname = 'CV', yna
 
 
 class cv:
-    def __init__(self, paramgrid,progressbar = None):
+    def __init__(self, paramgrid):
         self.paramgrid = paramgrid
-        # if progressbar is not None:
-        #     self.progress = progressbar
-        #     self.progress.setMaximum(len(self.paramgrid))
-        #     self.progress.show()
+
 
 
 
@@ -105,7 +101,6 @@ class cv:
 
         for i in list(range(len(self.paramgrid))):
             print('Permutation '+str(i+1)+' of '+str(len(self.paramgrid)))
-            #print(self.paramgrid[i])
             paramstring=''
             for key in self.paramgrid[i].keys():
                 paramstring=paramstring+key+': '+str(self.paramgrid[i][key])+'; '
@@ -118,7 +113,7 @@ class cv:
 
             except:
                 print('***No folds found! Did you remember to define folds before running cross validation?***')
-                return
+                return 0
 
             # create an empty output data frame to serve as template
             output_tmp = pd.DataFrame()

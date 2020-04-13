@@ -173,7 +173,7 @@ def test_ALS():
 def test_not_recognized():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
     result = remove_baseline(df, 'foo', params=None)
-    assert result==None
+    assert result == 0
 
 def test_common():
     #this test hits parts of the common baseline code not covered above

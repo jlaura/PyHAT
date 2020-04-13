@@ -38,7 +38,7 @@ def remove_baseline(df, method='ALS', segment=True, params=None):
         br = minimum_interp(**params)
     else:
         print(method + ' is not recognized!')
-        return
+        return 0
 
 
     br.fit(wvls, spectra, segment=segment)
