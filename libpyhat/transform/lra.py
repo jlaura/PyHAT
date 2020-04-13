@@ -5,8 +5,6 @@ http://www.aaai.org/ocs/index.php/AAAI/AAAI15/paper/download/9972/9880
 
 from scipy.linalg import block_diag, eigh, svd
 from scipy.sparse.csgraph import laplacian
-#from mpl_toolkits.mplot3d import Axes3D
-#import matplotlib.pyplot as plt
 import numpy as np
 
 
@@ -58,26 +56,6 @@ def demo():
 
     Xembed, Yembed = low_rank_align(X,Y,np.eye(n_sline+n_lline),d=2)
 
-    # fig = plt.figure()
-    # ax1 = fig.add_subplot(1,3,1,projection='3d')
-    # ax1.set_title('Noisy Dollar')
-    # ax1.scatter(X[:n_sline,0],X[:n_sline,1],X[:n_sline,2],c='b',s=50)
-    # ax1.scatter(X[n_sline:,0],X[n_sline:,1],X[n_sline:,2],c='b',marker='*',s=60)
-    # ax2 = fig.add_subplot(1,3,2,projection='3d')
-    # ax2.set_title('Rotated Noisier Dollar')
-    # ax2.scatter(Y[:n_sline,0],Y[:n_sline,1],Y[:n_sline,2],c='r',s=50)
-    # ax2.scatter(Y[n_sline:,0],Y[n_sline:,1],Y[n_sline:,2],c='r',marker='*',s=60)
-    # ax3 = fig.add_subplot(1,3,3)
-    # ax3.set_title('Aligned 2-D Dollars')
-    # ax3.scatter(Xembed[:n_sline,0],Xembed[:n_sline,1],c='b',edgecolor='b',s=150)
-    # ax3.scatter(Xembed[n_sline:,0],Xembed[n_sline:,1],c='b',edgecolor='b',s=165,
-    #             marker='*')
-    # ax3.scatter(Yembed[:n_sline,0],Yembed[:n_sline,1],c='r',edgecolor='r',s=50)
-    # ax3.scatter(Yembed[n_sline:,0],Yembed[n_sline:,1],c='r',edgecolor='r',s=60,
-    #             marker='*')
-    # ax3.xaxis.set_visible(False)
-    # ax3.yaxis.set_visible(False)
-    # plt.show()
     return Xembed, Yembed
 
 def dollar_sign(num_s_points, num_bar_points):
