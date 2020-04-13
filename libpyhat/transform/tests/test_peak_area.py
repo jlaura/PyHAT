@@ -18,8 +18,8 @@ def test_peak_area():
     pa_df = pd.DataFrame(expected_areas).T
     pa_df.columns = pd.MultiIndex.from_tuples([('peak_area', i) for i in expected_peaks])
     df_result, peaks_result, mins_result = pa.peak_area(df, peaks_mins_file=None)
-    np.testing.assert_array_almost_equal(peaks_result, expected_peaks)
-    np.testing.assert_array_almost_equal(mins_result, expected_mins)
+    np.testing.assert_array_almost_equal(np.array(peaks_result,dtype=float), expected_peaks)
+    np.testing.assert_array_almost_equal(np.array(mins_result,dtype=float), expected_mins)
     np.testing.assert_array_almost_equal(np.squeeze(np.array(df_result['peak_area'])), expected_areas)
 
 def test_peak_area_from_file():

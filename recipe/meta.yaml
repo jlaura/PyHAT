@@ -15,17 +15,28 @@ build:
 requirements:
   build:
     - python x.x
-    - setuptools
-    - numpy
+    - numpy>=1.18
     - pandas
     - scipy
+    - scikit-learn
+    - multipledispatch
+    - yaml
+    - pvl
     - plio
+    - matplotlib
+    - pywavelets
   run:
     - python x.x
-    - numpy
+    - numpy>=1.18
     - pandas
     - scipy
+    - scikit-learn
+    - multipledispatch
+    - yaml
+    - pvl
     - plio
+    - matplotlib
+    - pywavelets
 
 test:
   imports:
