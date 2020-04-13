@@ -9,15 +9,15 @@ def test_sm_blend():
     x = df['wvl']
     y = df[('comp','SiO2')]
 
-    model1 = reg.regression(method=['PLS'], yrange=[0.0, 100.0], params=[{'n_components': 3, 'scale': False}])
+    model1 = reg.regression(method=['PLS'], params=[{'n_components': 3, 'scale': False}])
     model1.fit(x, y)
     df[('predict','model1')] = model1.predict(x)
 
-    model2 = reg.regression(method=['PLS'], yrange=[0.0, 50.0], params=[{'n_components': 5, 'scale': False}])
+    model2 = reg.regression(method=['PLS'], params=[{'n_components': 5, 'scale': False}])
     model2.fit(x, y)
     df[('predict','model2')] = model2.predict(x)
 
-    model3 = reg.regression(method=['PLS'], yrange=[40.0, 100.0], params=[{'n_components': 4, 'scale': False}])
+    model3 = reg.regression(method=['PLS'], params=[{'n_components': 4, 'scale': False}])
     model3.fit(x, y)
     df[('predict','model3')] = model3.predict(x)
 

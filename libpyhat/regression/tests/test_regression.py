@@ -7,14 +7,14 @@ df = pd.read_csv(get_path('test_data.csv'),header=[0,1])
 x = df['wvl']
 y = df[('comp','SiO2')]
 
-regress = regression(method=['PLS'], yrange=[0.0, 100.0],
+regress = regression(method=['PLS'],
                      params=[{'n_components': 300, 'scale': False}])
 regress.fit(x, y)
 assert regress.goodfit==False
 pass
 
 def test_PLS():
-    regress = regression(method=['PLS'], yrange=[0.0, 100.0],
+    regress = regression(method=['PLS'],
                          params=[{'n_components': 3, 'scale': False}])
     regress.fit(x, y)
     prediction = np.squeeze(regress.predict(x))
@@ -31,13 +31,13 @@ def test_PLS():
     np.testing.assert_array_almost_equal(regress.leverage[0:10], leverage_expected)
 
 def test_badfit():
-    regress = regression(method=['PLS'], yrange=[0.0, 100.0],
+    regress = regression(method=['PLS'],
                          params=[{'n_components': 300, 'scale': False}])
     regress.fit(x, y)
     assert regress.goodfit == False
 
 def test_OLS():
-    regress = regression(method=['OLS'], yrange=[0.0, 100.0],
+    regress = regression(method=['OLS'],
                          params=[{'fit_intercept': True}])
     regress.fit(x, y)
     prediction = np.squeeze(regress.predict(x))
@@ -47,7 +47,7 @@ def test_OLS():
 
 
 def test_OMP():
-    regress = regression(method=['OMP'], yrange=[0.0, 100.0], params=[{'fit_intercept': True}])
+    regress = regression(method=['OMP'], params=[{'fit_intercept': True}])
     regress.fit(x, y)
     prediction = np.squeeze(regress.predict(x))
     rmse = np.sqrt(np.average((prediction - y) ** 2))
@@ -55,7 +55,7 @@ def test_OMP():
     np.testing.assert_almost_equal(rmse, expected)
 
 def test_LASSO():
-    regress = regression(method=['LASSO'], yrange=[0.0, 100.0],
+    regress = regression(method=['LASSO'],
                          params=[{'alpha': 1.0,
                                   'fit_intercept': True,
                                   'positive': False}])
@@ -67,7 +67,7 @@ def test_LASSO():
 
 
 def test_Elastic_Net():
-    regress = regression(method=['Elastic Net'], yrange=[0.0, 100.0],
+    regress = regression(method=['Elastic Net'],
                          params=[{'alpha': 1.0,
                                   'l1_ratio': 0.5,
                                   'fit_intercept': True,
@@ -81,7 +81,7 @@ def test_Elastic_Net():
 
 
 def test_Ridge():
-    regress = regression(method=['Ridge'], yrange=[0.0, 100.0],
+    regress = regression(method=['Ridge'],
                          params=[{'alpha': 1.0,
                                   'fit_intercept': True}])
     regress.fit(x, y)
@@ -91,7 +91,7 @@ def test_Ridge():
     np.testing.assert_almost_equal(rmse, expected)
 
 def test_Bayesian_Ridge():
-    regress = regression(method=['BRR'], yrange=[0.0, 100.0],
+    regress = regression(method=['BRR'],
                          params=[{'n_iter': 300,
                                   'tol': 0.001,
                                   'alpha_1': 0.001,
@@ -109,7 +109,7 @@ def test_Bayesian_Ridge():
 
 
 def test_ARD():
-    regress = regression(method=['ARD'], yrange=[0.0, 100.0],
+    regress = regression(method=['ARD'],
                          params=[{'n_iter': 300,
                                   'tol': 0.001,
                                   'alpha_1': 0.001,
@@ -130,7 +130,7 @@ def test_ARD():
 
 
 def test_LARS():
-    regress = regression(method=['LARS'], yrange=[0.0, 100.0],
+    regress = regression(method=['LARS'],
                          params=[{'n_nonzero_coefs': 5,
                                   'fit_intercept': True,
                                   'normalize': False,
@@ -146,17 +146,16 @@ def test_LARS():
 
 
 def test_SVR():
-    regress = regression(method=['SVR'], yrange=[0.0, 100.0], params=[{'C': 1.0,
-                                                                       'epsilon': 0.1,
-                                                                       'kernel': 'rbf',
-                                                                       'degree': 0,
-                                                                       'gamma': 'auto',
-                                                                       'coef0': 0.0,
-                                                                       'shrinking': False,
-                                                                       'tol': 0.001,
-                                                                       'cache_size': 200,
-                                                                       'verbose': False,
-                                                                       'max_iter': -1}])
+    regress = regression(method=['SVR'], params=[{'C': 1.0, 'epsilon': 0.1,
+                                                   'kernel': 'rbf',
+                                                   'degree': 0,
+                                                   'gamma': 'auto',
+                                                   'coef0': 0.0,
+                                                   'shrinking': False,
+                                                   'tol': 0.001,
+                                                   'cache_size': 200,
+                                                   'verbose': False,
+                                                   'max_iter': -1}])
     regress.fit(x, y)
     prediction = np.squeeze(regress.predict(x))
     rmse = np.sqrt(np.average((prediction - y) ** 2))
@@ -165,7 +164,7 @@ def test_SVR():
 
 
 def test_KRR():
-    regress = regression(method=['KRR'], yrange=[0.0, 100.0],
+    regress = regression(method=['KRR'],
                          params=[{'alpha': 0,
                                   'kernel': 'linear',
                                   'gamma': 'None',
