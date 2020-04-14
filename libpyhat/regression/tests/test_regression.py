@@ -173,5 +173,5 @@ def test_KRR():
     prediction = np.squeeze(regress.predict(x))
     rmse = np.sqrt(np.average((prediction - y) ** 2))
     expected = 5.603702809509191
-    np.testing.assert_almost_equal(rmse, expected,decimal=4)
+    np.testing.assert_almost_equal(rmse, expected,decimal=2)
 
