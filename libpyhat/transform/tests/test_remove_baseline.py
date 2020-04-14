@@ -116,8 +116,8 @@ def test_FABC():
 def test_Polyfit():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
     methodParameters = {'poly_order': 5, 'num_stdv': 3.}
-    expected = [-2.499429e-02, -1.881946e-05,  1.618573e-02,  1.693631e-02, 1.613577e-02]
-    expected_baseline = [0.035173,  0.013075, -0.000488, -0.007153, -0.008396]
+    expected = [-2.500340e-02, -3.468003e-06,  1.620876e-02,  1.696360e-02, 1.616043e-02]
+    expected_baseline = [ 0.035183,  0.01306 , -0.000511, -0.00718 , -0.008421]
     br_caller(df,'Polyfit',methodParameters,expected,expected_baseline)
 
     # test ranges

@@ -1,6 +1,6 @@
 import numpy as np
 from libpyhat.transform.baseline_code.common import Baseline
-
+import numpy.polynomial.polynomial as poly
 
 def polyfit_baseline(bands, intensities, poly_order=5, num_stdv=3.,
                      max_iter=200):
@@ -11,10 +11,12 @@ def polyfit_baseline(bands, intensities, poly_order=5, num_stdv=3.,
     '''
     fit_pts = intensities.copy()
     # precalculate [x^p, x^p-1, ..., x^1, x^0]
-    poly_terms = bands[:, None] ** np.arange(poly_order, -1, -1)
+    poly_terms = bands[:, None] ** np.arange(poly_order+1)
     for _ in range(max_iter):
-        coefs = np.polyfit(bands, fit_pts.T, poly_order)
-        baseline = poly_terms.dot(coefs).T
+        baseline = np.zeros_like(intensities)
+        for i in range(fit_pts.shape[0]):
+            poly_temp = poly.Polynomial.fit(bands, fit_pts[i,:], poly_order)
+            baseline[i,:] = poly_temp(bands)
         diff = fit_pts - baseline
         thresh = diff.std(axis=-1) * num_stdv
         mask = diff > np.array(thresh, copy=False)[..., None]
