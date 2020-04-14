@@ -2,6 +2,8 @@ from libpyhat.transform import peak_area as pa
 import numpy as np
 import pandas as pd
 from libpyhat.examples import get_path
+np.random.seed(1)
+
 df = pd.read_csv(get_path('test_data.csv'),header=[0,1])
 df = df[df[('meta','LIBS ID')]=='LIB00041']
 
@@ -33,4 +35,3 @@ def test_peak_area_from_file():
     np.testing.assert_array_almost_equal(expected_peaks,peaks_result)
     np.testing.assert_array_almost_equal(expected_mins,mins_result)
     np.testing.assert_array_almost_equal(expected_areas, np.array(df_result['peak_area'])[0,:])
-

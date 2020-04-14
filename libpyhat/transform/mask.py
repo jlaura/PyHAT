@@ -18,9 +18,9 @@ def mask(df, maskfile, maskvar='wvl'):
     spectcols = list(df_spectra.columns)  # get the list of columns in the spectra dataframe
     for i, j in enumerate(masked):  # change the first level of the tuple from 'wvl' to 'masked' where appropriate
         if j == True:
-            spectcols[i] = ('masked', spectcols[i])
+            spectcols[i] = ('masked', float(spectcols[i]))
         else:
-            spectcols[i] = (maskvar, spectcols[i])
+            spectcols[i] = (maskvar, float(spectcols[i]))
     df_spectra.columns = pd.MultiIndex.from_tuples(
         spectcols)  # assign the multiindex columns based on the new tuples
     df = pd.concat([df_spectra, metadata], axis=1)  # merge the masked spectra back with the metadata

@@ -68,16 +68,14 @@ class no_transform:
         return C
 
 class ratio:
-    def __init__(self):
+    def derive_transform(self, A, B):
+        A_mean = np.mean(A, axis=0)
+        B_mean = np.mean(B, axis=0)
+        self.ratio_vect = B_mean / A_mean
 
-        def derive_transform(self, A, B):
-            A_mean = np.mean(A, axis=0)
-            B_mean = np.mean(B, axis=0)
-            self.ratio_vect = B_mean / A_mean
-
-        def apply_transform(self, C):
-            C_transformed = C.multiply(self.ratio_vect, axis=1)
-            return C_transformed
+    def apply_transform(self, C):
+        C_transformed = np.multiply(C,self.ratio_vect)
+        return C_transformed
 
 class piecewise_ds:
     def __init__(self, win_size=5, pls=False, nc=5):
@@ -121,9 +119,10 @@ class ds:
         self.fit_intercept = fit_intercept
 
     def get_working_data(self, data):
+        data = np.array(data,dtype=float)
+        if len(data.shape) == 1:
+            data = np.reshape(data, (1, data.shape[0]))
         if self.fit_intercept:
-            if len(data.shape) == 1:
-                data = np.reshape(data, (1, data.shape[0]))
             working = np.hstack((data, np.ones((data.shape[0], 1))))
         else:
             working = np.copy(data)
@@ -177,7 +176,7 @@ class admm_ds:
 
         AtA = np.dot(A.T, A)
         AtB = np.dot(A.T, B)
-        if self.reg is 'fused':
+        if self.reg == 'fused':
             I = np.identity(n - 1)
             pos = np.hstack((I, np.zeros((len(I), 1))))
             neg = -1 * np.roll(pos, 1, 1)
@@ -185,26 +184,27 @@ class admm_ds:
             P_fact = cho_factor(AtA + self.rho * np.dot(D.T, D))
         else:
             P_fact = cho_factor(AtA + self.rho * np.eye(n))
-        if self.reg is 'ridge':
+        if self.reg == 'ridge':
             Z_fact = cho_factor(2 * np.eye(n) + self.rho * np.eye(n))
 
         for it in range(self.max_iter):
             last_P = P
             last_Z = Z
-            if self.reg is 'fused':
+            if self.reg == 'fused':
                 Z = ct.soft_thresh(np.dot(D, P) + (Y / self.rho), self.beta / self.rho)
-            elif self.reg is 'rank':
+            elif self.reg == 'rank':
                 Z = ct.svt_thresh(P + (Y / self.rho), self.beta / self.rho)
-            elif self.reg is 'ridge':
+            elif self.reg == 'ridge':
                 Z = cho_solve(Z_fact, self.rho * P + Y)
-            elif self.reg is 'sp_lr':
+            elif self.reg == 'sp_lr':
                 Z = (ct.soft_thresh(P + (Y / self.rho), self.beta / self.rho) +
                      ct.svt_thresh(P + (Y / self.rho), self.beta / self.rho)) / 2.0
-            elif self.reg is 'lasso':
+            elif self.reg == 'lasso':
                 Z = ct.soft_thresh(P + (Y / self.rho), self.beta / self.rho)
             else:
+                self.proj_to_B = None
                 return 'ERROR: Regularizer not programmed.'
-            if self.reg is 'fused':
+            if self.reg == 'fused':
                 P = cho_solve(P_fact, AtB + self.rho * np.dot(D.T, Z) - np.dot(D.T, Y))
                 Y += self.rho * (np.dot(D, P) - Z)
             else:
@@ -214,7 +214,7 @@ class admm_ds:
             Z_conv = norm(Z - last_Z) / norm(Z)
             if self.verbose:
                 # num_zero = np.count_nonzero(P<=1e-9)
-                if self.reg is 'fused':
+                if self.reg == 'fused':
                     print(it, P_conv, Z_conv, norm(np.dot(D, P) - Z), np.count_nonzero(Z), sum(svdvals(Z)))
                     print("score: %.4f" % (norm(np.dot(D, P) - Z) + norm(A - B.dot(Z))))
                 else:
@@ -236,7 +236,7 @@ class admm_ds:
         return C_proj_to_B
 
 class cca:
-    def __init__(self, n_components=1, ccatype='new'):
+    def __init__(self, n_components=1, ccatype=None):
         self.n_components = n_components
         self.ccatype = ccatype
 
@@ -253,14 +253,13 @@ class cca:
             return self.model
 
     def apply_transform(self, C):
+        C = np.array(C)
         if self.ccatype == 'new':
             return C.dot(self.proj_to_B)
         else:
             if len(C.shape) == 1:
                 C = C.reshape(1, -1)
             return self.model.predict(C)
-
-        return C
 
 class ipd_ds:
     def __init__(self, t=.0002, svt=10, l1=10, epsilon=1e-5, max_iter=50, verbose=True):
