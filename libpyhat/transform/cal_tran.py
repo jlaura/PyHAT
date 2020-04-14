@@ -214,7 +214,7 @@ class admm_ds:
             Z_conv = norm(Z - last_Z) / norm(Z)
             if self.verbose:
                 # num_zero = np.count_nonzero(P<=1e-9)
-                if self.reg is 'fused':
+                if self.reg == 'fused':
                     print(it, P_conv, Z_conv, norm(np.dot(D, P) - Z), np.count_nonzero(Z), sum(svdvals(Z)))
                     print("score: %.4f" % (norm(np.dot(D, P) - Z) + norm(A - B.dot(Z))))
                 else:
