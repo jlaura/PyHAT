@@ -175,16 +175,3 @@ def test_KRR():
     expected = 5.603702809509191
     np.testing.assert_almost_equal(rmse, expected,decimal=4)
 
-
-test_KRR()
-test_PLS()
-test_ARD()
-test_badfit()
-test_Bayesian_Ridge()
-test_Elastic_Net()
-test_LARS()
-test_LASSO()
-test_OLS()
-test_OMP()
-test_Ridge()
-test_SVR()
