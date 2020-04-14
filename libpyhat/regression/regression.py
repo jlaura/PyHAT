@@ -71,7 +71,6 @@ class regression:
             self.model = linear.Lars(**params_temp)
 
         if self.method[i] == 'SVR':
-
             self.model = svm.SVR(**params[i])
 
         if self.method[i] == 'KRR':

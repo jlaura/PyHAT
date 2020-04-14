@@ -21,7 +21,6 @@ warnings.filterwarnings('ignore')
 import time
 import copy
 from sklearn.model_selection import LeaveOneGroupOut
-from PyQt5.QtGui import QGuiApplication
 
 def RMSE(ypred, y):
     return np.sqrt(np.mean((np.squeeze(ypred) - np.squeeze(y)) ** 2))
@@ -270,11 +269,7 @@ class cv:
             except:
                 output = output_tmp
 
-            try:
-                self.progress.setValue(i+1)
-                QGuiApplication.processEvents()
-            except:
-                pass
+
 
         #make the columns of the output data drame multi-indexed
         cols = output.columns.values
