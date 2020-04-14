@@ -4,6 +4,7 @@ from libpyhat.examples import get_path
 import libpyhat.regression.cv as cv
 from libpyhat.utils.folds import stratified_folds
 from sklearn.model_selection import ParameterGrid
+np.random.seed(1)
 
 
 

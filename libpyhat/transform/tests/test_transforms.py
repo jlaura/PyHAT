@@ -9,6 +9,8 @@ import libpyhat.transform.meancenter as meancenter
 import libpyhat.transform.multiply_vector as multiply_vector
 import libpyhat.transform.norm as norm
 import libpyhat.transform.shift_spect as shift_spect
+np.random.seed(1)
+
 
 def test_shift_spect():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
@@ -92,8 +94,7 @@ def test_dimred_LLE():
 
     params = {'n_components': 3,
               'n_neighbors': 10,
-              'reg': 1e-3,
-              'random_state': 1}
+              'reg': 1e-3}
     df, dimred_obj = dim_red.dim_red(df, 'wvl', 'LLE', [], params)
     expected_err = 2.0687806439705738e-05
     expected_scores = [0.11088153, 0.01215013, -0.03551393]
@@ -111,9 +112,7 @@ def test_dimred_tSNE():
         'n_iter': 1000,
         'n_iter_without_progress': 300,
         'perplexity': 30,
-        'init': 'pca',
-        'random_state': 1
-    }
+        'init': 'pca'}
     df, dimred_obj = dim_red.dim_red(df, 'wvl', 't-SNE', [], params)
     expected_div = 0.38829776644706726
     expected_scores = [9938.469727, -802.161682]
@@ -125,9 +124,9 @@ def test_dimred_tSNE():
 def test_dimred_FastICA():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
 
-    params = {'n_components': 3, 'random_state': 1}
+    params = {'n_components': 3, 'random_state':1}
     df, dimred_obj = dim_red.dim_red(df, 'wvl', 'FastICA', [], params)
-    expected_comps = [-2.19027827e-05, 1.49810111e-06, 9.08288704e-07]
+    expected_comps = [-2.190278e-05,  1.498101e-06,  9.082887e-07]
     expected_scores = [0.03252833, -0.03749623, -0.11434307]
 
     assert df['FastICA'].shape == (103, 3)

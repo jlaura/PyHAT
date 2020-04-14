@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 from libpyhat.examples import get_path
 import libpyhat.regression.local_regression as local_regression
+np.random.seed(1)
+
 
 df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
 def test_local_regression():

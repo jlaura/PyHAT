@@ -3,6 +3,8 @@ import pandas as pd
 from libpyhat.examples import get_path
 import libpyhat.regression.sm as sm
 import libpyhat.regression.regression as reg
+np.random.seed(1)
+
 
 def test_sm_blend():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])

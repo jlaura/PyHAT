@@ -71,6 +71,7 @@ class regression:
             self.model = linear.Lars(**params_temp)
 
         if self.method[i] == 'SVR':
+
             self.model = svm.SVR(**params[i])
 
         if self.method[i] == 'KRR':
@@ -81,10 +82,11 @@ class regression:
         try:
             self.model.fit(x, y)
             self.goodfit = True
-        except:
+        except Exception as e:
             self.goodfit = False
             print('Model failed to train!')
             traceback.print_stack()
+            print(e)
 
 
     def predict(self, x, i=0):

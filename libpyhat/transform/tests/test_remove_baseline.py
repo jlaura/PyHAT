@@ -1,24 +1,27 @@
 import numpy as np
 import pandas as pd
 from libpyhat.examples import get_path
+from libpyhat.transform.norm import norm
 from libpyhat.transform.remove_baseline import remove_baseline
 from libpyhat.transform.baseline_code import airpls, als, dietrich,polyfit, kajfosz_kwiatek, median, fabc, rubberband, common
+np.random.seed(1)
 
 def br_caller(df, method, params, expected, expected_baseline):
+    df = norm(df,[[580,600]])
     result, result_baseline = remove_baseline(df, method, params=params)
-    np.testing.assert_allclose(expected,np.array(result['wvl'].iloc[5,0:5]), rtol=1e-4)
-    np.testing.assert_allclose(expected_baseline,np.array(result_baseline['wvl'].iloc[5,0:5]), rtol=1e-4)
+    np.testing.assert_array_almost_equal(expected,np.array(result['wvl'].iloc[5,0:5]))
+    np.testing.assert_array_almost_equal(expected_baseline,np.array(result_baseline['wvl'].iloc[5,0:5]))
 
 def test_min_interp():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
     methodParameters = {'window':10,'kind':'cubic'}
-    expected = [0.00000000e+00, 1.04801898e+03, 1.60660800e+03, 7.45393017e+02, 3.41060513e-13]
-    expected_baseline = [1210.06, 504.04102404, 259.45200478, 417.66698313, 920.06]
+    expected = [0.000000e+00, 8.816021e-03, 1.351492e-02, 6.270307e-03, -2.602085e-18]
+    expected_baseline = [0.010179, 0.00424 , 0.002183, 0.003513, 0.00774 ]
     br_caller(df, 'Min + Interpolate', methodParameters, expected, expected_baseline)
 
     #test case where the window is too big
     methodParameters = {'window': 1000, 'kind': 'cubic'}
-    expected = [0.00000000e+00, 1.04801898e+03, 1.60660800e+03, 7.45393017e+02, 3.41060513e-13]
+    expected = [0.010179, 0.013056, 0.015697, 0.009784, 0.00774 ]
     expected_baseline = [0, 0, 0, 0, 0]
     br_caller(df, 'Min + Interpolate', methodParameters, expected, expected_baseline)
 
@@ -28,27 +31,27 @@ def test_wavelet_spline():
 
     #test case where levelmin is too big
     methodParameters = {'level': 6, 'levelmin': 5}
-    expected = [1210.06, 1552.06, 1866.06, 1163.06,  920.06]
+    expected = [0.010179, 0.013056, 0.015697, 0.009784, 0.00774]
     expected_baseline = [0., 0., 0., 0., 0.]
     br_caller(df,'Wavelet a Trous + Spline',methodParameters,expected, expected_baseline)
 
     methodParameters = {'level': 6, 'levelmin': 2}
-    expected = [0., 463.585425, 863.017414, 214.440695, 0.]
-    expected_baseline = [1210.06, 1088.474575, 1003.042586, 948.619305, 920.06]
+    expected = [0., 0.0039, 0.00726, 0.001804, 0.]
+    expected_baseline = [0.010179, 0.009156, 0.008438, 0.00798, 0.00774]
     br_caller(df, 'Wavelet a Trous + Spline', methodParameters, expected, expected_baseline)
 
 def test_Rubberband():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
     methodParameters = {'num_iters': 8, 'num_ranges': 4}
-    expected = [0., 299.089331, 620.12025, -25.907243, -161.993146]
-    expected_baseline = [1210.06, 1252.970669, 1245.93975, 1188.967243, 1082.053146]
+    expected = [0.,  0.002516,  0.005217, -0.000218, -0.001363]
+    expected_baseline = [0.010179, 0.01054 , 0.010481, 0.010002, 0.009102]
     br_caller(df,'Rubberband',methodParameters,expected,expected_baseline)
 
     #test no iterations
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
     methodParameters = {'num_iters': 0, 'num_ranges': 4}
-    expected = [0., 414.5, 801., 170.5, 0.]
-    expected_baseline = [1210.06, 1137.56, 1065.06, 992.56, 920.06]
+    expected = [0., 0.003487, 0.006738, 0.001434, 0.]
+    expected_baseline = [0.010179, 0.009569, 0.008959, 0.008349, 0.00774]
     br_caller(df, 'Rubberband', methodParameters, expected, expected_baseline)
 
     # test ranges
@@ -60,8 +63,8 @@ def test_Rubberband():
 def test_median():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
     methodParameters = {'window_size': 30}
-    expected = [290., 567., 848., 134., -171.]
-    expected_baseline = [920.06, 985.06, 1018.06, 1029.06, 1091.06]
+    expected = [ 0.00244 ,  0.00477 ,  0.007133,  0.001127, -0.001438]
+    expected_baseline = [0.00774 , 0.008286, 0.008564, 0.008657, 0.009178]
     br_caller(df,'Median',methodParameters,expected,expected_baseline)
 
     # test ranges
@@ -79,15 +82,15 @@ def test_KK():
     #test case using top and bottom widths and tangent
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
     methodParameters = {'top_width': 10, 'bottom_width': 50, 'exponent': 2, 'tangent': True}
-    expected = [-14256.0221, -13917.137851, -13606.003676, -14311.619575, -14556.985549]
-    expected_baseline = [15466.0821, 15469.197851, 15472.063676, 15474.679575, 15477.045549]
+    expected = [-0.119923, -0.117072, -0.114455, -0.120391, -0.122455]
+    expected_baseline = [0.130102, 0.130128, 0.130152, 0.130174, 0.130194]
     br_caller(df,'KK',methodParameters,expected,expected_baseline)
 
     #test using just bottom width
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
     methodParameters = {'top_width': 0, 'bottom_width': 50, 'exponent': 2, 'tangent': False}
-    expected = [289.0003, 630.8753, 945.0003, 242.3752, 0.]
-    expected_baseline = [921.059702, 921.184664, 921.059702, 920.684814, 920.06]
+    expected = [0.002431, 0.005307, 0.007949, 0.002039, 0.]
+    expected_baseline = [0.007748, 0.007749, 0.007748, 0.007745, 0.00774 ]
     br_caller(df,'KK',methodParameters,expected,expected_baseline)
 
     # test ranges
@@ -100,8 +103,8 @@ def test_KK():
 def test_FABC():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
     methodParameters = {'dilation_param': 50, 'smoothness_param': 1e3}
-    expected = [-1549.471938, -1209.02141, -897.779904, -1604.436177, -1852.696886]
-    expected_baseline = [2759.531938, 2761.08141, 2763.839904, 2767.496177, 2772.756886]
+    expected = [-0.013034, -0.01017 , -0.007552, -0.013497, -0.015585]
+    expected_baseline = [0.023213, 0.023226, 0.02325 , 0.02328 , 0.023325]
     br_caller(df,'FABC',methodParameters,expected,expected_baseline)
 
     # test ranges
@@ -113,8 +116,8 @@ def test_FABC():
 def test_Polyfit():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
     methodParameters = {'poly_order': 5, 'num_stdv': 3.}
-    expected = [-2.9726e+03, -9.4000e-01,  1.9258e+03,  2.0166e+03,  1.9223e+03]
-    expected_baseline = [ 4182.625, 1553., -59.75, -853.5, -1002.25]
+    expected = [-2.499429e-02, -1.881946e-05,  1.618573e-02,  1.693631e-02, 1.613577e-02]
+    expected_baseline = [0.035173,  0.013075, -0.000488, -0.007153, -0.008396]
     br_caller(df,'Polyfit',methodParameters,expected,expected_baseline)
 
     # test ranges
@@ -127,8 +130,9 @@ def test_Dietrich():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
     methodParameters = {'half_window': 10,
                         'num_erosions': 2}
-    expected = [0., 355.294155, 682.58831, -7.117535, -236.82338 ]
-    expected_baseline = [1210.06, 1196.765845, 1183.47169, 1170.177535, 1156.88338 ]
+    expected = [ 0.000000e+00,  2.988763e-03,  5.741989e-03, -5.987328e-05,
+       -1.992178e-03]
+    expected_baseline = [0.010179, 0.010067, 0.009955, 0.009844, 0.009732]
     br_caller(df,'Dietrich',methodParameters,expected,expected_baseline)
 
     #test ranges
@@ -143,8 +147,8 @@ def test_AirPLS():
                         'conv_thresh': 0.01,
                         'max_iters': 5,
                         'verbose':True}
-    expected = [168.813415, 512.518371, 828.223327, 126.928282, -113.037659]
-    expected_baseline = [1041.246585, 1039.541629, 1037.836673, 1036.131718, 1033.097659]
+    expected = [ 0.00142 ,  0.004311,  0.006967,  0.001068, -0.000951]
+    expected_baseline = [0.008759, 0.008745, 0.00873 , 0.008716, 0.008691]
     br_caller(df,'AirPLS',methodParameters,expected,expected_baseline)
 
     # test ranges
@@ -160,8 +164,8 @@ def test_ALS():
                         'max_iters': 10,
                         'conv_thresh': 1e-5,
                         'verbose':True}
-    expected = [-151.880266, 200.842386, 525.565183, -166.711742, -398.988281]
-    expected_baseline = [1361.940266, 1351.217614, 1340.494817, 1329.771742, 1319.048281]
+    expected = [-0.001278,  0.00169 ,  0.004421, -0.001402, -0.003356]
+    expected_baseline = [0.011457, 0.011367, 0.011276, 0.011186, 0.011096]
     br_caller(df,'ALS',methodParameters,expected,expected_baseline)
 
     #test ranges
@@ -199,3 +203,5 @@ def test_common():
     result = [i for i in common._segment(wvls, np.array(df['wvl']))]
     assert result[0][0][0] == 585.149
     assert result[1][0][0] == 599.644
+
+

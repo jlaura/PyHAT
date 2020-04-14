@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from libpyhat.examples import get_path
 from libpyhat.regression.regression import regression
+np.random.seed(1)
 
 df = pd.read_csv(get_path('test_data.csv'),header=[0,1])
 x = df['wvl']
