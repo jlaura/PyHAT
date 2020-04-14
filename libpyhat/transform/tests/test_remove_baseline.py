@@ -203,6 +203,6 @@ def test_common():
     result = [i for i in common._segment(wvls, np.array(df['wvl']))]
     assert result[0][0][0] == 585.149
     assert result[1][0][0] == 599.644
-    
+
 
 

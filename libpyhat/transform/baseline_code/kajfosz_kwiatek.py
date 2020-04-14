@@ -119,22 +119,22 @@ def _kk_lookup_table(spectrum, width, exponent, slope, ref_ampl):
 
 class KajfoszKwiatek(Baseline):
     def __init__(self, top_width=0, bottom_width=50, exponent=2, tangent=False):
-        self.top_width_ = top_width
-        self.bottom_width_ = bottom_width
-        self.exponent_ = exponent
-        self.tangent_ = tangent
+        self.top_width = top_width
+        self.bottom_width = bottom_width
+        self.exponent = exponent
+        self.tangent = tangent
 
     def _fit_one(self, bands, intensities):
-        if self.bottom_width_>0:
-            return kajfosz_kwiatek_baseline(bands, intensities, self.top_width_,
-                                        self.bottom_width_, self.exponent_,
-                                        self.tangent_)
+        if self.bottom_width>0:
+            return kajfosz_kwiatek_baseline(bands, intensities, self.top_width,
+                                        self.bottom_width, self.exponent,
+                                        self.tangent)
         else:
             print('Bottom width must be >0')
             return
 
     def param_ranges(self):
         return {
-            'top_width_': (0, 100, 'integer'),
-            'bottom_width_': (0, 100, 'integer')
+            'top_width': (0, 100, 'integer'),
+            'bottom_width': (0, 100, 'integer')
         }

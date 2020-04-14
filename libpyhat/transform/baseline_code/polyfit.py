@@ -31,16 +31,16 @@ def polyfit_baseline(bands, intensities, poly_order=5, num_stdv=3.,
 
 class PolyFit(Baseline):
     def __init__(self, poly_order=5, num_stdv=3.):
-        self.poly_order_ = poly_order
-        self.stdv_ = num_stdv
+        self.poly_order = poly_order
+        self.num_stdv = num_stdv
 
     def _fit_many(self, bands, intensities):
         return polyfit_baseline(bands, intensities,
-                                poly_order=self.poly_order_,
-                                num_stdv=self.stdv_)
+                                poly_order=self.poly_order,
+                                num_stdv=self.num_stdv)
 
     def param_ranges(self):
         return {
-            'poly_order_': (1, 12, 'integer'),
-            'stdv_': (1, 5, 'linear')
+            'poly_order': (1, 12, 'integer'),
+            'stdv': (1, 5, 'linear')
         }

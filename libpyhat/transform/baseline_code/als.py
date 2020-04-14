@@ -34,18 +34,18 @@ def als_baseline(intensities, asymmetry_param=0.05, smoothness_param=1e6,
 class ALS(Baseline):
     def __init__(self, asymmetry_param=0.05, smoothness_param=1e6, max_iters=10,
                  conv_thresh=1e-5, verbose=False):
-        self.asymmetry_ = asymmetry_param
-        self.smoothness_ = smoothness_param
-        self.max_iters_ = max_iters
-        self.conv_thresh_ = conv_thresh
-        self.verbose_ = verbose
+        self.asymmetry_param = asymmetry_param
+        self.smoothness_param = smoothness_param
+        self.max_iters = max_iters
+        self.conv_thresh = conv_thresh
+        self.verbose = verbose
 
     def _fit_one(self, bands, intensities):
-        return als_baseline(intensities, self.asymmetry_, self.smoothness_,
-                            self.max_iters_, self.conv_thresh_, self.verbose_)
+        return als_baseline(intensities, self.asymmetry_param, self.smoothness_param,
+                            self.max_iters, self.conv_thresh, self.verbose)
 
     def param_ranges(self):
         return {
-            'asymmetry_': (1e-3, 1e-1, 'log'),
-            'smoothness_': (1e2, 1e8, 'log')
+            'asymmetry_param': (1e-3, 1e-1, 'log'),
+            'smoothness_param': (1e2, 1e8, 'log')
         }
