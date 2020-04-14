@@ -114,7 +114,7 @@ def test_Polyfit():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
     methodParameters = {'poly_order': 5, 'num_stdv': 3.}
     expected = [-2.9726e+03, -9.4000e-01,  1.9258e+03,  2.0166e+03,  1.9223e+03]
-    expected_baseline = [4178.375, 1551., -61.75, -853.125, -1000.]
+    expected_baseline = [ 4182.625, 1553., -59.75, -853.5, -1002.25]
     br_caller(df,'Polyfit',methodParameters,expected,expected_baseline)
 
     # test ranges

@@ -99,7 +99,7 @@ def test_rank():
     result = ct.apply_transform(data1['wvl'])
     expected = [2983729459.6655235, 58395418330.43097, 53338740816.48527, 44792462932.167305, 9963178402.018112,
                 35001553532.792885, 32994432752.733253]
-    np.testing.assert_allclose(np.array(result)[:, 4], expected)
+    np.testing.assert_allclose(np.array(result,dtype=float)[:, 4], expected)
 
 def test_ridge():
     params = {'method': 'Ridge DS', 'reg': 'ridge'}
@@ -119,7 +119,7 @@ def test_cca():
     cal_tran_helper(data1, data2, params, expected)
 
     params = {'method': 'CCA - Canonical Correlation Analysis'}
-    expected = [92044557972.7028]
+    expected = [2.993871e+10]
     cal_tran_helper(data1, data2, params, expected, single_spect=True)
 
 def test_cca_new():
