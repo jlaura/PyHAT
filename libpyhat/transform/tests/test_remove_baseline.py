@@ -55,8 +55,8 @@ def test_Rubberband():
     br_caller(df, 'Rubberband', methodParameters, expected, expected_baseline)
 
     # test ranges
-    expected_ranges = {'num_ranges_': (1, 100, 'integer'),
-                       'num_iters_': (0, 36, 'integer')}
+    expected_ranges = {'num_ranges': (1, 100, 'integer'),
+                       'num_iters': (0, 36, 'integer')}
     br_obj = rubberband.Rubberband()
     assert br_obj.param_ranges() == expected_ranges
 
@@ -68,7 +68,7 @@ def test_median():
     br_caller(df,'Median',methodParameters,expected,expected_baseline)
 
     # test ranges
-    expected_ranges = {'window_': (201, 901, 'integer')}
+    expected_ranges = {'window_size': (201, 901, 'integer')}
     br_obj = median.MedianFilter()
     assert br_obj.param_ranges() == expected_ranges
 
@@ -94,8 +94,8 @@ def test_KK():
     br_caller(df,'KK',methodParameters,expected,expected_baseline)
 
     # test ranges
-    expected_ranges = {'top_width_': (0, 100, 'integer'),
-                       'bottom_width_': (0, 100, 'integer')}
+    expected_ranges = {'top_width': (0, 100, 'integer'),
+                       'bottom_width': (0, 100, 'integer')}
     br_obj = kajfosz_kwiatek.KajfoszKwiatek()
     assert br_obj.param_ranges() == expected_ranges
 
@@ -108,8 +108,8 @@ def test_FABC():
     br_caller(df,'FABC',methodParameters,expected,expected_baseline)
 
     # test ranges
-    expected_ranges = {'dilation_': (1, 100, 'integer'),
-                       'smoothness_': (1, 1e6, 'log')}
+    expected_ranges = {'dilation_param': (1, 100, 'integer'),
+                       'smoothness_param': (1, 1e6, 'log')}
     br_obj = fabc.FABC()
     assert br_obj.param_ranges() == expected_ranges
 
@@ -121,8 +121,8 @@ def test_Polyfit():
     br_caller(df,'Polyfit',methodParameters,expected,expected_baseline)
 
     # test ranges
-    expected_ranges = {'poly_order_': (1, 12, 'integer'),
-                       'stdv_': (1, 5, 'linear')}
+    expected_ranges = {'poly_order': (1, 12, 'integer'),
+                       'num_stdv': (1, 5, 'linear')}
     br_obj = polyfit.PolyFit()
     assert br_obj.param_ranges() == expected_ranges
 
@@ -136,8 +136,8 @@ def test_Dietrich():
     br_caller(df,'Dietrich',methodParameters,expected,expected_baseline)
 
     #test ranges
-    expected_ranges = {'half_window_': (1, 100, 'integer'),
-                       'num_erosions_': (1, 20, 'integer')}
+    expected_ranges = {'half_window': (1, 100, 'integer'),
+                       'num_erosions': (1, 20, 'integer')}
     br_obj = dietrich.Dietrich()
     assert br_obj.param_ranges() == expected_ranges
 
@@ -152,7 +152,7 @@ def test_AirPLS():
     br_caller(df,'AirPLS',methodParameters,expected,expected_baseline)
 
     # test ranges
-    expected_ranges = {'smoothness_': (1, 1e4, 'log')}
+    expected_ranges = {'smoothness_param': (1, 1e4, 'log')}
 
     br_obj=airpls.AirPLS()
     assert br_obj.param_ranges()==expected_ranges
@@ -169,8 +169,8 @@ def test_ALS():
     br_caller(df,'ALS',methodParameters,expected,expected_baseline)
 
     #test ranges
-    expected_ranges = {'asymmetry_': (1e-3, 1e-1, 'log'),
-                       'smoothness_': (1e2, 1e8, 'log')}
+    expected_ranges = {'asymmetry_param': (1e-3, 1e-1, 'log'),
+                       'smoothness_param': (1e2, 1e8, 'log')}
     br_obj = als.ALS()
     assert br_obj.param_ranges() == expected_ranges
 

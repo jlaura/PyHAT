@@ -42,5 +42,5 @@ class PolyFit(Baseline):
     def param_ranges(self):
         return {
             'poly_order': (1, 12, 'integer'),
-            'stdv': (1, 5, 'linear')
+            'num_stdv': (1, 5, 'linear')
         }
