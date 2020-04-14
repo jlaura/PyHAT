@@ -1,10 +1,12 @@
 import numpy as np
 import pandas as pd
 from libpyhat.examples import get_path
+from libpyhat.transform.norm import norm
 from libpyhat.regression.regression import regression
 np.random.seed(1)
 
 df = pd.read_csv(get_path('test_data.csv'),header=[0,1])
+df = norm(df,[[580,600]])
 x = df['wvl']
 y = df[('comp','SiO2')]
 
@@ -14,15 +16,15 @@ def test_PLS():
     regress.fit(x, y)
     prediction = np.squeeze(regress.predict(x))
     rmse = np.sqrt(np.average((prediction - y) ** 2))
-    expected = 13.801824573081946
+    expected = 9.568890617713505
     np.testing.assert_almost_equal(rmse, expected)
 
     regress.calc_Qres_Lev(x)
-    Qres_expected = [2.35103099e+08, 2.36647676e+08, 2.35449237e+08, 2.36345327e+08, 2.33488060e+08, 2.36975197e+08,
-                     2.35345188e+08, 2.35190537e+08, 2.35189934e+08, 2.32935818e+08]
-    np.testing.assert_array_almost_equal(regress.Q_res[0:10], Qres_expected, decimal=0)
-    leverage_expected = [0.01854551, 0.04063431, 0.02558205, 0.10486388, 0.03121949, 0.0393575, 0.0084857, 0.01386892,
-                         0.01066457, 0.06845841]
+    Qres_expected = [0.04055878, 0.04188589, 0.04159104, 0.04374264, 0.04080776, 0.04072383, 0.04057845, 0.04053754,
+                     0.04056575, 0.04077855]
+    np.testing.assert_array_almost_equal(regress.Q_res[0:10], Qres_expected)
+    leverage_expected = [0.01225164, 0.01219529, 0.01431885, 0.03043435, 0.05013193, 0.01418457, 0.01055998, 0.00554777,
+                         0.00891671, 0.00912439]
     np.testing.assert_array_almost_equal(regress.leverage[0:10], leverage_expected)
 
 
@@ -38,7 +40,7 @@ def test_OLS():
     regress.fit(x, y)
     prediction = np.squeeze(regress.predict(x))
     rmse = np.sqrt(np.average((prediction - y) ** 2))
-    expected = 6.935420148428834
+    expected = 5.604104598379565
     np.testing.assert_almost_equal(rmse, expected)
 
 
@@ -47,7 +49,7 @@ def test_OMP():
     regress.fit(x, y)
     prediction = np.squeeze(regress.predict(x))
     rmse = np.sqrt(np.average((prediction - y) ** 2))
-    expected = 10.560905826959745
+    expected = 9.835802028648189
     np.testing.assert_almost_equal(rmse, expected)
 
 def test_LASSO():
@@ -58,7 +60,7 @@ def test_LASSO():
     regress.fit(x, y)
     prediction = np.squeeze(regress.predict(x))
     rmse = np.sqrt(np.average((prediction - y) ** 2))
-    expected = 7.027314035067699
+    expected = 22.815757879917708
     np.testing.assert_almost_equal(rmse, expected)
 
 
@@ -71,7 +73,7 @@ def test_Elastic_Net():
     regress.fit(x, y)
     prediction = np.squeeze(regress.predict(x))
     rmse = np.sqrt(np.average((prediction - y) ** 2))
-    expected = 7.019810621596676
+    expected = 22.800420060822468
     np.testing.assert_almost_equal(rmse, expected)
 
 
@@ -83,7 +85,7 @@ def test_Ridge():
     regress.fit(x, y)
     prediction = np.squeeze(regress.predict(x))
     rmse = np.sqrt(np.average((prediction - y) ** 2))
-    expected = 6.935420151711957
+    expected = 19.29172384871638
     np.testing.assert_almost_equal(rmse, expected)
 
 def test_Bayesian_Ridge():
@@ -100,7 +102,7 @@ def test_Bayesian_Ridge():
     regress.fit(x, y)
     prediction = np.squeeze(regress.predict(x))
     rmse = np.sqrt(np.average((prediction - y) ** 2))
-    expected = 7.843189715819001
+    expected = 6.3894201026386135
     np.testing.assert_almost_equal(rmse, expected)
 
 
@@ -121,7 +123,7 @@ def test_ARD():
     regress.fit(x, y)
     prediction = np.squeeze(regress.predict(x))
     rmse = np.sqrt(np.average((prediction - y) ** 2))
-    expected = 7.981886512289962
+    expected = 6.714452573751844
     np.testing.assert_almost_equal(rmse, expected)
 
 
@@ -137,7 +139,7 @@ def test_LARS():
     regress.fit(x, y)
     prediction = np.squeeze(regress.predict(x))
     rmse = np.sqrt(np.average((prediction - y) ** 2))
-    expected = 15.605082215087926
+    expected = 21.952591101815294
     np.testing.assert_almost_equal(rmse, expected)
 
 
@@ -155,7 +157,7 @@ def test_SVR():
     regress.fit(x, y)
     prediction = np.squeeze(regress.predict(x))
     rmse = np.sqrt(np.average((prediction - y) ** 2))
-    expected = 23.05563865877408
+    expected = 23.740048198035947
     np.testing.assert_almost_equal(rmse, expected)
 
 
@@ -170,7 +172,19 @@ def test_KRR():
     regress.fit(x, y)
     prediction = np.squeeze(regress.predict(x))
     rmse = np.sqrt(np.average((prediction - y) ** 2))
-    expected = 10.085015520714528
+    expected = 5.603702809509191
     np.testing.assert_almost_equal(rmse, expected,decimal=4)
 
 
+test_KRR()
+test_PLS()
+test_ARD()
+test_badfit()
+test_Bayesian_Ridge()
+test_Elastic_Net()
+test_LARS()
+test_LASSO()
+test_OLS()
+test_OMP()
+test_Ridge()
+test_SVR()
