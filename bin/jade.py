@@ -5,6 +5,7 @@
 #
 # Copyright 2005, Jean-Francois Cardoso (Original MATLAB code)
 # Copyright 2007, Gabriel J.L. Beckers (NumPy translation)
+# http://gbeckers.nl/pages/numpy_scripts/jadeR.py
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -69,7 +70,7 @@ def jadeR(X, m=None, verbose=True):
     at the end of the source file.
 
     Translated into NumPy from the original Matlab Version 1.8 (May 2005) by
-    Gabriel Beckers, http://gbeckers.nl .
+    Gabriel Beckers, http://gbeckers.nl/pages/numpy_scripts/jadeR.py
 
     Parameters:
 
