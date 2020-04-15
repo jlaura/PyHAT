@@ -280,7 +280,7 @@ def enumerate_duplicates(df, col):
     rows = np.array(rows)
     rows_list = list(rows)
     for i in unique_rows:
-        if i is not '-':
+        if i != '-':
             matchindex = np.where(rows == i)[0]
 
             if len(matchindex) > 1:

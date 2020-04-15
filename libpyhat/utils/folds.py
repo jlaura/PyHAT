@@ -4,17 +4,16 @@ from sklearn import model_selection
 #This function assigns spectra to folds randomly, but keeps spectra with the same value in a user-defined column together.
 #This ensures that multiple spectra of the same target end up in the same fold
 
-def random(df, nfolds=5, seed=10):
-    df['Folds'] = 'None'  # Create an entry in the data frame that holds the folds
-    foldslist = np.array(df['Folds'])
-    n = len(df.index)
-    folds = model_selection.KFold(n_splits=nfolds, shuffle=True, random_state=seed)
+def random(df, col, nfolds=5, seed=10):
+    df[('meta','Folds')] = 'None'  # Create an entry in the data frame that holds the folds
+    foldslist = np.array(df[('meta','Folds')])
+    folds = model_selection.GroupKFold(n_splits=nfolds)
     i = 1
-    for train, test in folds:
-        foldslist[test] = 'Fold' + str(i)
+    for train, test in folds.split(df,groups=df[col]):
+        foldslist[test] = i
         i = i + 1
 
-    df['Folds'] = foldslist
+    df[('meta','Folds')] = foldslist
     return df
 
 # This function divides the data up into a specified number of folds, using sorting

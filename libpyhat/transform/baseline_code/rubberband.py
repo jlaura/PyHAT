@@ -4,17 +4,22 @@ from scipy.spatial import ConvexHull
 
 
 def rubberband_baseline(bands, intensities, num_iters=8, num_ranges=64):
-    '''Bruker OPUS method. If num_iters=0, uses basic method from OPUS.'''
+    '''Bruker OPUS method. If num_iters=0, uses basic method from OPUS.
+    Method detailed in Pirzer et al., 2008 US Patent No. US7359815B2'''
     y = intensities.copy()
-    for _ in range(num_iters):
-        yrange = y.max() - y.min()
-        x_center = (bands[-1] - bands[0]) / 2.
-        tmp = (bands - x_center) ** 2
-        y += yrange / 10. * tmp / tmp[-1]
-    baseline = _rubberband(bands, y, num_ranges)
-    # undo the n steps of convex function addition
-    baseline -= (y - intensities)
-    return baseline
+    if num_iters > 0:
+        for _ in range(num_iters):
+            yrange = y.max() - y.min()
+            x_center = bands[0]+(bands[-1] - bands[0]) / 2.
+            tmp = (bands - x_center) ** 2
+            y += yrange / 10. * tmp / tmp[-1]
+            baseline = _rubberband(bands, y, num_ranges)
+            y = y - baseline
+        final_baseline = intensities - y
+    else:
+        final_baseline = _rubberband(bands, y, num_ranges)
+
+    return final_baseline
 
 
 def _rubberband(bands, intensities, num_ranges):
@@ -51,15 +56,15 @@ def _rubberband(bands, intensities, num_ranges):
 
 class Rubberband(Baseline):
     def __init__(self, num_iters=8, num_ranges=64):
-        self.num_iters_ = num_iters
-        self.num_ranges_ = num_ranges
+        self.num_iters = num_iters
+        self.num_ranges = num_ranges
 
     def _fit_one(self, bands, intensities):
-        return rubberband_baseline(bands, intensities, num_iters=self.num_iters_,
-                                   num_ranges=self.num_ranges_)
+        return rubberband_baseline(bands, intensities, num_iters=self.num_iters,
+                                   num_ranges=self.num_ranges)
 
     def param_ranges(self):
         return {
-            'num_ranges_': (1, 100, 'integer'),
-            'num_iters_': (0, 36, 'integer')
+            'num_ranges': (1, 100, 'integer'),
+            'num_iters': (0, 36, 'integer')
         }

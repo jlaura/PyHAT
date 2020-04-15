@@ -43,16 +43,16 @@ def dietrich_baseline(bands, intensities, half_window=16, num_erosions=10):
 
 class Dietrich(Baseline):
     def __init__(self, half_window=16, num_erosions=10):
-        self.half_window_ = half_window
-        self.num_erosions_ = num_erosions
+        self.half_window = half_window
+        self.num_erosions = num_erosions
 
     def _fit_many(self, bands, intensities):
         return dietrich_baseline(bands, intensities,
-                                 half_window=self.half_window_,
-                                 num_erosions=self.num_erosions_)
+                                 half_window=self.half_window,
+                                 num_erosions=self.num_erosions)
 
     def param_ranges(self):
         return {
-            'half_window_': (1, 100, 'integer'),
-            'num_erosions_': (1, 20, 'integer')
+            'half_window': (1, 100, 'integer'),
+            'num_erosions': (1, 20, 'integer')
         }

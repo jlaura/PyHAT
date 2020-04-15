@@ -5,20 +5,18 @@ import numpy as np
 import pandas as pd
 
 def peak_area(df, peaks_mins_file=None):
-    wvls = df['wvl'].columns.values  # get the wavelengths
+    wvls = np.array(df['wvl'].columns.values,dtype=float)  # get the wavelengths
 
     if peaks_mins_file is not None:
         peaks_mins = pd.read_csv(peaks_mins_file, sep=',')
-        peaks = peaks_mins['peaks']
-        mins = peaks_mins['mins']
+        peaks = np.array(peaks_mins[peaks_mins['type']=='peak']['wvl'],dtype='float')
+        mins = np.array(peaks_mins[peaks_mins['type']=='min']['wvl'],dtype='float')
         pass
     else:
         ave_spect = np.average(np.array(df['wvl']), axis=0)  # find the average of the spectra in the data frame
         peaks = wvls[
-            sp.signal.argrelextrema(ave_spect, np.greater_equal)[0]]  # find the maxima in the average spectrum
-        mins = wvls[sp.signal.argrelextrema(ave_spect, np.less_equal)[0]]  # find the maxima in the average spectrum
-
-    wvls = df['wvl'].columns.values  # get the wavelengths
+            sp.signal.argrelextrema(ave_spect, np.greater)[0]]  # find the maxima in the average spectrum
+        mins = wvls[sp.signal.argrelextrema(ave_spect, np.less)[0]]  # find the maxima in the average spectrum
 
     spectra = np.array(df['wvl'])
     for i in range(len(peaks)):
@@ -35,9 +33,7 @@ def peak_area(df, peaks_mins_file=None):
             high = mins[-1]
 
         peak_indices = np.all((wvls >= low, wvls < high), axis=0)
-        # plot.plot(wvls,ave_spect)
-        # plot.plot(wvls[peak_indices],ave_spect[peak_indices])
-        # plot.show()
+
         df[('peak_area', peaks[i])] = spectra[:, peak_indices].sum(axis=1)
 
     return df, peaks, mins

@@ -18,10 +18,10 @@ def median_baseline(intensities, window_size=501):
 
 class MedianFilter(Baseline):
     def __init__(self, window_size=501):
-        self.window_ = window_size
+        self.window_size = window_size
 
     def _fit_many(self, bands, intensities):
-        return median_baseline(intensities, window_size=self.window_)
+        return median_baseline(intensities, window_size=self.window_size)
 
     def param_ranges(self):
-        return {'window_': (201, 901, 'integer')}
+        return {'window_size': (201, 901, 'integer')}

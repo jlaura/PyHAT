@@ -19,5 +19,6 @@ def meancenter(df, col, previous_mean=None):
         df[col] = df[col].sub(mean_vect.values, axis=1)
     else:
         print("Can't mean center! Wavelengths don't match!")
+        return 0
 
     return df, mean_vect
