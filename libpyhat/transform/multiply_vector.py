@@ -10,4 +10,5 @@ def multiply_vector(df, vectorfile):
         df['wvl'] = df_spectra.multiply(vector, axis=1)
     else:
         print('Vector is not the same size as the spectra!')
+        return 0
     return df

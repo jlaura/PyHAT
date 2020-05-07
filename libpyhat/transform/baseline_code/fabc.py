@@ -19,14 +19,14 @@ def fabc_baseline(intensities, dilation_param=50, smoothness_param=1e3):
 
 class FABC(Baseline):
     def __init__(self, dilation_param=50, smoothness_param=1e3):
-        self.dilation_ = dilation_param
-        self.smoothness_ = smoothness_param
+        self.dilation_param = dilation_param
+        self.smoothness_param = smoothness_param
 
     def _fit_one(self, bands, intensities):
-        return fabc_baseline(intensities, self.dilation_, self.smoothness_)
+        return fabc_baseline(intensities, self.dilation_param, self.smoothness_param)
 
     def param_ranges(self):
         return {
-            'dilation_': (1, 100, 'integer'),
-            'smoothness_': (1, 1e6, 'log')
+            'dilation_param': (1, 100, 'integer'),
+            'smoothness_param': (1, 1e6, 'log')
         }

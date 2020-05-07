@@ -24,11 +24,10 @@ def min_interp(wvl, spectrum, window = 50,kind='cubic'):
 
         #find the local minima within the current window
         window_minima = all_minima[(all_minima>ind_window[0])&(all_minima<ind_window[-1])]
-
+        if len(window_minima)>0:
         #of those, find the one with the minimum value
-        current_min = window_minima[np.argmin(spectrum[window_minima])]
-
-        s_minima.append(current_min)
+            current_min = window_minima[np.argmin(spectrum[window_minima])]
+            s_minima.append(current_min)
 
     # add the first and last elements to avoid extrapolation
     s_minima = np.hstack(([0], s_minima, len(spectrum) - 1))
