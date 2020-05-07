@@ -32,7 +32,7 @@ def generic_func(data, wavelengths, kernels={}, func=None, axis=0, pass_wvs=Fals
         wvs = data.wavelengths
 
         for k, v in kernels.items():
-            s = sorted(np.abs(wvs-k).argsort()[:v])
+            s = sorted(np.abs(np.array(wvs)-k).argsort()[:v])
             subset.append(np.median(data.iloc[s, :, :], axis=axis))
         if len(subset) == 0:
             subset = subset[0]

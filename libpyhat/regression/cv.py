@@ -20,9 +20,7 @@ from sklearn.utils.validation import check_X_y, check_array
 warnings.filterwarnings('ignore')
 import time
 import copy
-import itertools
 from sklearn.model_selection import LeaveOneGroupOut
-from PyQt5.QtGui import QGuiApplication
 
 def RMSE(ypred, y):
     return np.sqrt(np.mean((np.squeeze(ypred) - np.squeeze(y)) ** 2))
@@ -84,25 +82,24 @@ def path_calc(X, y, X_holdout, y_holdout, alphas, paramgrid, colname = 'CV', yna
 
 
 class cv:
-    def __init__(self, paramgrid,progressbar = None):
+    def __init__(self, paramgrid):
         self.paramgrid = paramgrid
-        # if progressbar is not None:
-        #     self.progress = progressbar
-        #     self.progress.setMaximum(len(self.paramgrid))
-        #     self.progress.show()
+
 
 
 
     def do_cv(self, Train, xcols='wvl', ycol=('comp', 'SiO2'), method='PLS',
-              yrange=[0, 100], calc_path = False, alphas = None):
+              yrange=None, calc_path = False, alphas = None):
 
         models = []
         modelkeys = []
         predictkeys = []
 
+        if yrange is None:
+            yrange = [np.min(Train[ycol]),np.max(Train(ycol))]
+
         for i in list(range(len(self.paramgrid))):
             print('Permutation '+str(i+1)+' of '+str(len(self.paramgrid)))
-            #print(self.paramgrid[i])
             paramstring=''
             for key in self.paramgrid[i].keys():
                 paramstring=paramstring+key+': '+str(self.paramgrid[i][key])+'; '
@@ -113,8 +110,9 @@ class cv:
                 cv_iterator = LeaveOneGroupOut().split(Train[xcols], Train[ycol], Train[('meta', 'Folds')])
                 n_folds = LeaveOneGroupOut().get_n_splits(groups=Train[('meta', 'Folds')])
 
-            except:
+            except KeyError:
                 print('***No folds found! Did you remember to define folds before running cross validation?***')
+                return 0
 
             # create an empty output data frame to serve as template
             output_tmp = pd.DataFrame()
@@ -164,7 +162,6 @@ class cv:
                         Train.at[Train.index[holdout], cvcols[n]] = y_pred_holdouts[n]
 
                 else:
-                    cvcols = [('predict', '"'+method+'- CV -' + str(self.paramgrid[i]) + '"')]
 
                     if method == 'Local Regression':
                         params = self.paramgrid[i]
@@ -174,12 +171,15 @@ class cv:
                             params.pop('n_neighbors')
                         except:
                             pass
-
+                        cvcols = [('predict', '"' + method + '- CV -' + str(self.paramgrid[i]) + ' n_neighbors: ' + str(
+                            n_neighbors) + '"')]
                         model = local_regression.LocalRegression(params, n_neighbors=n_neighbors)
                         y_pred_holdout, coeffs, intercepts = model.fit_predict(cv_train[xcols],cv_train[ycol],cv_holdout[xcols])
                     else:
+                        cvcols = [('predict', '"' + method + '- CV -' + str(self.paramgrid[i]) + '"')]
+
                         #fit the model and predict the held-out data
-                        model = regression([method], [yrange], [self.paramgrid[i]])
+                        model = regression([method], [self.paramgrid[i]])
                         model.fit(cv_train[xcols], cv_train[ycol])
                         if model.goodfit:
                             y_pred_holdout = model.predict(cv_holdout[xcols])
@@ -218,7 +218,7 @@ class cv:
                     Train[cols[n]]=ypred_train[n] #put the training set predictions in the data frame
                     predictkeys.append(cols[n][-1])
                     #create the model and manually set its parameters based on the path results rather than training it
-                    model = regression([method], [yrange], [self.paramgrid[i]])
+                    model = regression([method], [self.paramgrid[i]])
                     model.model.set_params(alpha = path_alphas[n])
                     setattr(model.model, 'intercept_', intercepts[n])
                     setattr(model.model, 'coef_', np.squeeze(path_coefs)[:,n])
@@ -232,21 +232,32 @@ class cv:
 
                 output_tmp['RMSEC'] = rmsec_train
             else:
-                model = regression([method], [yrange], [self.paramgrid[i]])
-                modelkey = "{} - {} - ({}, {}) {}".format(method, ycol[0][-1], yrange[0], yrange[1], self.paramgrid[i])
+                if method == 'Local Regression':
+                    model = local_regression.LocalRegression(self.paramgrid[i], n_neighbors=n_neighbors)
+                    modelkey = "{} - {} - ({}, {}) {} n_neighbors: {}".format(method, ycol[0][-1], yrange[0], yrange[1],
+                                                              self.paramgrid[i],n_neighbors)
+                else:
+                    model = regression([method], [self.paramgrid[i]])
+                    modelkey = "{} - {} - ({}, {}) {}".format(method, ycol[0][-1], yrange[0], yrange[1], self.paramgrid[i])
                 models.append(model)
                 modelkeys.append(modelkey)
                 ypred_train = Train[ycol] * np.nan
-                model.fit(Train[xcols], Train[ycol])
-                #if the fit is good, then predict the training set
-                if model.goodfit:
-                    ypred_train = model.predict(Train[xcols])
+                if method == 'Local Regression':
+                    ypred_train, coeffs, intercepts = model.fit_predict(Train[xcols],Train[ycol],Train[xcols])
                 else:
-                    models = models[:-1]
-                    modelkeys = modelkeys[:-1]
+                    model.fit(Train[xcols], Train[ycol])
+                    #if the fit is good, then predict the training set
+                    if model.goodfit:
+                        ypred_train = model.predict(Train[xcols])
+                    else:
+                        models = models[:-1]
+                        modelkeys = modelkeys[:-1]
 
                 #add the calibration predictions to the appropriate column
-                calcol = ('predict', '"'+method + '- Cal -' + str(self.paramgrid[i])+'"')
+                if method == 'Local Regression':
+                    calcol = ('predict', '"' + method + '- Cal -' + str(self.paramgrid[i]) + ' n_neighbors: '+str(n_neighbors)+'"')
+                else:
+                    calcol = ('predict', '"'+method + '- Cal -' + str(self.paramgrid[i])+'"')
                 predictkeys.append(calcol[-1])
                 Train[calcol] = ypred_train
                 #append the RMSEC for the current settings to the cllection of all RMSECs
@@ -258,11 +269,7 @@ class cv:
             except:
                 output = output_tmp
 
-            try:
-                self.progress.setValue(i+1)
-                QGuiApplication.processEvents()
-            except:
-                pass
+
 
         #make the columns of the output data drame multi-indexed
         cols = output.columns.values

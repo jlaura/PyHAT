@@ -56,15 +56,15 @@ def _rubberband(bands, intensities, num_ranges):
 
 class Rubberband(Baseline):
     def __init__(self, num_iters=8, num_ranges=64):
-        self.num_iters_ = num_iters
-        self.num_ranges_ = num_ranges
+        self.num_iters = num_iters
+        self.num_ranges = num_ranges
 
     def _fit_one(self, bands, intensities):
-        return rubberband_baseline(bands, intensities, num_iters=self.num_iters_,
-                                   num_ranges=self.num_ranges_)
+        return rubberband_baseline(bands, intensities, num_iters=self.num_iters,
+                                   num_ranges=self.num_ranges)
 
     def param_ranges(self):
         return {
-            'num_ranges_': (1, 100, 'integer'),
-            'num_iters_': (0, 36, 'integer')
+            'num_ranges': (1, 100, 'integer'),
+            'num_iters': (0, 36, 'integer')
         }

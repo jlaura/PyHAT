@@ -15,11 +15,9 @@ def lookup(df,lookupfile=None,lookupdf=None,sep=',',skiprows=1,left_on='sclock',
         # this loop concatenates together multiple lookup files if provided
         # (mostly to handle the three different master lists for chemcam)
         for x in lookupfile:
-            try:
-                tmp = pd.read_csv(x, sep=sep, skiprows=skiprows, error_bad_lines=False)
-                lookupdf = pd.concat([lookupdf, tmp])
-            except:
-                lookupdf = pd.read_csv(x, sep=sep, skiprows=skiprows, error_bad_lines=False)
+            tmp = pd.read_csv(x, sep=sep, skiprows=skiprows, error_bad_lines=False)
+            lookupdf = pd.concat([lookupdf, tmp])
+
     metadata = df['meta']
 
     metadata = metadata.merge(lookupdf, left_on=left_on, right_on=right_on, how='left')

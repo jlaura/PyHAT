@@ -42,16 +42,16 @@ def airpls_baseline(intensities, smoothness_param=100, max_iters=10,
 class AirPLS(Baseline):
     def __init__(self, smoothness_param=100, max_iters=10,
                  conv_thresh=0.001, verbose=False):
-        self.smoothness_ = smoothness_param
-        self.max_iters_ = max_iters
-        self.conv_thresh_ = conv_thresh
-        self.verbose_ = verbose
+        self.smoothness_param = smoothness_param
+        self.max_iters = max_iters
+        self.conv_thresh = conv_thresh
+        self.verbose = verbose
 
     def _fit_one(self, bands, intensities):
-        return airpls_baseline(intensities, self.smoothness_, self.max_iters_,
-                               self.conv_thresh_, self.verbose_)
+        return airpls_baseline(intensities, self.smoothness_param, self.max_iters,
+                               self.conv_thresh, self.verbose)
 
     def param_ranges(self):
         return {
-            'smoothness_': (1, 1e4, 'log')
+            'smoothness_param': (1, 1e4, 'log')
         }

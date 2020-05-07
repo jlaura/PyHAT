@@ -47,7 +47,6 @@ def dim_red(df, xcol, method, params, kws, load_fit=None, ycol=None):
         else:
             dim_red_result = do_dim_red.fit_transform(xdata)
 
-
     for i in list(range(1, dim_red_result.shape[
                                1] + 1)):  # will need to revisit this for other methods that don't use n_components to make sure column names still mamke sense
         df[(method, method+'-'+str(i))] = dim_red_result[:, i - 1]
