@@ -147,12 +147,13 @@ def test_dimred_PCA():
 
 def test_dimred_NMF():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
+    df['wvl'] = df['wvl'] - 1000 #make some values negative to test adding a constant
     params = {'n_components': 3,
         'random_state': 0,
         'add_constant': True}
     df, dimred_obj = dim_red.dim_red(df, 'wvl', 'NMF', [], params)
-    expected_comps = [14.30623638, 35.24726985, 3.47872306]
-    expected_scores = [50.36502974, 3.51910685, 27.30433286]
+    expected_comps = [10.27191532, 34.62489686, 3.06822373]
+    expected_scores = [49.42458628, 3.9910722, 27.03100371]
     assert df['NMF'].shape == (103,3)
     np.testing.assert_array_almost_equal(expected_comps, dimred_obj.components_[:,0])
     np.testing.assert_array_almost_equal(expected_scores,np.array(df['NMF'].iloc[0,:]))
