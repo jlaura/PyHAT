@@ -222,6 +222,31 @@ def bd1250(data, **kwargs):
     return utils.generic_func(data, wavelengths, func = pf.bd_func, pass_wvs=True, **kwargs)
 
 @utils.warn_m3
+def bd2800(data, **kwargs):
+    """
+    Name: BD2800
+    Parameter: Band Depth at 2800 nm
+    Formulation:
+    Numerator = R2817
+    Denominator = ((R2976 - R2697) / (2976 - 2697)) * (2817 - 2897) + R2697
+    BD620 = 1 - [Numerator/Denominator]
+    Rationale: OH absorption at 2.8um (Color ramp: dark is weak, white is strong)
+    Bands: R2697, R2817, R2976
+
+    Parameters
+    ----------
+    data : ndarray
+           (n,m,p) array
+
+    Returns
+    -------
+     : ndarray
+       the processed ndarray
+    """
+    wavelengths = [2697, 2817, 2976]
+    return utils.generic_func(data, wavelengths, func = pf.bd_func, pass_wvs=True, **kwargs)
+
+@utils.warn_m3
 def r1580(data, **kwargs):
     """
     Name: R1580
