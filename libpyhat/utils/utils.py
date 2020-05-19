@@ -289,3 +289,4 @@ def enumerate_duplicates(df, col):
 
     df[('meta', col)] = rows_list
     return df
+
