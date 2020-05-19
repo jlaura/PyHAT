@@ -117,3 +117,11 @@ class TestUtils(unittest.TestCase):
         y = utils.normalize_vector(x)
         truth = np.tile(np.array([0.70710678, 0.70710678, 0.70710678]), 4).reshape(4, 3)
         np.testing.assert_array_almost_equal(truth, y)
+
+    def test_ratio(self):
+        df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
+        result = ratio(df, ['580','590'],['590','600'])
+        expected = np.array([3.93136608, 1.88664136, 1.47565463, 1.74094051])
+
+        cleaned_array = result['ratio'][0:4].values
+        np.testing.assert_array_almost_equal(cleaned_array, expected)
