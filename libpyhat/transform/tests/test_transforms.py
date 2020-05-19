@@ -148,6 +148,7 @@ def test_dimred_PCA():
 def test_dimred_NMF():
     df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
     df['wvl'] = df['wvl'] - 1000 #make some values negative to test adding a constant
+    dim_red.check_positive(df['wvl'])
     params = {'n_components': 3,
         'random_state': 0,
         'add_constant': True}
