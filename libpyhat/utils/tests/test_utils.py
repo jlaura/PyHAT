@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 
 from libpyhat.utils import utils
-
+from libpyhat.examples import get_path
 
 class TestUtils(unittest.TestCase):
     def setUp(self):
