@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from libpyhat.utils import utils
 
+from libpyhat.examples import get_path
 
 class TestUtils(unittest.TestCase):
     def setUp(self):
@@ -125,3 +126,4 @@ class TestUtils(unittest.TestCase):
 
         cleaned_array = result['ratio'][0:4].values
         np.testing.assert_array_almost_equal(cleaned_array, expected)
+
