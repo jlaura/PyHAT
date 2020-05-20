@@ -43,3 +43,4 @@ def norm(df, ranges, col_var='wvl'):
 def norm_total(df):
     df = df.div(df.sum(axis=1), axis=0)
     return df
+

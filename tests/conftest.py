@@ -10,7 +10,7 @@ def m3_functions():
     'mare_omat', 'thermal_slope', 'visslope', 'tilt', 'bd3000', 'hlnd_isfeo',
     'uvvis', 'bdi1000', 'nbd1480', 'r950_750', 'r750', 'fe_mare_est', 'bd2umratio',
     'olindex', 'nbd2700', 'visuv', 'twoum_ratio', 'nbd2300', 'bd950', 'visnir',
-    'bd2300', 'thermal_ratio', 'twoum_slope', 'bd1900', 'r540']
+    'bd2300', 'thermal_ratio', 'twoum_slope', 'bd1900', 'r540', 'bd2800']
 
 @pytest.fixture
 def crism_functions():

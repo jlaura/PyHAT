@@ -50,6 +50,11 @@ def test_bd2300(m3_img):
     np.testing.assert_array_almost_equal(res, np.array([[0.28366762,  0.26470588,  0.2481203 ],
                                                         [0.23349057,  0.22048998,  0.20886076],
                                                         [0.19839679,  0.1889313,   0.18032787]]))
+def test_bd2800(m3_img):
+    res = pipe.bd2800(m3_img)
+    np.testing.assert_array_almost_equal(res, np.array([[-0.143911, -0.129139, -0.117117],
+                                                        [-0.107143, -0.098734, -0.091549],
+                                                        [-0.085339, -0.079918, -0.075145]]))
 
 def test_bd3000(m3_img):
     res = pipe.bd3000(m3_img)
