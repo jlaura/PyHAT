@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 
 from libpyhat.utils import utils
-from libpyhat.examples import get_path
+
 
 class TestUtils(unittest.TestCase):
     def setUp(self):
@@ -120,7 +120,7 @@ class TestUtils(unittest.TestCase):
 
     def test_ratio(self):
         df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
-        result = ratio(df, ['580','590'],['590','600'])
+        result = utils.ratio(df, ['580','590'],['590','600'])
         expected = np.array([3.93136608, 1.88664136, 1.47565463, 1.74094051])
 
         cleaned_array = result['ratio'][0:4].values
