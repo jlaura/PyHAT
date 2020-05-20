@@ -9,6 +9,7 @@ import libpyhat.transform.meancenter as meancenter
 import libpyhat.transform.multiply_vector as multiply_vector
 import libpyhat.transform.norm as norm
 import libpyhat.transform.shift_spect as shift_spect
+import libpyhat.clustering.cluster as cluster
 np.random.seed(1)
 
 
@@ -143,3 +144,35 @@ def test_dimred_PCA():
     assert df['PCA'].shape == (103,3)
     np.testing.assert_array_almost_equal(expected_expl_var, dimred_obj.explained_variance_ratio_)
     np.testing.assert_array_almost_equal(expected_scores,np.array(df['PCA'].iloc[0,:]))
+
+def test_dimred_NMF():
+    df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
+    df['wvl'] = df['wvl'] - 1000 #make some values negative to test adding a constant
+    dim_red.check_positive(df['wvl'])
+    params = {'n_components': 3,
+        'random_state': 0,
+        'add_constant': True}
+    df, dimred_obj = dim_red.dim_red(df, 'wvl', 'NMF', [], params)
+    expected_comps = [10.27191532, 34.62489686, 3.06822373]
+    expected_scores = [49.42458628, 3.9910722, 27.03100371]
+    assert df['NMF'].shape == (103,3)
+    np.testing.assert_array_almost_equal(expected_comps, dimred_obj.components_[:,0])
+    np.testing.assert_array_almost_equal(expected_scores,np.array(df['NMF'].iloc[0,:]))
+
+def test_dimred_LDA():
+
+    df = pd.read_csv(get_path('test_data.csv'), header=[0, 1])
+    kws = {'n_clusters': 5,
+           'n_init': 10,
+           'max_iter': 100,
+           'tol': 0.01,
+           'n_jobs': 1,
+           'random_state': 1}
+    cluster.cluster(df, 'wvl', 'K-Means', [], kws)
+    params = {'n_components': 3}
+    df, dimred_obj = dim_red.dim_red(df, 'wvl', 'LDA', [], params, ycol='K-Means')
+    expected_coefs = [-0.02209121, -0.0016516, -0.01139357, -0.06448139, 0.07085655]
+    expected_scores = [-11.89340048, 0.41598425, 0.22964169]
+    assert df['LDA'].shape == (103, 3)
+    np.testing.assert_array_almost_equal(expected_coefs, dimred_obj.coef_[:, 0])
+    np.testing.assert_array_almost_equal(expected_scores, np.array(df['LDA'].iloc[0, :]))

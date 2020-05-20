@@ -11,7 +11,13 @@ def peak_area(df, peaks_mins_file=None):
         peaks_mins = pd.read_csv(peaks_mins_file, sep=',')
         peaks = np.array(peaks_mins[peaks_mins['type']=='peak']['wvl'],dtype='float')
         mins = np.array(peaks_mins[peaks_mins['type']=='min']['wvl'],dtype='float')
-        pass
+        #keep only peaks that have mins on both sides
+        badpeaks = np.sum([peaks < np.min(mins), peaks > np.max(mins)], axis=0)
+
+        if np.sum(badpeaks==1)>0:
+            print('Removing unbounded peaks: '+str(peaks[badpeaks == 1]))
+            peaks = peaks[badpeaks == 0]
+
     else:
         ave_spect = np.average(np.array(df['wvl']), axis=0)  # find the average of the spectra in the data frame
         peaks = wvls[
