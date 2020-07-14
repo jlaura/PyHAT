@@ -31,13 +31,38 @@ def rpeak1_func(data, wv):
     for i, band in enumerate(data):
         band = band.flatten()
         wavelength = np.full(len(band), wv[i])
-        a, b, c, d, e, f = np.polyfit(band, wavelength, 5)
+        a, b, c, d, e, f = np.polyfit(band, wavelength, 5, 2e-16)
         derivation = derivative(func, 1.0, dx=1e-6, n = 1)
 
         if derivation == 0:
             return wv[i]
 
-#@@TODO bdi1000vis
+def bdi1000VIS_func(data, wv):
+    *numerator, rpeak1 = data
+
+    norm_cube = np.divide(numerator,rpeak1)
+    res = np.trapz(1-norm_cube, axis=0)
+    return res
+
+def bdi1000IR_func(data, wvs):
+    *numerator, medRB, medRA = data
+    
+    # get wavelength indices for slope calculation
+    r1045_i = np.abs(wvs-1045).argmin()
+    r1255_i = np.abs(wvs-1255).argmin()
+    medRA_i = np.abs(wvs-1585).argmin()
+    medRB_i = np.abs(wvs-2513).argmin()
+
+    slope = compute_slope(medRB_i, medRA_i, medRB, medRA)
+    b = medRA - slope*medRA_i
+
+    fit1045 = line_fit(slope, r1045_i, b)
+    fit1255 = line_fit(slope, r1255_i, b)
+
+    linear_fit = np.linspace(fit1045, fit1255, len(numerator))
+    norm_cube = np.divide(numerator, linear_fit)
+    res = np.trapz(1-norm_cube, axis=0)
+    return res
 
 def olivine_index2_func(bands):
     b1080, b1210, b1330, b1470, b1750, b2400 = bands
@@ -186,7 +211,14 @@ def bd1900r2_func(bands, wv):
                           b2112 / rc2112 + b2120 / rc2120 + b2126 / rc2126)
 
     return 1 - (numerator / denominator)
-#@@TODO bdi2000
+
+def bdi2000_func(bands, wv):
+    *numerator, peakR, R2530 = bands
+    linear_fit = np.linspace(peakR,R2530,len(numerator))
+    norm_cube = np.divide(numerator,linear_fit)
+    res = np.trapz(1-norm_cube, axis=0)
+
+    return res
 
 def bd2100_func(bands, wv):
     b1930, b2120, b2130, b2250 = bands

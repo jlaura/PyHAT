@@ -115,7 +115,6 @@ def sh600(data, use_kernels = True, **kwargs):
 
     return generic_func(data, wv, func = cf.sh_func, pass_wvs = True, kernels = kernels, **kwargs)
 
-
 def sh770(data, **kwargs):
     """
     NAME: SH770
@@ -234,13 +233,12 @@ def bd920(data, use_kernels = True, **kwargs):
 
     return generic_func(data, wv, func = cf.bd_func2, pass_wvs = True, kernels = kernels, **kwargs)
 
-
 def rpeak1(data, **kwargs):
     """
-    NAME: BDI1000VIS
-    PARAMETER: 1 micron integrated band depth; VIS wavelengths
-    FORMULATION: divide R830, R860, R890, R915 by RPEAK1 then\
-      integrate over (1 -  normalized radiances)
+    NAME: RPEAK1
+    PARAMETER: Reflectance peak 1
+    FORMULATION: Wavelength where first derivative = 0 of fifth-order \
+            polynomial fit to reflectances at all valid VNIR wavelengths
     RATIONALE: crystalline Fe+2 or Fe+3 minerals
 
     Parameters
@@ -258,9 +256,8 @@ def rpeak1(data, **kwargs):
     vnir_mask = (wvs > 400) * (wvs < 1000)
     vnir_wvs = wvs[vnir_mask]
 
-    return generic_func(data, wvs, func = cf.rpeak1_func, pass_wvs = True, **kwargs)
+    return generic_func(data, vnir_wvs, func = cf.rpeak1_func, pass_wvs = True, **kwargs)
 
-# TODO: bdi1000VIS
 def bdi1000VIS(data, **kwargs):
     """
     NAME: BDI1000VIS
@@ -269,8 +266,15 @@ def bdi1000VIS(data, **kwargs):
       integrate over (1 -  normalized radiances)
     RATIONALE: crystalline Fe+2 or Fe+3 minerals
     """
+    peak = rpeak1(data)
+    wvs = data.wavelengths
+    kernels = {833: 5,
+               860: 5,
+               890: 5,
+               915: 5,
+               peak:5}
 
-    raise NotImplementedError
+    return generic_func(data, wvs, func=cf.bdi1000VIS_func, pass_wvs=True, kernels=kernels, **kwargs)
 
 # TODO: bdi1000IR
 def bdi1000IR(data, **kwargs):
@@ -284,9 +288,55 @@ def bdi1000IR(data, **kwargs):
     RATIONALE: crystalline Fe+2 minerals; corrected for overlying\
     aerosol induced slope
     """
+    wvs = data.wavelengths
+    # medR A
+    A_mask = (wvs >= 1300) * (wvs <= 1870)
+    A_wvs = wvs[A_mask]
+    medRA = np.median(A_wvs)
 
-    raise NotImplementedError
+    # medR B
+    B_mask = (wvs >= 2430) * (wvs <= 2600)
+    B_wvs = wvs[B_mask]
+    medRB = np.median(B_wvs)
 
+    kernels = {1045: 5,
+               1066: 5,
+               1087: 5,
+               1108: 5,
+               1129: 5,
+               1150: 5,
+               1171: 5,
+               1192: 5,
+               1213: 5,
+               1234: 5,
+               1255: 5,
+               medRA:15,
+               medRB:15}
+
+    return generic_func(data, wvs, func=cf.bdi1000IR_func, pass_wvs=True, kernels=kernels, **kwargs)
+
+def r1300(data, **kwargs):
+    """
+    Name: R1300
+    Parameter: 1.30 micron reflectance
+    FORMULATION (with kernels): R1300
+    Rationale: IRA browse product component
+
+    Parameters
+    ----------
+    data : ndarray
+           (n,m,p) array
+
+    Returns
+    -------
+     : ndarray
+       the processed ndarray
+    """
+
+    wv = [1300]
+    kernels = {1300: 5}
+
+    return generic_func(data, wv, func = (lambda x: x[0]), kernels = kernels, **kwargs)
 
 def r1330(data, **kwargs):
     """
@@ -609,8 +659,8 @@ def bd1500(data, use_kernels = True, **kwargs):
     if use_kernels:
         wv = [1367, 1525, 1808]
         kernels = {1367: 5,
-                          1525: 11,
-                          1808: 5}
+                   1525: 11,
+                   1808: 5}
 
         return generic_func(data, wv, func = cf.bd_func2, pass_wvs = True, kernels = kernels, **kwargs)
 
@@ -809,7 +859,6 @@ def bd1900r2(data, **kwargs):
 
     return generic_func(data, wv, func = cf.bd1900r2_func, pass_wvs = True, **kwargs)
 
-# TODO:  bdi2000
 def bdi2000(data, **kwargs):
     """
     NAME: BDI2000
@@ -820,9 +869,28 @@ def bdi2000(data, **kwargs):
      (1 -  normalized radiances)
     RATIONALE: pyroxene abundance and particle size
     """
+    wvs = data.wavelengths
+    # peakR of 15
+    peak_mask = (wvs >= 1300) * (wvs <= 1870)
+    peak_wvs = wvs[peak_mask]
+    peakR = generic_func(data, peak_wvs, func = cf.rpeak1_func, pass_wvs = True, **kwargs)
+    
+    kernels = {1660: 5,
+               1815: 5,
+               2140: 5,
+               2210: 5,
+               2250: 5,
+               2290: 5,
+               2330: 5,
+               2350: 5,
+               2390: 5,
+               2430: 5,
+               2460: 5,
+               2530: 5,
+               peakR:15}
 
-    raise NotImplementedError
 
+    return generic_func(data, peak_wvs, func=cf.bdi2000_func, pass_wvs=True, kernels=kernels, **kwargs)
 
 def bd2100(data, use_kernels = True, **kwargs):
     """
@@ -846,13 +914,14 @@ def bd2100(data, use_kernels = True, **kwargs):
     if use_kernels:
         wv = [1930, 2132, 2250]
         kernels = {1930: 3,
-                          2132: 5,
-                          2250: 3}
+                   2132: 5,
+                   2250: 3}
 
         return generic_func(data, wv, func = cf.bd_func2, pass_wvs = True, kernels = kernels, **kwargs)
 
     wv = [1930, 2120, 2130, 2250]
     return generic_func(data, wv, func = cf.bd2100_func, pass_wvs=True, **kwargs)
+
 
 def bd2165(data, **kwargs):
     """
@@ -990,6 +1059,7 @@ def bd2210(data, use_kernels = True, **kwargs):
         kernels[2250] = 5
 
     return generic_func(data, wv, func = cf.bd_func2, pass_wvs = True, kernels = kernels, **kwargs)
+
 
 def d2200(data, **kwargs):
     """
@@ -1181,7 +1251,6 @@ def d2300(data, **kwargs):
                       2330: 3,
                       2530: 5}
 
-    # return generic_func(data, wv, func = cf.d2300_func, **kwargs)
     return generic_func(data, wv, func = cf.d2300_func, kernels = kernels, **kwargs)
 
 def bd2355(data, **kwargs):
@@ -1658,6 +1727,7 @@ def r1080(data, **kwargs):
     kernels = {1080: 5}
 
     return generic_func(data, wv, func = (lambda x: x[0]), kernels = kernels, **kwargs)
+
 
 def r1506(data, **kwargs):
     """

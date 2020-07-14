@@ -49,7 +49,7 @@ def generic_func(data, wavelengths, kernels={}, func=None, axis=0, pass_wvs=Fals
 
 def compute_b_a(wavelengths):
     '''
-    Given a set of three wavelengths compute there b and a values as per
+    Given a set of three wavelengths compute their b and a values as per
     the Viviano Beck CRISM Derived Products paper
     (Revised CRISM spectral parameters and summary
     products based on the currently detected
